@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala B-WISE - Peso, Imagen Corporal y Autoestima</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, h2 {
+            color: #29A98C;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #112F33;
+        }
+
+        .instructions {
+            background: rgba(41, 169, 140, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #112F33;
+        }
+
+        .question-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .question-text {
+            color: #112F33;
+            font-size: 18px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(41, 169, 140, 0.05);
+            border: 2px solid transparent;
+            padding: 18px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #112F33;
+            text-align: center;
+        }
+
+        .option:hover {
+            background: rgba(41, 169, 140, 0.15);
+            border-color: #29A98C;
+            transform: translateX(5px);
+        }
+
+        .option:active {
+            transform: scale(0.98);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(41, 169, 140, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(41, 169, 140, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #EC7367, #f56565);
+            margin-top: 15px;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #29A98C;
+            border: 2px solid #29A98C;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background: #29A98C;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .results-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .results-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .results-container::-webkit-scrollbar-track {
+            background: rgba(41, 169, 140, 0.1);
+            border-radius: 4px;
+        }
+
+        .results-container::-webkit-scrollbar-thumb {
+            background: #29A98C;
+            border-radius: 4px;
+        }
+
+        .score-section {
+            background: rgba(41, 169, 140, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #112F33;
+            margin-bottom: 10px;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .interpretation {
+            background: rgba(255, 248, 238, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #29A98C;
+        }
+
+        .interpretation h3 {
+            color: #112F33;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .interpretation p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .alert-title {
+            color: #742a2a;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .alert-content {
+            color: #742a2a;
+            line-height: 1.5;
+        }
+
+        .subscale-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .subscale-item {
+            background: rgba(41, 169, 140, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #29A98C;
+        }
+
+        .subscale-name {
+            font-weight: 600;
+            color: #112F33;
+            margin-bottom: 5px;
+        }
+
+        .subscale-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .level-good {
+            background: rgba(72, 187, 120, 0.1);
+            border-left-color: #48bb78;
+        }
+
+        .level-moderate {
+            background: rgba(246, 173, 85, 0.1);
+            border-left-color: #f6ad55;
+        }
+
+        .level-poor {
+            background: rgba(245, 101, 101, 0.1);
+            border-left-color: #f56565;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .score-value {
+                font-size: 36px;
+            }
+
+            .back-button {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .buttons-container {
+                display: none;
+            }
+
+            .back-button, .progress-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Card 0: Bienvenida -->
+        <div class="card active" id="card-0">
+            <h1>Escala de Peso, Imagen Corporal y Autoestima (B-WISE)</h1>
+            <div class="instructions">
+                <p><strong>Instrucciones:</strong></p>
+                <p>A continuación encontrará una serie de afirmaciones sobre cómo se ha sentido durante las <strong>2 últimas semanas</strong> en relación con su peso, imagen corporal y autoestima.</p>
+                <p>Por favor, lea cada afirmación cuidadosamente y seleccione la opción que mejor represente con qué frecuencia ha experimentado lo descrito:</p>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li><strong>Nunca</strong>: No he experimentado esto en absoluto</li>
+                    <li><strong>A veces</strong>: Lo he experimentado ocasionalmente</li>
+                    <li><strong>Siempre</strong>: Lo he experimentado todo el tiempo</li>
+                </ul>
+                <p style="margin-top: 15px;">No hay respuestas correctas o incorrectas. Sea lo más honesto/a posible con sus respuestas.</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="startEvaluation()">Comenzar Evaluación</button>
+            </div>
+        </div>
+
+        <!-- Cards 1-12: Preguntas -->
+        <div class="card" id="card-1">
+            <div class="question-text">
+                <span class="question-number">1</span>
+                <span>He estado disgustado/a por mi peso actual.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(1, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(1, 2)">A veces</div>
+                <div class="option" onclick="selectOption(1, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-2">
+            <div class="question-text">
+                <span class="question-number">2</span>
+                <span>Me he sentido activo/a y con energía.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(2, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(2, 2)">A veces</div>
+                <div class="option" onclick="selectOption(2, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-3">
+            <div class="question-text">
+                <span class="question-number">3</span>
+                <span>He salido a divertirme más a menudo.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(3, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(3, 2)">A veces</div>
+                <div class="option" onclick="selectOption(3, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-4">
+            <div class="question-text">
+                <span class="question-number">4</span>
+                <span>He sido incapaz de controlar mi apetito y mis ansias de comer.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(4, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(4, 2)">A veces</div>
+                <div class="option" onclick="selectOption(4, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-5">
+            <div class="question-text">
+                <span class="question-number">5</span>
+                <span>Me ha disgustado mi aspecto.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(5, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(5, 2)">A veces</div>
+                <div class="option" onclick="selectOption(5, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-6">
+            <div class="question-text">
+                <span class="question-number">6</span>
+                <span>He estado tímido/a en compañía de otros por culpa de mi peso.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(6, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(6, 2)">A veces</div>
+                <div class="option" onclick="selectOption(6, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-7">
+            <div class="question-text">
+                <span class="question-number">7</span>
+                <span>Me he fijado en mi apariencia e imagen corporal durante el día.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(7, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(7, 2)">A veces</div>
+                <div class="option" onclick="selectOption(7, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-8">
+            <div class="question-text">
+                <span class="question-number">8</span>
+                <span>He evitado a mis amigos y familiares porque no estoy en forma.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(8, 3)">Nunca</div>
+                <div class="option" onclick="selectOption(8, 2)">A veces</div>
+                <div class="option" onclick="selectOption(8, 1)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-9">
+            <div class="question-text">
+                <span class="question-number">9</span>
+                <span>Sé por qué he ganado peso y sé cómo perderlo.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(9, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(9, 2)">A veces</div>
+                <div class="option" onclick="selectOption(9, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-10">
+            <div class="question-text">
+                <span class="question-number">10</span>
+                <span>Creo que el exceso de peso no es bueno para mi salud general.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(10, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(10, 2)">A veces</div>
+                <div class="option" onclick="selectOption(10, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-11">
+            <div class="question-text">
+                <span class="question-number">11</span>
+                <span>He tomado medidas para controlar mi peso.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(11, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(11, 2)">A veces</div>
+                <div class="option" onclick="selectOption(11, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-12">
+            <div class="question-text">
+                <span class="question-number">12</span>
+                <span>En general, me he sentido bien conmigo mismo/a.</span>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(12, 1)">Nunca</div>
+                <div class="option" onclick="selectOption(12, 2)">A veces</div>
+                <div class="option" onclick="selectOption(12, 3)">Siempre</div>
+            </div>
+        </div>
+
+        <!-- Card Final -->
+        <div class="card" id="card-final">
+            <h1>Evaluación Completada</h1>
+            <div style="text-align: center; margin: 40px 0;">
+                <p style="font-size: 20px; color: #112F33; margin-bottom: 30px;">
+                    ¡Muchas gracias por completar la evaluación!
+                </p>
+                <p style="font-size: 16px; color: #666; margin-bottom: 40px;">
+                    Por favor, pase el dispositivo a su médico o profesional para la revisión de los resultados.
+                </p>
+                <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
+            </div>
+        </div>
+
+        <!-- Card Resultados -->
+        <div class="card" id="card-results">
+            <h1>Resultados B-WISE</h1>
+            <div class="results-container">
+                <div class="score-section">
+                    <div class="score-label">Puntuación Total</div>
+                    <div class="score-value" id="total-score">0/36</div>
+                </div>
+
+                <div class="interpretation" id="interpretation-section">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="subscale-grid">
+                    <div class="subscale-item">
+                        <div class="subscale-name">Información de la Escala</div>
+                        <div class="subscale-info">
+                            La B-WISE evalúa el ajuste psicosocial relacionado con el peso corporal, imagen y autoestima. 
+                            Desarrollada específicamente para pacientes con trastornos mentales graves que experimentan cambios de peso asociados a medicación psicotrópica.
+                        </div>
+                    </div>
+                    <div class="subscale-item">
+                        <div class="subscale-name">Estructura Factorial</div>
+                        <div class="subscale-info">
+                            La escala evalúa tres componentes principales: imagen corporal, funcionamiento social y control del peso. 
+                            Los estudios psicométricos muestran una consistencia interna de α=0.79.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="alerts-section">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="interpretation level-good">
+                    <h3>Consideraciones Clínicas</h3>
+                    <p id="clinical-considerations">
+                        <!-- Se llenará dinámicamente -->
+                    </p>
+                </div>
+
+                <div class="buttons-container">
+                    <button class="btn" onclick="exportToPDF()">Exportar PDF</button>
+                    <button class="btn" onclick="captureResults()">Capturar Imagen</button>
+                    <button class="btn btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-button" id="back-button" onclick="goBack()">
+        ← Regresar
+    </button>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentCard = 0;
+        let responses = {};
+        const totalQuestions = 12;
+
+        // Items inversos (mayor puntuación = peor ajuste)
+        const inverseItems = [1, 4, 5, 6, 7, 8];
+
+        function startEvaluation() {
+            currentCard = 1;
+            responses = {};
+            showCard(currentCard);
+            updateProgress();
+            updateBackButton();
+        }
+
+        function selectOption(question, score) {
+            responses[question] = score;
+            
+            // Auto-avance
+            setTimeout(() => {
+                if (currentCard < totalQuestions) {
+                    currentCard++;
+                    showCard(currentCard);
+                } else {
+                    showCard('final');
+                }
+                updateProgress();
+                updateBackButton();
+            }, 150);
+        }
+
+        function showCard(cardId) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('active'));
+            
+            if (typeof cardId === 'number') {
+                document.getElementById(`card-${cardId}`).classList.add('active');
+            } else {
+                document.getElementById(`card-${cardId}`).classList.add('active');
+            }
+        }
+
+        function updateProgress() {
+            const progress = (Object.keys(responses).length / totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function updateBackButton() {
+            const backButton = document.getElementById('back-button');
+            if (currentCard === 0 || currentCard === 'final' || currentCard === 'results') {
+                backButton.style.display = 'none';
+            } else {
+                backButton.style.display = 'flex';
+            }
+        }
+
+        function goBack() {
+            if (currentCard > 1 && currentCard <= totalQuestions) {
+                currentCard--;
+                showCard(currentCard);
+                updateBackButton();
+            }
+        }
+
+        function showResults() {
+            currentCard = 'results';
+            showCard('results');
+            calculateScore();
+            updateBackButton();
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            
+            // Calcular puntuación total
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (responses[i]) {
+                    totalScore += responses[i];
+                }
+            }
+
+            // Mostrar puntuación
+            document.getElementById('total-score').textContent = `${totalScore}/36`;
+
+            // Generar interpretación
+            const interpretation = getInterpretation(totalScore);
+            const interpretationSection = document.getElementById('interpretation-section');
+            interpretationSection.className = `interpretation ${interpretation.levelClass}`;
+            interpretationSection.innerHTML = `
+                <h3>Nivel de Ajuste Psicosocial: ${interpretation.level}</h3>
+                <p>${interpretation.description}</p>
+            `;
+
+            // Generar alertas
+            generateAlerts();
+
+            // Consideraciones clínicas
+            generateClinicalConsiderations(totalScore);
+        }
+
+        function getInterpretation(score) {
+            if (score >= 28) {
+                return {
+                    level: 'Buen Ajuste',
+                    levelClass: 'level-good',
+                    description: 'El paciente muestra un buen ajuste psicosocial en relación con su peso e imagen corporal. Indica satisfacción general con su apariencia, energía adecuada y participación social activa. Este nivel sugiere un impacto mínimo del peso en la autoestima y funcionamiento diario.',
+                    color: '#48bb78'
+                };
+            } else if (score >= 22) {
+                return {
+                    level: 'Ajuste Moderado',
+                    levelClass: 'level-moderate',
+                    description: 'El paciente presenta un ajuste psicosocial moderado. Pueden existir algunas preocupaciones sobre el peso e imagen corporal que afectan ocasionalmente su funcionamiento social y autoestima. Se recomienda monitoreo continuo y posible intervención psicoeducativa.',
+                    color: '#f6ad55'
+                };
+            } else {
+                return {
+                    level: 'Ajuste Deficiente',
+                    levelClass: 'level-poor',
+                    description: 'El paciente muestra un ajuste psicosocial deficiente en relación con su peso e imagen corporal. Existe un impacto significativo en la autoestima, funcionamiento social y bienestar general. Este nivel está asociado con mayor riesgo de no adherencia al tratamiento y requiere intervención específica.',
+                    color: '#f56565'
+                };
+            }
+        }
+
+        function generateAlerts() {
+            const alertsSection = document.getElementById('alerts-section');
+            alertsSection.innerHTML = '';
+            
+            const highRiskItems = [];
+            
+            // Identificar ítems con puntuación crítica
+            const criticalItems = {
+                1: { threshold: 1, message: 'Disgusto significativo con el peso actual' },
+                5: { threshold: 1, message: 'Disgusto importante con el aspecto físico' },
+                6: { threshold: 1, message: 'Timidez social significativa debido al peso' },
+                8: { threshold: 1, message: 'Aislamiento social debido a la forma física' }
+            };
+
+            for (const [item, config] of Object.entries(criticalItems)) {
+                if (responses[item] && responses[item] <= config.threshold) {
+                    highRiskItems.push(config.message);
+                }
+            }
+
+            if (highRiskItems.length > 0) {
+                const alert = document.createElement('div');
+                alert.className = 'alert';
+                alert.innerHTML = `
+                    <div class="alert-title">⚠️ Áreas de Preocupación Clínica</div>
+                    <div class="alert-content">
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            ${highRiskItems.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                alertsSection.appendChild(alert);
+            }
+
+            // Alerta por baja actividad y energía
+            if (responses[2] === 1 || responses[3] === 1) {
+                const alert = document.createElement('div');
+                alert.className = 'alert';
+                alert.innerHTML = `
+                    <div class="alert-title">⚠️ Baja Actividad y Energía</div>
+                    <div class="alert-content">
+                        El paciente reporta niveles bajos de energía y/o actividad social reducida, 
+                        lo cual puede estar relacionado con el impacto psicológico del cambio de peso.
+                    </div>
+                `;
+                alertsSection.appendChild(alert);
+            }
+        }
+
+        function generateClinicalConsiderations(score) {
+            const considerations = document.getElementById('clinical-considerations');
+            
+            let text = 'La escala B-WISE proporciona información valiosa sobre el impacto psicosocial del peso en pacientes con trastornos mentales graves. ';
+            
+            if (score < 22) {
+                text += 'El bajo puntaje obtenido sugiere un impacto significativo del peso en múltiples áreas del funcionamiento del paciente. Se recomienda: ' +
+                    '(1) Evaluar la relación entre el cambio de peso y la medicación actual, ' +
+                    '(2) Considerar intervenciones psicoeducativas sobre manejo del peso, ' +
+                    '(3) Implementar estrategias de apoyo para mejorar la imagen corporal y autoestima, ' +
+                    '(4) Monitorear la adherencia al tratamiento, ya que la insatisfacción con el peso es un predictor de abandono terapéutico.';
+            } else if (score < 28) {
+                text += 'El puntaje sugiere algunas dificultades en el ajuste al cambio de peso. Considere: ' +
+                    '(1) Discutir con el paciente sus preocupaciones específicas sobre el peso, ' +
+                    '(2) Proporcionar información sobre estrategias saludables de manejo del peso, ' +
+                    '(3) Reforzar los aspectos positivos del tratamiento actual, ' +
+                    '(4) Programar seguimiento para monitorear la evolución del ajuste psicosocial.';
+            } else {
+                text += 'El buen ajuste psicosocial es un factor protector para la adherencia al tratamiento. ' +
+                    'Continúe monitoreando periódicamente, especialmente si hay cambios en la medicación o peso corporal. ' +
+                    'Refuerce las estrategias adaptativas que el paciente está utilizando.';
+            }
+            
+            considerations.textContent = text;
+        }
+
+        function exportToPDF() {
+            const totalScore = Object.values(responses).reduce((a, b) => a + b, 0);
+            const interpretation = getInterpretation(totalScore);
+            const highRiskItems = [];
+            
+            // Identificar ítems críticos para el PDF
+            const criticalItems = {
+                1: { threshold: 1, message: 'Disgusto significativo con el peso actual' },
+                5: { threshold: 1, message: 'Disgusto importante con el aspecto físico' },
+                6: { threshold: 1, message: 'Timidez social significativa debido al peso' },
+                8: { threshold: 1, message: 'Aislamiento social debido a la forma física' }
+            };
+
+            for (const [item, config] of Object.entries(criticalItems)) {
+                if (responses[item] && responses[item] <= config.threshold) {
+                    highRiskItems.push(config.message);
+                }
+            }
+
+            const printContent = `
+                <html>
+                <head>
+                    <title>Resultados B-WISE</title>
+                    <style>
+                        @page { margin: 2cm; }
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            line-height: 1.6; 
+                            color: #333;
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+                        .header {
+                            text-align: center;
+                            padding: 20px 0;
+                            border-bottom: 3px solid #29A98C;
+                            margin-bottom: 30px;
+                        }
+                        h1 { 
+                            color: #29A98C; 
+                            margin: 0;
+                            font-size: 28px;
+                        }
+                        h2 { 
+                            color: #112F33; 
+                            margin-top: 25px;
+                            font-size: 20px;
+                            border-bottom: 2px solid #e0e0e0;
+                            padding-bottom: 10px;
+                        }
+                        h3 { 
+                            color: #29A98C; 
+                            margin-top: 20px;
+                            font-size: 18px;
+                        }
+                        .score-box {
+                            background: linear-gradient(135deg, ${interpretation.color}20, ${interpretation.color}10);
+                            padding: 25px;
+                            border-radius: 10px;
+                            text-align: center;
+                            margin: 20px 0;
+                            border: 2px solid ${interpretation.color};
+                        }
+                        .score-label {
+                            font-size: 18px;
+                            color: #112F33;
+                            margin-bottom: 10px;
+                        }
+                        .score-value {
+                            font-size: 48px;
+                            font-weight: bold;
+                            color: ${interpretation.color};
+                        }
+                        .interpretation-box {
+                            background: #f7fafc;
+                            padding: 20px;
+                            border-left: 4px solid ${interpretation.color};
+                            margin: 20px 0;
+                            border-radius: 5px;
+                        }
+                        .info-grid {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 20px;
+                            margin: 20px 0;
+                        }
+                        .info-item {
+                            background: #f0f8ff;
+                            padding: 15px;
+                            border-radius: 8px;
+                            border-left: 3px solid #29A98C;
+                        }
+                        .alert-box {
+                            background: #fff5f5;
+                            border: 1px solid #feb2b2;
+                            border-left: 4px solid #f56565;
+                            padding: 15px;
+                            margin: 15px 0;
+                            border-radius: 5px;
+                            break-inside: avoid;
+                        }
+                        .alert-title {
+                            color: #742a2a;
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                        }
+                        .response-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                            break-inside: avoid;
+                        }
+                        .response-table th, .response-table td {
+                            border: 1px solid #e0e0e0;
+                            padding: 10px;
+                            text-align: left;
+                        }
+                        .response-table th {
+                            background: #29A98C;
+                            color: white;
+                        }
+                        .response-table tr:nth-child(even) {
+                            background: #f7fafc;
+                        }
+                        .clinical-section {
+                            background: #e6fffa;
+                            padding: 20px;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                            border: 1px solid #29A98C;
+                        }
+                        .footer {
+                            margin-top: 40px;
+                            padding-top: 20px;
+                            border-top: 2px solid #e0e0e0;
+                            font-size: 12px;
+                            color: #666;
+                            text-align: center;
+                        }
+                        @media print {
+                            .info-grid { grid-template-columns: 1fr; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Escala de Peso, Imagen Corporal y Autoestima (B-WISE)</h1>
+                        <p style="margin: 10px 0; color: #666;">
+                            Informe de Resultados - ${new Date().toLocaleDateString('es-ES', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}
+                        </p>
+                    </div>
+
+                    <div class="score-box">
+                        <div class="score-label">Puntuación Total B-WISE</div>
+                        <div class="score-value">${totalScore}/36</div>
+                        <div style="margin-top: 15px; font-size: 16px; color: #112F33;">
+                            Nivel de Ajuste: <strong>${interpretation.level}</strong>
+                        </div>
+                    </div>
+
+                    <div class="interpretation-box">
+                        <h3>Interpretación Clínica</h3>
+                        <p>${interpretation.description}</p>
+                    </div>
+
+                    ${highRiskItems.length > 0 ? `
+                        <div class="alert-box">
+                            <div class="alert-title">⚠️ Áreas de Preocupación Clínica Identificadas</div>
+                            <ul style="margin: 10px 0 0 20px;">
+                                ${highRiskItems.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <h2>Información de la Escala</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h3>Estructura</h3>
+                            <p>La B-WISE evalúa tres componentes principales del ajuste psicosocial relacionado con el peso: 
+                            imagen corporal, funcionamiento social y control del peso.</p>
+                        </div>
+                        <div class="info-item">
+                            <h3>Propiedades Psicométricas</h3>
+                            <p>Consistencia interna: α = 0.79<br>
+                            Fiabilidad test-retest: r = 0.81<br>
+                            Validez discriminante demostrada entre grupos clínicos</p>
+                        </div>
+                    </div>
+
+                    <h2>Respuestas del Paciente</h2>
+                    <table class="response-table">
+                        <thead>
+                            <tr>
+                                <th>Ítem</th>
+                                <th>Respuesta</th>
+                                <th>Puntuación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${generateResponseTable()}
+                        </tbody>
+                    </table>
+
+                    <div class="clinical-section">
+                        <h3>Consideraciones para el Seguimiento</h3>
+                        ${generateClinicalRecommendations(totalScore)}
+                    </div>
+
+                    <div class="footer">
+                        <p>Escala B-WISE (Body Weight, Image and Self-Esteem Evaluation Scale)<br>
+                        Desarrollada por Awad & Voruganti (2004)<br>
+                        Este informe es para uso clínico profesional exclusivamente</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function generateResponseTable() {
+            const items = [
+                'He estado disgustado/a por mi peso actual',
+                'Me he sentido activo/a y con energía',
+                'He salido a divertirme más a menudo',
+                'He sido incapaz de controlar mi apetito y mis ansias de comer',
+                'Me ha disgustado mi aspecto',
+                'He estado tímido/a en compañía de otros por culpa de mi peso',
+                'Me he fijado en mi apariencia e imagen corporal durante el día',
+                'He evitado a mis amigos y familiares porque no estoy en forma',
+                'Sé por qué he ganado peso y sé cómo perderlo',
+                'Creo que el exceso de peso no es bueno para mi salud general',
+                'He tomado medidas para controlar mi peso',
+                'En general, me he sentido bien conmigo mismo/a'
+            ];
+
+            const responseLabels = {
+                1: 'Nunca',
+                2: 'A veces',
+                3: 'Siempre'
+            };
+
+            let html = '';
+            for (let i = 1; i <= totalQuestions; i++) {
+                const score = responses[i] || 0;
+                let responseText = '';
+                
+                if (inverseItems.includes(i)) {
+                    responseText = score === 3 ? 'Nunca' : score === 2 ? 'A veces' : score === 1 ? 'Siempre' : '-';
+                } else {
+                    responseText = responseLabels[score] || '-';
+                }
+                
+                html += `
+                    <tr>
+                        <td>${i}. ${items[i-1]}</td>
+                        <td>${responseText}</td>
+                        <td style="text-align: center;">${score}</td>
+                    </tr>
+                `;
+            }
+            return html;
+        }
+
+        function generateClinicalRecommendations(score) {
+            if (score < 22) {
+                return `
+                    <p><strong>Recomendaciones prioritarias:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Evaluar urgentemente la relación entre cambio de peso y adherencia al tratamiento</li>
+                        <li>Considerar ajuste de medicación si el aumento de peso es significativo</li>
+                        <li>Implementar programa estructurado de manejo del peso</li>
+                        <li>Derivación a nutricionista con experiencia en salud mental</li>
+                        <li>Intervención psicoterapéutica centrada en imagen corporal</li>
+                        <li>Seguimiento quincenal para monitorear evolución</li>
+                    </ul>
+                `;
+            } else if (score < 28) {
+                return `
+                    <p><strong>Recomendaciones:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Monitorear periódicamente el ajuste psicosocial</li>
+                        <li>Proporcionar psicoeducación sobre manejo saludable del peso</li>
+                        <li>Reforzar estrategias de afrontamiento adaptativas</li>
+                        <li>Considerar grupos de apoyo si están disponibles</li>
+                        <li>Reevaluar en 4-6 semanas</li>
+                    </ul>
+                `;
+            } else {
+                return `
+                    <p><strong>Mantenimiento:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Continuar monitoreo regular</li>
+                        <li>Reforzar las estrategias actuales que están funcionando</li>
+                        <li>Mantener comunicación abierta sobre preocupaciones del peso</li>
+                        <li>Reevaluar si hay cambios significativos en medicación o peso</li>
+                    </ul>
+                `;
+            }
+        }
+
+        function captureResults() {
+            // Función simplificada para capturar resultados
+            alert('La función de captura de imagen depende del dispositivo. Por favor, use la función de captura de pantalla de su dispositivo o exporte a PDF.');
+        }
+
+        function newEvaluation() {
+            currentCard = 0;
+            responses = {};
+            showCard(0);
+            updateProgress();
+            updateBackButton();
+        }
+
+        // Inicialización
+        updateBackButton();
+    </script>
+</body>
+</html>

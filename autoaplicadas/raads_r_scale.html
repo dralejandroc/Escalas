@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test RAADS-R - Escala Diagnóstica de Autismo en Adultos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h1, .card h2 {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .card h3 {
+            color: #29A98C;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+            color: #112F33;
+        }
+
+        .option:hover {
+            border-color: #29A98C;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(41, 169, 140, 0.15);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #29A98C, #1a7a66);
+            border-color: #29A98C;
+            color: white;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: rgba(41, 169, 140, 0.1);
+            border-left: 4px solid #29A98C;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            color: #112F33;
+            line-height: 1.6;
+        }
+
+        .warning {
+            background: rgba(236, 115, 103, 0.1);
+            border-left: 4px solid #EC7367;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #112F33;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn.visible {
+            display: block;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 25px auto 0;
+            min-width: 200px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(41, 169, 140, 0.3);
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .result-item {
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid #29A98C;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #112F33;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #29A98C;
+        }
+
+        .interpretation {
+            background: rgba(41, 169, 140, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 4px solid #29A98C;
+        }
+
+        .interpretation h4 {
+            color: #29A98C;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .interpretation p {
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 15px;
+        }
+
+        .alert-high {
+            background: rgba(245, 101, 101, 0.1);
+            border-left: 4px solid #f56565;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .alert-high h5 {
+            color: #742a2a;
+            margin-bottom: 10px;
+        }
+
+        /* Colores de gravedad para interpretación */
+        .very-high-risk {
+            color: #9f1239 !important;
+            background: linear-gradient(135deg, #fecaca, #fee2e2);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .high-risk {
+            color: #dc2626 !important;
+            background: linear-gradient(135deg, #fed7d7, #fef2f2);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .moderate-high-risk {
+            color: #ea580c !important;
+            background: linear-gradient(135deg, #fed7aa, #fff7ed);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #f97316;
+        }
+
+        .moderate-risk {
+            color: #d97706 !important;
+            background: linear-gradient(135deg, #fde68a, #fffbeb);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .low-risk {
+            color: #059669 !important;
+            background: linear-gradient(135deg, #a7f3d0, #ecfdf5);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        /* Colores para subescalas */
+        .high-subscale {
+            color: #dc2626;
+            font-weight: bold;
+            background: #fecaca;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .moderate-subscale {
+            color: #ea580c;
+            font-weight: bold;
+            background: #fed7aa;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .normal-subscale {
+            color: #059669;
+            font-weight: bold;
+            background: #a7f3d0;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Ítems de alto riesgo */
+        .risk-item {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .very-high-item {
+            background: #fecaca;
+            border-left-color: #dc2626;
+            color: #7f1d1d;
+        }
+
+        .high-item {
+            background: #fed7aa;
+            border-left-color: #ea580c;
+            color: #9a3412;
+        }
+
+        .high-score {
+            font-weight: bold;
+            color: #dc2626;
+            background: #fecaca;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Alertas específicas por tipo */
+        .sensory-alert {
+            border-left-color: #7c3aed !important;
+            background: linear-gradient(135deg, #ddd6fe, #f5f3ff) !important;
+        }
+
+        .sensory-alert h5 {
+            color: #5b21b6 !important;
+        }
+
+        .social-alert {
+            border-left-color: #dc2626 !important;
+            background: linear-gradient(135deg, #fecaca, #fef2f2) !important;
+        }
+
+        .social-alert h5 {
+            color: #991b1b !important;
+        }
+
+        .language-alert {
+            border-left-color: #0891b2 !important;
+            background: linear-gradient(135deg, #a5f3fc, #f0fdff) !important;
+        }
+
+        .language-alert h5 {
+            color: #0e7490 !important;
+        }
+
+        .interests-alert {
+            border-left-color: #059669 !important;
+            background: linear-gradient(135deg, #a7f3d0, #ecfdf5) !important;
+        }
+
+        .interests-alert h5 {
+            color: #047857 !important;
+        }
+
+        .subscales-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .subscale-item {
+            background: rgba(248, 249, 250, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .subscale-name {
+            font-size: 0.9rem;
+            color: #112F33;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .subscale-score {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #29A98C;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+                padding: 0 10px;
+            }
+
+            .card {
+                padding: 20px;
+                margin-bottom: 10px;
+            }
+
+            .card h1 {
+                font-size: 1.8rem;
+            }
+
+            .card h2 {
+                font-size: 1.5rem;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .option {
+                padding: 15px;
+            }
+
+            .subscales-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Card 0: Bienvenida -->
+        <div class="card active" id="card-0">
+            <h1>Test RAADS-R</h1>
+            <h3>Escala Diagnóstica Ritvo de Autismo y Asperger - Revisada</h3>
+            
+            <div class="instructions">
+                <strong>Instrucciones Importantes:</strong><br><br>
+                Este cuestionario está diseñado para evaluar características del espectro autista en adultos mayores de 16 años. Contiene 80 preguntas que deben responderse con honestidad y reflexión sobre sus experiencias de vida.
+                <br><br>
+                <strong>Para cada afirmación, elija la opción que mejor describa su experiencia:</strong>
+                <br>
+                • <strong>Verdadero ahora y cuando era joven:</strong> La característica ha estado presente tanto en su niñez/adolescencia como actualmente<br>
+                • <strong>Verdadero solo ahora:</strong> La característica solo está presente actualmente<br>
+                • <strong>Verdadero solo cuando era menor de 16 años:</strong> Solo estaba presente en su infancia/adolescencia<br>
+                • <strong>Nunca verdadero:</strong> Esta característica nunca ha estado presente
+            </div>
+
+            <div class="warning">
+                <strong>Importante:</strong> Este es un instrumento de apoyo clínico que debe ser administrado por un profesional de salud mental calificado. No constituye un diagnóstico por sí mismo, sino una herramienta de evaluación complementaria en el proceso diagnóstico del Trastorno del Espectro Autista en adultos.
+            </div>
+
+            <button class="btn-primary" onclick="nextCard()">Comenzar Evaluación</button>
+        </div>
+
+        <!-- Cards 1-80: Preguntas -->
+        <div class="card" id="card-1">
+            <div class="question-number">Pregunta 1 de 80</div>
+            <div class="question-text">Soy una persona comprensiva/empática.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(1, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(1, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(1, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(1, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-2">
+            <div class="question-number">Pregunta 2 de 80</div>
+            <div class="question-text">A menudo uso palabras y frases de películas y televisión en conversaciones.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(2, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(2, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(2, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(2, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-3">
+            <div class="question-number">Pregunta 3 de 80</div>
+            <div class="question-text">A menudo me sorprende cuando otros me dicen que he sido grosero/a.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(3, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(3, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(3, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(3, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-4">
+            <div class="question-number">Pregunta 4 de 80</div>
+            <div class="question-text">A veces hablo muy alto o muy bajo, y no me doy cuenta.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(4, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(4, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(4, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(4, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-5">
+            <div class="question-number">Pregunta 5 de 80</div>
+            <div class="question-text">A menudo no sé cómo actuar en situaciones sociales.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(5, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(5, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(5, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(5, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-6">
+            <div class="question-number">Pregunta 6 de 80</div>
+            <div class="question-text">Puedo "ponerme en el lugar de otras personas".</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(6, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(6, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(6, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(6, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-7">
+            <div class="question-number">Pregunta 7 de 80</div>
+            <div class="question-text">Tengo dificultades para entender qué significan algunas frases, como "eres la niña de mis ojos".</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(7, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(7, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(7, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(7, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-8">
+            <div class="question-number">Pregunta 8 de 80</div>
+            <div class="question-text">Solo me gusta hablar con personas que comparten mis intereses especiales.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(8, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(8, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(8, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(8, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-9">
+            <div class="question-number">Pregunta 9 de 80</div>
+            <div class="question-text">Me enfoco en los detalles en lugar de la idea general.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(9, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(9, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(9, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(9, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-10">
+            <div class="question-number">Pregunta 10 de 80</div>
+            <div class="question-text">Siempre noto cómo se siente la comida en mi boca. Esto es más importante para mí que su sabor.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(10, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(10, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(10, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(10, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-11">
+            <div class="question-number">Pregunta 11 de 80</div>
+            <div class="question-text">Echo de menos a mis mejores amigos o familia cuando estamos separados por mucho tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(11, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(11, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(11, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(11, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-12">
+            <div class="question-number">Pregunta 12 de 80</div>
+            <div class="question-text">A veces tengo que cubrirme los oídos para bloquear ruidos dolorosos (como aspiradoras o personas hablando demasiado o muy alto).</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(12, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(12, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(12, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(12, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-13">
+            <div class="question-number">Pregunta 13 de 80</div>
+            <div class="question-text">Me siento cómodo/a con las reglas sociales no escritas que gobiernan las conversaciones.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(13, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(13, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(13, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(13, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-14">
+            <div class="question-number">Pregunta 14 de 80</div>
+            <div class="question-text">Tengo una gran habilidad para descifrar lo que alguien está pensando o sintiendo al mirar su rostro.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(14, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(14, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(14, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(14, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-15">
+            <div class="question-number">Pregunta 15 de 80</div>
+            <div class="question-text">Las mismas cosas que me gustaban cuando era niño/a me siguen gustando ahora.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(15, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(15, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(15, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(15, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-16">
+            <div class="question-number">Pregunta 16 de 80</div>
+            <div class="question-text">Tengo pocos intereses intensos.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(16, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(16, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(16, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(16, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-17">
+            <div class="question-number">Pregunta 17 de 80</div>
+            <div class="question-text">La gente me dice que sigo hablando de lo mismo una y otra vez.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(17, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(17, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(17, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(17, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-18">
+            <div class="question-number">Pregunta 18 de 80</div>
+            <div class="question-text">Entiendo cuando los amigos necesitan ser consolados.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(18, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(18, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(18, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(18, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-19">
+            <div class="question-number">Pregunta 19 de 80</div>
+            <div class="question-text">Me frustra mucho cuando algo que quiero hacer se ve interrumpido por algo inesperado.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(19, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(19, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(19, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(19, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-20">
+            <div class="question-number">Pregunta 20 de 80</div>
+            <div class="question-text">Puede ser muy intimidante para mí hablar con más de una persona al mismo tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(20, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(20, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(20, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(20, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-21">
+            <div class="question-number">Pregunta 21 de 80</div>
+            <div class="question-text">Tengo más amigos de mi edad de lo que puedo manejar.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(21, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(21, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(21, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(21, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-22">
+            <div class="question-number">Pregunta 22 de 80</div>
+            <div class="question-text">Me han dicho que hablo de manera extraña (por ejemplo, mecánica, infantil, monótona o aguda).</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(22, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(22, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(22, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(22, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-23">
+            <div class="question-number">Pregunta 23 de 80</div>
+            <div class="question-text">Conocer gente nueva es usualmente fácil para mí.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(23, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(23, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(23, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(23, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-24">
+            <div class="question-number">Pregunta 24 de 80</div>
+            <div class="question-text">Me asusta la idea de citas románticas.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(24, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(24, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(24, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(24, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-25">
+            <div class="question-number">Pregunta 25 de 80</div>
+            <div class="question-text">A veces ofendo a las personas diciendo lo que pienso, incluso cuando no pretendo hacerlo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(25, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(25, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(25, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(25, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-26">
+            <div class="question-number">Pregunta 26 de 80</div>
+            <div class="question-text">Me gusta tener una conversación con varias personas, por ejemplo en una mesa de cena, en la escuela o en el trabajo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(26, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(26, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(26, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(26, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-27">
+            <div class="question-number">Pregunta 27 de 80</div>
+            <div class="question-text">Cuando hablo con alguien, tengo dificultades para saber cuándo es mi turno para hablar o escuchar.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(27, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(27, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(27, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(27, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-28">
+            <div class="question-number">Pregunta 28 de 80</div>
+            <div class="question-text">Soy una persona muy torpe.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(28, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(28, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(28, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(28, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-29">
+            <div class="question-number">Pregunta 29 de 80</div>
+            <div class="question-text">Es muy difícil para mí hacer nuevos amigos.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(29, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(29, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(29, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(29, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-30">
+            <div class="question-number">Pregunta 30 de 80</div>
+            <div class="question-text">Puedo "leer entre líneas" cuando alguien me está hablando.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(30, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(30, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(30, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(30, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-31">
+            <div class="question-number">Pregunta 31 de 80</div>
+            <div class="question-text">A veces tengo que cubrir mis ojos debido a la sensibilidad a la luz.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(31, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(31, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(31, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(31, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-32">
+            <div class="question-number">Pregunta 32 de 80</div>
+            <div class="question-text">Me gustan las actividades y juegos más por la oportunidad de estar con amigos que por la actividad misma.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(32, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(32, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(32, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(32, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-33">
+            <div class="question-number">Pregunta 33 de 80</div>
+            <div class="question-text">Hablo con un ritmo normal.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(33, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(33, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(33, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(33, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-34">
+            <div class="question-number">Pregunta 34 de 80</div>
+            <div class="question-text">Las palabras de las canciones son muy importantes para mí.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(34, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(34, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(34, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(34, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-35">
+            <div class="question-number">Pregunta 35 de 80</div>
+            <div class="question-text">Tengo un difícil tiempo coordinando mi movimiento y mirada con lo que otros están haciendo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(35, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(35, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(35, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(35, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-36">
+            <div class="question-number">Pregunta 36 de 80</div>
+            <div class="question-text">No entiendo cómo funciona la reciprocidad en las conversaciones.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(36, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(36, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(36, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(36, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-37">
+            <div class="question-number">Pregunta 37 de 80</div>
+            <div class="question-text">Soy una persona comprensiva.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(37, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(37, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(37, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(37, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-38">
+            <div class="question-number">Pregunta 38 de 80</div>
+            <div class="question-text">Tengo dificultades para seguir las reglas que no tienen sentido para mí.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(38, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(38, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(38, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(38, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-39">
+            <div class="question-number">Pregunta 39 de 80</div>
+            <div class="question-text">Las cosas que a otros les parecen normales son muy abrumadoras para mí.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(39, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(39, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(39, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(39, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-40">
+            <div class="question-number">Pregunta 40 de 80</div>
+            <div class="question-text">Me gustan las rutinas diarias familiares y encuentro los cambios inesperados difíciles de manejar.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(40, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(40, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(40, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(40, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-41">
+            <div class="question-number">Pregunta 41 de 80</div>
+            <div class="question-text">Tengo una voz inusual (por ejemplo, plana, monótona, infantil o aguda).</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(41, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(41, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(41, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(41, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-42">
+            <div class="question-number">Pregunta 42 de 80</div>
+            <div class="question-text">Puedo ver pequeños detalles que otros no notan.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(42, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(42, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(42, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(42, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-43">
+            <div class="question-number">Pregunta 43 de 80</div>
+            <div class="question-text">Me gusta hablar de las cosas con mis amigos.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(43, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(43, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(43, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(43, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-44">
+            <div class="question-number">Pregunta 44 de 80</div>
+            <div class="question-text">Ciertas texturas me molestan mucho.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(44, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(44, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(44, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(44, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-45">
+            <div class="question-number">Pregunta 45 de 80</div>
+            <div class="question-text">Tengo dificultades para distinguir entre diferentes emociones.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(45, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(45, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(45, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(45, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-46">
+            <div class="question-number">Pregunta 46 de 80</div>
+            <div class="question-text">Tengo un interés especial que ocupa mucho de mi tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(46, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(46, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(46, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(46, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-47">
+            <div class="question-number">Pregunta 47 de 80</div>
+            <div class="question-text">Me siento muy cómodo/a en citas o en situaciones sociales con otros.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(47, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(47, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(47, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(47, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-48">
+            <div class="question-number">Pregunta 48 de 80</div>
+            <div class="question-text">Trato de ser lo más útil posible cuando otras personas me cuentan sus problemas personales.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(48, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(48, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(48, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(48, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-49">
+            <div class="question-number">Pregunta 49 de 80</div>
+            <div class="question-text">Tengo dificultades para saber cuándo alguien está bromeando conmigo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(49, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(49, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(49, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(49, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-50">
+            <div class="question-number">Pregunta 50 de 80</div>
+            <div class="question-text">Ciertos olores que no molestan a otros pueden ser abrumadores para mí.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(50, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(50, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(50, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(50, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-51">
+            <div class="question-number">Pregunta 51 de 80</div>
+            <div class="question-text">No me gusta que me toquen o me abracen.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(51, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(51, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(51, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(51, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-52">
+            <div class="question-number">Pregunta 52 de 80</div>
+            <div class="question-text">Tengo que hacer cosas una y otra vez hasta que se sienten bien.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(52, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(52, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(52, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(52, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-53">
+            <div class="question-number">Pregunta 53 de 80</div>
+            <div class="question-text">Soy considerado una persona compasiva.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(53, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(53, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(53, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(53, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-54">
+            <div class="question-number">Pregunta 54 de 80</div>
+            <div class="question-text">Me molestan los ruidos que no parecen molestar a nadie más.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(54, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(54, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(54, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(54, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-55">
+            <div class="question-number">Pregunta 55 de 80</div>
+            <div class="question-text">Tengo dificultades para aceptar críticas sobre mi área de interés especial.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(55, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(55, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(55, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(55, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-56">
+            <div class="question-number">Pregunta 56 de 80</div>
+            <div class="question-text">Tengo un excelente sentido del tacto.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(56, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(56, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(56, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(56, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-57">
+            <div class="question-number">Pregunta 57 de 80</div>
+            <div class="question-text">Me resulta difícil determinar si alguien está interesado o aburrido con lo que estoy diciendo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(57, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(57, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(57, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(57, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-58">
+            <div class="question-number">Pregunta 58 de 80</div>
+            <div class="question-text">Puedo charlar y hacer conversación ligera con la gente.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(58, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(58, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(58, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(58, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-59">
+            <div class="question-number">Pregunta 59 de 80</div>
+            <div class="question-text">Algunas personas me dicen que soy demasiado sensible.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(59, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(59, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(59, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(59, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-60">
+            <div class="question-number">Pregunta 60 de 80</div>
+            <div class="question-text">Tengo problemas para descifrar lo que significa el lenguaje corporal de las personas.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(60, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(60, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(60, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(60, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-61">
+            <div class="question-number">Pregunta 61 de 80</div>
+            <div class="question-text">Tengo la misma expresión facial la mayor parte del tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(61, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(61, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(61, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(61, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-62">
+            <div class="question-number">Pregunta 62 de 80</div>
+            <div class="question-text">Generalmente hablo en un tono normal.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(62, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(62, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(62, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(62, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-63">
+            <div class="question-number">Pregunta 63 de 80</div>
+            <div class="question-text">Recibo señales mixtas de las personas porque no entiendo el lenguaje corporal.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(63, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(63, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(63, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(63, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-64">
+            <div class="question-number">Pregunta 64 de 80</div>
+            <div class="question-text">Me ha resultado más fácil relacionarme con niños pequeños que con personas de mi propia edad.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(64, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(64, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(64, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(64, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+        <div class="card" id="card-65">
+            <div class="question-number">Pregunta 65 de 80</div>
+            <div class="question-text">Me gusta que las cosas sean exactamente iguales día tras día e incluso pequeños cambios en mis rutinas me molestan.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(65, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(65, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(65, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(65, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-66">
+            <div class="question-number">Pregunta 66 de 80</div>
+            <div class="question-text">Prefiero hacer las cosas de la misma manera una y otra vez.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(66, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(66, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(66, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(66, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-67">
+            <div class="question-number">Pregunta 67 de 80</div>
+            <div class="question-text">Tengo dificultades para iniciar conversaciones con otras personas.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(67, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(67, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(67, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(67, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-68">
+            <div class="question-number">Pregunta 68 de 80</div>
+            <div class="question-text">Puedo darme cuenta cuando alguien dice una cosa pero quiere decir otra.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(68, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(68, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(68, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(68, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-69">
+            <div class="question-number">Pregunta 69 de 80</div>
+            <div class="question-text">Me molesto mucho cuando algo interrumpe mi rutina diaria.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(69, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(69, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(69, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(69, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-70">
+            <div class="question-number">Pregunta 70 de 80</div>
+            <div class="question-text">No entiendo cómo una persona puede estar interesada en mí románticamente.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(70, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(70, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(70, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(70, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-71">
+            <div class="question-number">Pregunta 71 de 80</div>
+            <div class="question-text">Tengo una o dos emociones que parecen más fuertes que el resto.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(71, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(71, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(71, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(71, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-72">
+            <div class="question-number">Pregunta 72 de 80</div>
+            <div class="question-text">Disfruto pasar tiempo comiendo y hablando con mi familia y amigos.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(72, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(72, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(72, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(72, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-73">
+            <div class="question-number">Pregunta 73 de 80</div>
+            <div class="question-text">Las personas cercanas a mí a menudo se quejan de que no las escucho.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(73, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(73, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(73, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(73, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-74">
+            <div class="question-number">Pregunta 74 de 80</div>
+            <div class="question-text">Cuando estoy interesado en algo, puedo hablar de ello por mucho tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(74, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(74, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(74, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(74, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-75">
+            <div class="question-number">Pregunta 75 de 80</div>
+            <div class="question-text">Soy muy directo cuando hablo con las personas.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(75, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(75, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(75, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(75, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-76">
+            <div class="question-number">Pregunta 76 de 80</div>
+            <div class="question-text">Tengo dificultades con la coordinación.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(76, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(76, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(76, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(76, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-77">
+            <div class="question-number">Pregunta 77 de 80</div>
+            <div class="question-text">Me gusta tener amigos cercanos.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(77, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(77, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(77, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(77, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-78">
+            <div class="question-number">Pregunta 78 de 80</div>
+            <div class="question-text">Cuando estoy molesto, la gente no puede saber por qué.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(78, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(78, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(78, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(78, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-79">
+            <div class="question-number">Pregunta 79 de 80</div>
+            <div class="question-text">Es difícil para mí comenzar y mantener una conversación.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(79, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(79, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(79, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(79, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+        <div class="card" id="card-80">
+            <div class="question-number">Pregunta 80 de 80</div>
+            <div class="question-text">A veces me fascino tanto con algo que pierdo la noción del tiempo.</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(80, 0)">Verdadero ahora y cuando era joven</div>
+                <div class="option" onclick="selectOption(80, 1)">Verdadero solo ahora</div>
+                <div class="option" onclick="selectOption(80, 2)">Verdadero solo cuando era menor de 16 años</div>
+                <div class="option" onclick="selectOption(80, 3)">Nunca verdadero</div>
+            </div>
+        </div>
+
+    <!-- Card Final -->
+        <div class="card" id="card-final">
+            <h2>Evaluación Completada</h2>
+            <div class="instructions">
+                <strong>¡Muchas gracias por completar el cuestionario!</strong><br><br>
+                La evaluación ha sido completada exitosamente. Los resultados están listos para ser revisados por el profesional de salud mental.
+                <br><br>
+                Por favor, entregue el dispositivo a su médico o profesional para la revisión e interpretación de los resultados.
+            </div>
+            <button class="btn-primary" onclick="showResults()">Revisar Resultados (Profesional)</button>
+        </div>
+
+        <!-- Card Results -->
+        <div class="card" id="card-results">
+            <h2>Resultados RAADS-R</h2>
+            <div class="warning">
+                <strong>Solo para revisión profesional:</strong> Estos resultados deben ser interpretados exclusivamente por un profesional de salud mental calificado como parte de una evaluación clínica integral.
+            </div>
+
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-label">Puntuación Total</div>
+                    <div class="result-value" id="total-score">0</div>
+                </div>
+            </div>
+
+            <div class="subscales-grid">
+                <div class="subscale-item">
+                    <div class="subscale-name">Lenguaje</div>
+                    <div class="subscale-score" id="language-score">0</div>
+                </div>
+                <div class="subscale-item">
+                    <div class="subscale-name">Relacionamiento Social</div>
+                    <div class="subscale-score" id="social-score">0</div>
+                </div>
+                <div class="subscale-item">
+                    <div class="subscale-name">Sensorio-Motor</div>
+                    <div class="subscale-score" id="sensory-score">0</div>
+                </div>
+                <div class="subscale-item">
+                    <div class="subscale-name">Intereses Circunscritos</div>
+                    <div class="subscale-score" id="interests-score">0</div>
+                </div>
+            </div>
+
+            <div class="interpretation" id="interpretation-section">
+                <!-- Los resultados se generarán dinámicamente -->
+            </div>
+
+            <div id="alerts-section">
+                <!-- Las alertas se generarán dinámicamente -->
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="exportToPDF()">Exportar PDF</button>
+                <button class="btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+            </div>
+        </div>
+
+        <!-- Botón Regresar -->
+        <button class="back-btn" id="back-btn" onclick="previousCard()">← Regresar</button>
+
+        <!-- Barra de Progreso -->
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <script>
+        let currentCard = 0;
+        let responses = {};
+        const totalQuestions = 80;
+
+        // Preguntas normativas (puntuación inversa) - 17 preguntas
+        const normativeQuestions = [1, 6, 11, 18, 23, 26, 33, 37, 43, 47, 48, 53, 58, 62, 68, 72, 77];
+
+        // Distribución de preguntas por subescala basada en la investigación RAADS-R
+        const subscales = {
+            language: [2, 7, 22, 33, 58, 62, 68], // 7 preguntas - Lenguaje
+            social: [1, 3, 5, 6, 8, 11, 13, 14, 18, 20, 21, 23, 24, 25, 26, 27, 29, 30, 32, 36, 37, 43, 47, 48, 49, 53, 57, 60, 63, 64, 67, 70, 72, 73, 75, 77, 78, 79], // 38+ preguntas - Social
+            sensory: [4, 10, 12, 28, 31, 35, 39, 41, 44, 45, 50, 51, 52, 54, 56, 59, 61, 76], // 18+ preguntas - Sensorio-motor
+            interests: [9, 15, 16, 17, 19, 34, 38, 40, 42, 46, 55, 65, 66, 69, 71, 74, 80] // 17 preguntas - Intereses circunscritos
+        };
+
+        function nextCard() {
+            if (currentCard < totalQuestions + 1) {
+                document.getElementById(`card-${currentCard}`).classList.remove('active');
+                currentCard++;
+                
+                if (currentCard <= totalQuestions) {
+                    document.getElementById(`card-${currentCard}`).classList.add('active');
+                    updateProgress();
+                    updateBackButton();
+                } else {
+                    document.getElementById('card-final').classList.add('active');
+                    updateBackButton();
+                }
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                if (currentCard <= totalQuestions) {
+                    document.getElementById(`card-${currentCard}`).classList.remove('active');
+                } else {
+                    document.getElementById('card-final').classList.remove('active');
+                }
+                
+                currentCard--;
+                
+                if (currentCard === 0) {
+                    document.getElementById('card-0').classList.add('active');
+                } else {
+                    document.getElementById(`card-${currentCard}`).classList.add('active');
+                }
+                
+                updateProgress();
+                updateBackButton();
+            }
+        }
+
+        function selectOption(questionNumber, optionValue) {
+            responses[questionNumber] = optionValue;
+            
+            // Update visual selection
+            const card = document.getElementById(`card-${questionNumber}`);
+            const options = card.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                option.classList.toggle('selected', index === optionValue);
+            });
+
+            // Auto-advance after selection
+            setTimeout(() => {
+                nextCard();
+            }, 150);
+        }
+
+        function updateProgress() {
+            const progress = (currentCard / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function updateBackButton() {
+            const backBtn = document.getElementById('back-btn');
+            if (currentCard > 0 && currentCard !== 'results') {
+                backBtn.classList.add('visible');
+            } else {
+                backBtn.classList.remove('visible');
+            }
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            let languageScore = 0;
+            let socialScore = 0;
+            let sensoryScore = 0;
+            let interestsScore = 0;
+
+            for (let question = 1; question <= totalQuestions; question++) {
+                if (responses[question] !== undefined) {
+                    let score;
+                    
+                    // Verificar si es pregunta normativa (puntuación inversa)
+                    if (normativeQuestions.includes(question)) {
+                        score = 3 - responses[question]; // Puntuación inversa
+                    } else {
+                        score = responses[question]; // Puntuación normal
+                    }
+
+                    totalScore += score;
+
+                    // Sumar a la subescala correspondiente
+                    if (subscales.language.includes(question)) {
+                        languageScore += score;
+                    } else if (subscales.social.includes(question)) {
+                        socialScore += score;
+                    } else if (subscales.sensory.includes(question)) {
+                        sensoryScore += score;
+                    } else if (subscales.interests.includes(question)) {
+                        interestsScore += score;
+                    }
+                }
+            }
+
+            return {
+                total: totalScore,
+                language: languageScore,
+                social: socialScore,
+                sensory: sensoryScore,
+                interests: interestsScore
+            };
+        }
+
+        function getInterpretation(scores) {
+            const { total, language, social, sensory, interests } = scores;
+            
+            let interpretation = '';
+            let riskLevel = '';
+            let colorClass = '';
+
+            if (total >= 65) {
+                if (total >= 160) {
+                    riskLevel = 'Muy Alto';
+                    colorClass = 'very-high-risk';
+                    interpretation = `<h4 class="${colorClass}">Puntuación Total: ${total}/240 - Indicadores Muy Significativos</h4>
+                    <p><strong>Interpretación Clínica:</strong> La puntuación indica presencia muy significativa de características del espectro autista. Los resultados son consistentes con criterios diagnósticos para TEA según los estándares de investigación del RAADS-R.</p>
+                    <p><strong>Áreas de Evaluación Adicional:</strong> Se recomienda exploración detallada de historia del desarrollo, observación clínica estructurada y evaluación de funcionamiento adaptativo.</p>`;
+                } else if (total >= 130) {
+                    riskLevel = 'Alto';
+                    colorClass = 'high-risk';
+                    interpretation = `<h4 class="${colorClass}">Puntuación Total: ${total}/240 - Indicadores Significativos</h4>
+                    <p><strong>Interpretación Clínica:</strong> Puntuación típica en personas con diagnóstico de TEA. Los resultados sugieren presencia significativa de características del espectro autista.</p>
+                    <p><strong>Consideraciones Clínicas:</strong> Evaluar impacto funcional y considerar diagnóstico diferencial con otras condiciones del neurodesarrollo.</p>`;
+                } else if (total >= 90) {
+                    riskLevel = 'Moderado-Alto';
+                    colorClass = 'moderate-high-risk';
+                    interpretation = `<h4 class="${colorClass}">Puntuación Total: ${total}/240 - Indicadores Moderados-Altos</h4>
+                    <p><strong>Interpretación Clínica:</strong> Presencia notable de características del espectro autista. Requiere evaluación clínica integral para determinar significancia diagnóstica.</p>
+                    <p><strong>Nota Importante:</strong> Individuos neurotípicos ocasionalmente pueden obtener puntuaciones en este rango.</p>`;
+                } else {
+                    riskLevel = 'Moderado';
+                    colorClass = 'moderate-risk';
+                    interpretation = `<h4 class="${colorClass}">Puntuación Total: ${total}/240 - Indicadores Moderados</h4>
+                    <p><strong>Interpretación Clínica:</strong> Puntuación por encima del umbral de corte (≥65). Presencia de características del espectro autista que requieren evaluación clínica adicional.</p>`;
+                }
+            } else {
+                riskLevel = 'Bajo';
+                colorClass = 'low-risk';
+                interpretation = `<h4 class="${colorClass}">Puntuación Total: ${total}/240 - Por Debajo del Umbral</h4>
+                <p><strong>Interpretación Clínica:</strong> Puntuación por debajo del umbral de corte (<65). Los resultados no sugieren presencia significativa de características del espectro autista según los criterios del RAADS-R.</p>
+                <p><strong>Consideración Clínica:</strong> Una puntuación baja no descarta completamente TEA, especialmente en casos de presentación sutil o enmascaramiento.</p>`;
+            }
+
+            // Análisis de subescalas con colores
+            let languageColor = language >= 14 ? 'high-subscale' : language >= 10 ? 'moderate-subscale' : 'normal-subscale';
+            let socialColor = social >= 60 ? 'high-subscale' : social >= 40 ? 'moderate-subscale' : 'normal-subscale';
+            let sensoryColor = sensory >= 30 ? 'high-subscale' : sensory >= 20 ? 'moderate-subscale' : 'normal-subscale';
+            let interestsColor = interests >= 25 ? 'high-subscale' : interests >= 15 ? 'moderate-subscale' : 'normal-subscale';
+
+            interpretation += `<h4>Análisis por Subescalas:</h4>
+            <p><strong>Lenguaje (<span class="${languageColor}">${language} pts</span>):</strong> Evaluación de comprensión literal, ecolalia y patrones comunicativos atípicos.</p>
+            <p><strong>Relacionamiento Social (<span class="${socialColor}">${social} pts</span>):</strong> Dificultades en reciprocidad social, comprensión de señales sociales y mantenimiento de relaciones.</p>
+            <p><strong>Sensorio-Motor (<span class="${sensoryColor}">${sensory} pts</span>):</strong> Sensibilidades sensoriales, coordinación motriz y procesamiento sensorial atípico.</p>
+            <p><strong>Intereses Circunscritos (<span class="${interestsColor}">${interests} pts</span>):</strong> Intensidad y restricción de intereses, resistencia al cambio y patrones repetitivos.</p>`;
+
+            return { interpretation, riskLevel, colorClass };
+        }
+        
+        function showResults() {
+            currentCard = 'results';
+            document.getElementById('card-final').classList.remove('active');
+            document.getElementById('card-results').classList.add('active');
+            
+            const scores = calculateScore();
+            const { interpretation, riskLevel } = getInterpretation(scores);
+            
+            // Actualizar puntuaciones
+            document.getElementById('total-score').textContent = scores.total;
+            document.getElementById('language-score').textContent = scores.language;
+            document.getElementById('social-score').textContent = scores.social;
+            document.getElementById('sensory-score').textContent = scores.sensory;
+            document.getElementById('interests-score').textContent = scores.interests;
+            
+            // Mostrar interpretación
+            document.getElementById('interpretation-section').innerHTML = interpretation;
+            
+            // Generar alertas para ítems de alto riesgo
+            generateAlerts(scores);
+            
+            // Ocultar botón de regresar en resultados
+            document.getElementById('back-btn').classList.remove('visible');
+        }
+
+        function generateAlerts(scores) {
+            const alertsSection = document.getElementById('alerts-section');
+            let alertsHTML = '';
+            
+            // Definir descripciones de ítems para referencia clínica
+            const itemDescriptions = {
+                1: "Capacidad empática y comprensiva",
+                2: "Uso de frases de películas/TV (ecolalia)",
+                3: "Sorpresa ante comentarios sobre rudeza",
+                4: "Volumen de voz inadecuado sin conciencia",
+                5: "Dificultades en situaciones sociales",
+                6: "Capacidad de perspectiva social",
+                7: "Comprensión de lenguaje figurado",
+                8: "Conversaciones limitadas a intereses especiales",
+                9: "Enfoque en detalles vs. idea general",
+                10: "Sensibilidad táctil alimentaria",
+                11: "Extrañar personas ausentes",
+                12: "Sensibilidad auditiva dolorosa",
+                13: "Comodidad con reglas sociales no escritas",
+                14: "Lectura de expresiones faciales",
+                15: "Continuidad de intereses desde la infancia",
+                16: "Pocos intereses intensos",
+                17: "Repetición temática en conversaciones",
+                18: "Reconocimiento de necesidad de consuelo",
+                19: "Frustración por interrupciones inesperadas",
+                20: "Intimidación en conversaciones grupales",
+                21: "Número de amistades manejables",
+                22: "Características vocales atípicas",
+                23: "Facilidad para conocer gente nueva",
+                24: "Miedo a citas románticas",
+                25: "Ofensas involuntarias por franqueza",
+                26: "Disfrute de conversaciones grupales",
+                27: "Turnos conversacionales",
+                28: "Coordinación motriz (torpeza)",
+                29: "Dificultad para hacer amigos",
+                30: "Lectura entre líneas",
+                31: "Sensibilidad a la luz",
+                32: "Preferencia social vs. actividad",
+                33: "Ritmo de habla normal",
+                34: "Importancia de letras de canciones",
+                35: "Coordinación motriz con otros",
+                36: "Reciprocidad conversacional",
+                37: "Personalidad comprensiva",
+                38: "Seguimiento de reglas sin sentido",
+                39: "Sobrecarga por estímulos normales",
+                40: "Preferencia por rutinas familiares",
+                41: "Características vocales inusuales",
+                42: "Percepción de detalles pequeños",
+                43: "Disfrute conversacional con amigos",
+                44: "Molestia por texturas específicas",
+                45: "Distinción entre emociones",
+                46: "Interés especial que consume tiempo",
+                47: "Comodidad en situaciones sociales/románticas",
+                48: "Ayuda con problemas personales ajenos",
+                49: "Detección de bromas",
+                50: "Sensibilidad olfativa abrumadora",
+                51: "Aversión al contacto físico",
+                52: "Compulsiones hasta sentirse bien",
+                53: "Percepción como persona compasiva",
+                54: "Molestia por ruidos que otros toleran",
+                55: "Dificultad con críticas a intereses especiales",
+                56: "Sensibilidad táctil excepcional",
+                57: "Detección de interés/aburrimiento ajeno",
+                58: "Habilidad para conversación ligera",
+                59: "Percepción como persona muy sensible",
+                60: "Interpretación de lenguaje corporal",
+                61: "Expresión facial constante",
+                62: "Tono de voz normal",
+                63: "Señales mixtas por incomprensión corporal",
+                64: "Relación más fácil con niños",
+                65: "Rigidez en rutinas diarias",
+                66: "Preferencia por repetición de métodos",
+                67: "Dificultad para iniciar conversaciones",
+                68: "Detección de significados implícitos",
+                69: "Molestia por interrupciones rutinarias",
+                70: "Incomprensión de interés romántico ajeno",
+                71: "Emociones dominantes específicas",
+                72: "Disfrute de comidas sociales",
+                73: "Quejas sobre falta de escucha",
+                74: "Habla prolongada sobre intereses",
+                75: "Comunicación muy directa",
+                76: "Dificultades de coordinación",
+                77: "Deseo de amistades cercanas",
+                78: "Expresión poco clara del malestar",
+                79: "Dificultad conversacional inicial y sostenida",
+                80: "Fascinación que hace perder noción del tiempo"
+            };
+            
+            // Verificar ítems de alto riesgo (≥66% del máximo = 2 puntos)
+            const highRiskItems = [];
+            
+            for (let question = 1; question <= totalQuestions; question++) {
+                if (responses[question] !== undefined) {
+                    let actualScore;
+                    if (normativeQuestions.includes(question)) {
+                        actualScore = 3 - responses[question];
+                    } else {
+                        actualScore = responses[question];
+                    }
+                    
+                    if (actualScore >= 2) {
+                        highRiskItems.push({
+                            number: question,
+                            score: actualScore,
+                            description: itemDescriptions[question]
+                        });
+                    }
+                }
+            }
+            
+            if (highRiskItems.length > 0) {
+                let itemsListHTML = '';
+                highRiskItems.forEach(item => {
+                    let scoreColor = item.score === 3 ? 'very-high-item' : 'high-item';
+                    itemsListHTML += `<div class="risk-item ${scoreColor}">
+                        <strong>Ítem ${item.number} (${item.score}/3 pts):</strong> ${item.description}
+                    </div>`;
+                });
+
+                alertsHTML = `
+                <div class="alert-high">
+                    <h5>🔍 Ítems de Atención Clínica</h5>
+                    <p>Se identificaron <strong>${highRiskItems.length} ítems</strong> con puntuaciones altas (≥2 puntos) que requieren exploración clínica adicional:</p>
+                    ${itemsListHTML}
+                    <p><strong>💡 Recomendación:</strong> Estos ítems pueden indicar áreas de mayor dificultad que beneficiarían de evaluación detallada e intervenciones específicas.</p>
+                </div>`;
+            }
+            
+            // Alertas específicas por subescala
+            if (scores.sensory >= 30) {
+                alertsHTML += `
+                <div class="alert-high sensory-alert">
+                    <h5>⚠️ Alerta: Perfil Sensorio-Motor Elevado</h5>
+                    <p>Puntuación sensorio-motor significativamente elevada (<span class="high-score">${scores.sensory} pts</span>). Considerar evaluación de terapia ocupacional para manejo de sensibilidades sensoriales.</p>
+                    <p><strong>Áreas de atención:</strong> Procesamiento sensorial, coordinación motriz, tolerancia a texturas/sonidos/luz.</p>
+                </div>`;
+            }
+            
+            if (scores.social >= 60) {
+                alertsHTML += `
+                <div class="alert-high social-alert">
+                    <h5>👥 Alerta: Desafíos Sociales Significativos</h5>
+                    <p>Puntuación de relacionamiento social muy elevada (<span class="high-score">${scores.social} pts</span>). Explorar impacto en funcionamiento diario y considerar intervenciones de habilidades sociales.</p>
+                    <p><strong>Áreas de atención:</strong> Reciprocidad social, comunicación no verbal, mantenimiento de relaciones.</p>
+                </div>`;
+            }
+
+            if (scores.language >= 14) {
+                alertsHTML += `
+                <div class="alert-high language-alert">
+                    <h5>💬 Alerta: Patrón Comunicativo Atípico</h5>
+                    <p>Puntuación de lenguaje elevada (<span class="high-score">${scores.language} pts</span>). Evaluar patrones de comunicación y comprensión pragmática.</p>
+                    <p><strong>Áreas de atención:</strong> Lenguaje literal, ecolalia, comprensión de modismos.</p>
+                </div>`;
+            }
+
+            if (scores.interests >= 25) {
+                alertsHTML += `
+                <div class="alert-high interests-alert">
+                    <h5>🎯 Alerta: Intereses Altamente Circunscritos</h5>
+                    <p>Puntuación de intereses circunscritos muy elevada (<span class="high-score">${scores.interests} pts</span>). Evaluar flexibilidad cognitiva y adaptabilidad.</p>
+                    <p><strong>Áreas de atención:</strong> Rigidez de rutinas, intensidad de intereses especiales, resistencia al cambio.</p>
+                </div>`;
+            }
+            
+            alertsSection.innerHTML = alertsHTML;
+        }
+
+        function exportToPDF() {
+            const scores = calculateScore();
+            const { interpretation } = getInterpretation(scores);
+            
+            const printContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Reporte RAADS-R</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        color: #333;
+                        line-height: 1.6;
+                    }
+                    .header {
+                        text-align: center;
+                        border-bottom: 3px solid #29A98C;
+                        padding-bottom: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .header h1 {
+                        color: #29A98C;
+                        margin: 0;
+                        font-size: 28px;
+                    }
+                    .header h2 {
+                        color: #112F33;
+                        margin: 10px 0 0 0;
+                        font-size: 18px;
+                        font-weight: normal;
+                    }
+                    .scores-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 20px;
+                        margin: 30px 0;
+                    }
+                    .score-item {
+                        background: #f8f9fa;
+                        padding: 15px;
+                        border-radius: 8px;
+                        border-left: 4px solid #29A98C;
+                    }
+                    .score-label {
+                        font-weight: bold;
+                        color: #112F33;
+                        margin-bottom: 5px;
+                    }
+                    .score-value {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #29A98C;
+                    }
+                    .interpretation {
+                        background: #f0f8f5;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border-left: 4px solid #29A98C;
+                        margin: 20px 0;
+                    }
+                    .interpretation h4 {
+                        color: #29A98C;
+                        margin-top: 0;
+                    }
+                    .footer {
+                        margin-top: 40px;
+                        padding-top: 20px;
+                        border-top: 1px solid #ddd;
+                        font-size: 12px;
+                        color: #666;
+                    }
+                    .alert {
+                        background: #ffeaea;
+                        border-left: 4px solid #f56565;
+                        padding: 15px;
+                        margin: 15px 0;
+                        border-radius: 8px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Test RAADS-R</h1>
+                    <h2>Escala Diagnóstica Ritvo de Autismo y Asperger - Revisada</h2>
+                    <p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>
+                </div>
+                
+                <div class="scores-grid">
+                    <div class="score-item">
+                        <div class="score-label">Puntuación Total</div>
+                        <div class="score-value">${scores.total}/240</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Lenguaje</div>
+                        <div class="score-value">${scores.language}</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Relacionamiento Social</div>
+                        <div class="score-value">${scores.social}</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Sensorio-Motor</div>
+                        <div class="score-value">${scores.sensory}</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Intereses Circunscritos</div>
+                        <div class="score-value">${scores.interests}</div>
+                    </div>
+                </div>
+                
+                <div class="interpretation">
+                    ${interpretation}
+                </div>
+                
+                ${document.getElementById('alerts-section').innerHTML}
+                
+                <div class="footer">
+                    <p><strong>Nota Profesional:</strong> Este reporte debe ser interpretado exclusivamente por un profesional de salud mental calificado. El RAADS-R es una herramienta de apoyo diagnóstico que debe utilizarse como parte de una evaluación clínica integral.</p>
+                    <p><strong>Referencia:</strong> Ritvo, R.A., et al. (2011). The Ritvo Autism Asperger Diagnostic Scale-Revised (RAADS-R): A scale to assist the diagnosis of Autism Spectrum Disorder in adults. Journal of Autism and Developmental Disorders, 41(8), 1076-1089.</p>
+                </div>
+            </body>
+            </html>`;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function newEvaluation() {
+            if (confirm('¿Está seguro de que desea iniciar una nueva evaluación? Se perderán todos los datos actuales.')) {
+                currentCard = 0;
+                responses = {};
+                
+                // Ocultar todas las tarjetas
+                document.querySelectorAll('.card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Limpiar selecciones
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Mostrar tarjeta inicial
+                document.getElementById('card-0').classList.add('active');
+                
+                // Resetear progreso
+                document.getElementById('progress-bar').style.width = '0%';
+                
+                // Ocultar botón de regresar
+                document.getElementById('back-btn').classList.remove('visible');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBackButton();
+            updateProgress();
+        });
+
+        // Prevenir envío accidental
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && currentCard > 0 && currentCard <= totalQuestions) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
