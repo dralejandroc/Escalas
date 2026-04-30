@@ -1149,20 +1149,28 @@
         });
     </script>
     <script>
-    // Inject navigation back buttons into question cards
-    (function() {
-        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
-                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
-        document.querySelectorAll(".card").forEach(function(card) {
-            var id = card.id || "";
-            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
-            if (card.querySelector(".navigation")) return;
-            var nav = document.createElement("div");
-            nav.className = "navigation";
-            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-            card.appendChild(nav);
-        });
-    })();
-    </script>
+// Fix null refs for removed back button elements + inject navigation
+(function() {
+    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
+        if (!document.getElementById(id)) {
+            var d = document.createElement('div');
+            d.id = id;
+            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
+            document.body.appendChild(d);
+        }
+    });
+    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
+                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
+    document.querySelectorAll('.card').forEach(function(card) {
+        var id = card.id || '';
+        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
+        if (card.querySelector('.navigation')) return;
+        var nav = document.createElement('div');
+        nav.className = 'navigation';
+        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+        card.appendChild(nav);
+    });
+})();
+</script>
 </body>
 </html>
