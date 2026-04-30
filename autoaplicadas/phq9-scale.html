@@ -754,11 +754,24 @@
             const interpretation = getInterpretation(score);
             const alerts = checkAlerts();
 
-            // Update score display
-            document.getElementById('score-display').innerHTML = `
-                <div>Puntuación Total: <strong>${score}/27</strong></div>
-                <div style="font-size: 1rem; margin-top: 10px; opacity: 0.9;">
-                    Pregunta funcional: ${responses[10] !== undefined ? responses[10] : 'No respondida'}
+            // Color by severity
+            const colorMap = { minimal: '#48bb78', mild: '#f6ad55', moderate: '#ed8936', 'moderate-severe': '#f56565', severe: '#f56565' };
+            const severityColor = colorMap[interpretation.level] || '#29A98C';
+
+            // Functional impact text
+            const funcTexts = ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'];
+            const funcText = responses[10] !== undefined ? funcTexts[responses[10]] : 'No respondida';
+
+            // Update score display with large number and color
+            const scoreBox = document.getElementById('score-display');
+            scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
+            scoreBox.innerHTML = `
+                <div style="font-size:0.95em;opacity:0.85;margin-bottom:4px;">Puntuación Total PHQ-9</div>
+                <div style="font-size:3.5em;font-weight:300;line-height:1;">${score}<span style="font-size:0.4em;opacity:0.7;"> / 27</span></div>
+                <div style="margin-top:12px;font-size:1em;font-weight:600;">${interpretation.title}</div>
+                <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.3);padding-top:12px;">
+                    <div style="font-size:0.85em;opacity:0.8;">Impacto sindromatico referido</div>
+                    <div style="font-size:1.05em;font-weight:500;margin-top:4px;">${funcText}</div>
                 </div>
             `;
 
@@ -789,26 +802,8 @@
             const interpretation = getInterpretation(score);
             const alerts = checkAlerts();
             const now = new Date();
-            
-            let pdfContent = `
-PHQ-9 - CUESTIONARIO DE SALUD DEL PACIENTE
-=========================================
-
-Fecha: ${now.toLocaleDateString('es-ES')}
-Hora: ${now.toLocaleTimeString('es-ES')}
-
-PUNTUACIÓN TOTAL: ${score}/27
-
-INTERPRETACIÓN:
-${interpretation.title}
-
-${interpretation.description}
-
-RECOMENDACIONES:
-${interpretation.recommendations}
-
-DETALLE DE RESPUESTAS:
-`;
+            const fecha = now.toLocaleDateString('es-ES');
+            const hora = now.toLocaleTimeString('es-ES');
 
             const questionTexts = [
                 '',
@@ -819,37 +814,57 @@ DETALLE DE RESPUESTAS:
                 'Poco apetito o comer demasiado',
                 'Sentirse mal consigo mismo; sentir que es un fracasado o que ha decepcionado a su familia o a sí mismo',
                 'Problemas para concentrarse en algo, como leer el periódico o ver la televisión',
-                'Moverse o hablar tan despacio que los demás pueden haberlo notado. O lo contrario: estar tan inquieto o agitado que se ha estado moviendo de un lado a otro más de lo habitual',
+                'Moverse o hablar tan despacio que los demás pueden haberlo notado. O lo contrario: estar tan inquieto o agitado',
                 'Pensamientos de que estaría mejor muerto o de querer hacerse daño de algún modo'
             ];
-
             const responseTexts = ['Nunca', 'Varios días', 'Más de la mitad de los días', 'Casi todos los días'];
+            const funcTexts = ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'];
 
+            let itemRows = '';
             for (let i = 1; i <= 9; i++) {
-                const response = responses[i] !== undefined ? responses[i] : 'No respondida';
-                const responseText = responses[i] !== undefined ? responseTexts[responses[i]] : 'No respondida';
-                pdfContent += `\n${i}. ${questionTexts[i]}\n   Respuesta: ${responseText} (${response})\n`;
+                const rt = responses[i] !== undefined ? responseTexts[responses[i]] : 'No respondida';
+                itemRows += `<tr><td style="padding:6px 8px;border-bottom:1px solid #eee;">${i}. ${questionTexts[i]}</td><td style="padding:6px 8px;border-bottom:1px solid #eee;white-space:nowrap;">${rt}</td></tr>`;
             }
+            const funcText = responses[10] !== undefined ? funcTexts[responses[10]] : 'No respondida';
+            const alertsHTML = alerts.length > 0
+                ? `<div style="background:#ffe5e5;border:1px solid #f56565;border-radius:8px;padding:12px;margin-top:16px;"><strong>⚠️ Alertas Clínicas:</strong><ul style="margin:8px 0 0 16px;">${alerts.map(a => `<li>${a.title}: ${a.message}</li>`).join('')}</ul></div>`
+                : '';
 
-            pdfContent += `\nPREGUNTA FUNCIONAL:
-Si ha marcado alguno de los problemas de este cuestionario, ¿hasta qué punto estos problemas le han creado dificultades para hacer su trabajo, ocuparse de la casa o relacionarse con los demás?
-Respuesta: ${responses[10] !== undefined ? ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'][responses[10]] : 'No respondida'}`;
-
-            if (alerts.length > 0) {
-                pdfContent += `\n\nALERTAS CLÍNICAS:
-${alerts.map(alert => `• ${alert.title}: ${alert.message}`).join('\n')}`;
-            }
-
-            // Create and download the file
-            const blob = new Blob([pdfContent], { type: 'text/plain;charset=utf-8' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `PHQ9_${now.toISOString().split('T')[0]}_${now.toLocaleTimeString('es-ES').replace(/:/g, '-')}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
+            <title>PHQ-9 - ${fecha}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 30px; color: #333; line-height: 1.5; }
+                h1 { color: #29A98C; margin-bottom: 4px; }
+                .score-box { background: linear-gradient(135deg, ${interpretation.color || '#29A98C'}, #112F33); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
+                .score-box .num { font-size: 48px; font-weight: 900; }
+                .score-box .label { font-size: 18px; font-weight: 700; margin-top: 4px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+                th { background: #29A98C; color: #fff; padding: 8px; text-align: left; }
+                .func-box { background: #f0fdf4; border: 1px solid #9ae6b4; border-radius: 8px; padding: 12px; margin-top: 16px; }
+                @media print { body { margin: 15px; } }
+            </style></head><body>
+            <h1>PHQ-9 — Cuestionario de Salud del Paciente</h1>
+            <p>Fecha: ${fecha} &nbsp;|&nbsp; Hora: ${hora}</p>
+            <div class="score-box">
+                <div class="num">${score}/27</div>
+                <div class="label">${interpretation.title}</div>
+            </div>
+            <p>${interpretation.description}</p>
+            <table>
+                <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+                <tbody>${itemRows}</tbody>
+            </table>
+            <div class="func-box">
+                <strong>Impacto sindromatico referido:</strong><br>
+                Si ha marcado alguno de los problemas de este cuestionario, ¿hasta qué punto estos problemas le han creado dificultades para hacer su trabajo, ocuparse de la casa o relacionarse con los demás?<br>
+                <strong>${funcText}</strong>
+            </div>
+            ${alertsHTML}
+            </body></html>`);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
         }
 
         function captureScreen() {

@@ -257,10 +257,6 @@
             <div class="progress-bar" id="progressBar"></div>
         </div>
 <div class="card active" id="card-0">
-            
-        
-        </div>
-            
             <div class="instructions">
                 <h3>Instrucciones importantes:</h3>
                 <ul>
@@ -271,7 +267,7 @@
                     <li>Sus respuestas son <strong>confidenciales</strong> y serán revisadas por un profesional de la salud.</li>
                 </ul>
             </div>
-            
+
             <div style="text-align: center;">
                 <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
             </div>
@@ -567,56 +563,35 @@
                 <p>Inventario de Ansiedad Generalizada</p>
             </div>
 
-            <div class="score-display">
-                <h2 id="total-score">0/88</h2>
-                <p>Puntuación Total</p>
+            <div id="gadi-score-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 56px; font-weight: 900; color: #fff;" id="total-score">--</div>
+                <div style="font-size: 16px; color: rgba(255,255,255,0.8);">Puntuación Total / 88</div>
+                <div style="font-size: 20px; font-weight: 700; color: #fff; margin-top: 8px;" id="severity-level"></div>
             </div>
 
-            <div class="interpretation">
-                <h3>Interpretación Clínica <span id="severity-level" class="level-indicator"></span></h3>
+            <div class="interpretation" style="margin-bottom: 16px;">
                 <p id="interpretation-text"></p>
-                
-                <h4>Información Técnica del GADI:</h4>
-                <p><strong>Estructura factorial:</strong> El GADI evalúa tres dimensiones principales de la ansiedad generalizada:</p>
-                <ul>
-                    <li><strong>Síntomas Cognitivos:</strong> Preocupación excesiva, dificultad para controlar la ansiedad, temores específicos</li>
-                    <li><strong>Síntomas Somáticos:</strong> Manifestaciones físicas como tensión muscular, fatiga, síntomas autonómicos</li>
-                    <li><strong>Alteraciones del Sueño:</strong> Dificultades para conciliar el sueño y despertares nocturnos</li>
-                </ul>
-                <p><strong>Confiabilidad:</strong> α = .928 (excelente consistencia interna)</p>
-                <p><strong>Periodo evaluado:</strong> Síntomas experimentados en las últimas dos semanas</p>
             </div>
 
-            <div class="factor-scores">
-                <div class="factor-score">
-                    <h4>Síntomas Cognitivos <span id="cognitive-score"></span></h4>
-                    <p id="cognitive-interpretation"></p>
-                    <p><strong>Ítems evaluados:</strong> Ansiedad general, preocupaciones cotidianas, malestar por ansiedad, temores de pérdida de control, inquietud, asustarse fácilmente, dificultad de concentración, dificultad para controlar ansiedad, preocupación excesiva</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Síntomas Cognitivos</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="cognitive-score">--</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="cognitive-interpretation"></div>
                 </div>
-                
-                <div class="factor-score">
-                    <h4>Síntomas Somáticos <span id="somatic-score"></span></h4>
-                    <p id="somatic-interpretation"></p>
-                    <p><strong>Ítems evaluados:</strong> Fatiga, dificultad para relajarse, sensación de estar "al límite", sofocos/escalofríos, boca seca, mareos, temblores, tensión muscular, dificultades respiratorias, hormigueos, irritabilidad</p>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Síntomas Somáticos</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="somatic-score">--</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="somatic-interpretation"></div>
                 </div>
-                
-                <div class="factor-score">
-                    <h4>Alteraciones del Sueño <span id="sleep-score"></span></h4>
-                    <p id="sleep-interpretation"></p>
-                    <p><strong>Ítems evaluados:</strong> Despertares nocturnos, dificultad para conciliar el sueño</p>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Alteraciones del Sueño</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="sleep-score">--</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="sleep-interpretation"></div>
                 </div>
             </div>
 
             <div id="high-scores-alert"></div>
-
-            <div class="interpretation">
-                <h3>Consideraciones para la Evaluación Clínica:</h3>
-                <p><strong>Escala de puntuación:</strong> 0=En absoluto, 1=Un poco, 2=Algo, 3=Mucho, 4=Extremadamente (Rango total: 0-88 puntos)</p>
-                <p><strong>Puntos de corte sugeridos:</strong> Puntuaciones ≥23 pueden indicar presencia de sintomatología clínicamente significativa que requiere evaluación adicional.</p>
-                <p><strong>Diagnóstico diferencial:</strong> Es importante considerar comorbilidades frecuentes como trastornos depresivos, otros trastornos de ansiedad y condiciones médicas.</p>
-                <p><strong>Seguimiento:</strong> La escala es sensible a cambios terapéuticos y puede utilizarse para monitorear evolución del tratamiento.</p>
-                <p><strong>Limitaciones:</strong> Esta escala es una herramienta de apoyo diagnóstico que no reemplaza la evaluación clínica completa ni la entrevista diagnóstica estructurada.</p>
-            </div>
 
             <div class="buttons-group">
                 <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
@@ -837,54 +812,57 @@
         function showResults() {
             // Ocultar card final
             document.getElementById('card-final').classList.remove('active');
-            
+
             // Calcular puntuaciones
             const scores = calculateScore();
             const interpretation = getInterpretation(scores);
             const alerts = getHighScoreAlerts(scores);
-            
+
+            // Color por severidad
+            const colorMap = { 'minimal': '#48bb78', 'mild': '#f6ad55', 'moderate': '#ed8936', 'severe': '#f56565' };
+            const severityColor = colorMap[interpretation.level] || '#48bb78';
+            const scoreBox = document.getElementById('gadi-score-box');
+            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
+
             // Mostrar puntuación total
-            document.getElementById('total-score').textContent = `${scores.total}/88`;
-            
+            document.getElementById('total-score').textContent = scores.total;
+
             // Mostrar nivel de severidad
             const severityElement = document.getElementById('severity-level');
-            severityElement.textContent = {
-                'minimal': 'Mínima',
-                'mild': 'Leve',
-                'moderate': 'Moderada',
-                'severe': 'Severa'
-            }[interpretation.level];
-            severityElement.className = `level-indicator level-${interpretation.level}`;
-            
+            severityElement.textContent = { 'minimal': 'Mínima', 'mild': 'Leve', 'moderate': 'Moderada', 'severe': 'Severa' }[interpretation.level] || '';
+
             // Mostrar interpretación
             document.getElementById('interpretation-text').innerHTML = interpretation.description;
-            
+
             // Mostrar puntuaciones por factor
-            document.getElementById('cognitive-score').textContent = `(${scores.cognitive}/${factorItems.cognitive.length * 4})`;
+            document.getElementById('cognitive-score').textContent = `${scores.cognitive}/${factorItems.cognitive.length * 4}`;
             document.getElementById('cognitive-interpretation').textContent = interpretation.cognitive;
-            
-            document.getElementById('somatic-score').textContent = `(${scores.somatic}/${factorItems.somatic.length * 4})`;
+
+            document.getElementById('somatic-score').textContent = `${scores.somatic}/${factorItems.somatic.length * 4}`;
             document.getElementById('somatic-interpretation').textContent = interpretation.somatic;
-            
-            document.getElementById('sleep-score').textContent = `(${scores.sleep}/${factorItems.sleep.length * 4})`;
+
+            document.getElementById('sleep-score').textContent = `${scores.sleep}/${factorItems.sleep.length * 4}`;
             document.getElementById('sleep-interpretation').textContent = interpretation.sleep;
-            
+
             // Mostrar alertas de puntuaciones altas
             const alertContainer = document.getElementById('high-scores-alert');
             if (alerts.length > 0) {
                 alertContainer.innerHTML = `
-                    <div class="alert">
+                    <div class="alert" style="margin-bottom: 16px;">
                         <h4>⚠️ Síntomas de Atención Prioritaria</h4>
-                        <p>Los siguientes ítems obtuvieron puntuaciones altas (≥3/4) que requieren atención clínica específica:</p>
+                        <p>Los siguientes ítems obtuvieron puntuaciones altas (≥3/4):</p>
                         <ul style="margin-top: 10px; padding-left: 20px;">
-                            ${alerts.map(alert => `<li>${alert}</li>`).join('')}
+                            ${alerts.map(alert => {
+                                const m = alert.match(/^• (.+?) \(Ítem (\d+)\): (.+)$/);
+                                return m ? `<li><strong>${m[1]}</strong> (Ítem ${m[2]}): ${m[3]}</li>` : `<li>${alert}</li>`;
+                            }).join('')}
                         </ul>
                     </div>
                 `;
             } else {
                 alertContainer.innerHTML = '';
             }
-            
+
             // Mostrar card de resultados
             document.getElementById('card-results').classList.add('active');
             updateBackButton();

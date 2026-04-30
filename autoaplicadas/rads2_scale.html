@@ -257,9 +257,6 @@
             <div class="progress-bar" id="progress-bar"></div>
         </div>
 <div class="card active" id="card-0">
-            
-        
-        </div>
             <div class="instructions">
                 <p><strong>Instrucciones:</strong></p>
                 <p>A continuación encontrarás una serie de frases que describen cómo te puedes sentir. Lee cada frase cuidadosamente y selecciona la opción que mejor describe cómo te has sentido <strong>en las últimas dos semanas</strong>.</p>
@@ -274,7 +271,7 @@
                 <br>
                 <p>No hay respuestas correctas o incorrectas. Es importante que respondas con honestidad cómo realmente te has sentido.</p>
             </div>
-            <button class="complete-btn" onclick="nextCard()">Comenzar Evaluación</button>
+            <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
         </div>
 
         <!-- Card 1-30: Preguntas -->
@@ -621,7 +618,7 @@
                 <br>
                 <p>Los resultados de esta evaluación deben ser interpretados por un profesional calificado en el contexto de una evaluación clínica completa.</p>
             </div>
-            <button class="complete-btn" onclick="showResults()">Revisar Resultados (Médico)</button>
+            <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
         </div>
 
         <!-- Card Results -->
@@ -633,29 +630,36 @@
             
             <div class="results-container">
                 <div class="result-section">
-                    <div class="result-title">Puntuación Total de Depresión</div>
-                    <div class="score-display" id="total-score">--</div>
+                    <div id="score-display-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px;">
+                        <div style="font-size: 56px; font-weight: 900; color: #fff;" id="total-score">--</div>
+                        <div style="font-size: 16px; color: rgba(255,255,255,0.8);">Puntuación Total / 120</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #fff; margin-top: 8px;" id="severity-badge">--</div>
+                    </div>
                     <div class="interpretation" id="total-interpretation">--</div>
                 </div>
 
                 <div class="result-section">
                     <div class="result-title">Subescalas</div>
-                    <div id="subscales-container">
-                        <div style="margin-bottom: 15px;">
-                            <strong>Estado de Ánimo Disfórico:</strong> <span id="dysphoric-score">--</span>
-                            <div id="dysphoric-interpretation" style="font-size: 14px; color: #666; margin-top: 5px;">--</div>
+                    <div id="subscales-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Estado de Ánimo Disfórico</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="dysphoric-score">--</div>
+                            <div id="dysphoric-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong>Anhedonia/Afecto Negativo:</strong> <span id="anhedonia-score">--</span>
-                            <div id="anhedonia-interpretation" style="font-size: 14px; color: #666; margin-top: 5px;">--</div>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Anhedonia/Afecto Negativo</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="anhedonia-score">--</div>
+                            <div id="anhedonia-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong>Autoevaluación Negativa:</strong> <span id="negative-score">--</span>
-                            <div id="negative-interpretation" style="font-size: 14px; color: #666; margin-top: 5px;">--</div>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Autoevaluación Negativa</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="negative-score">--</div>
+                            <div id="negative-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong>Quejas Somáticas:</strong> <span id="somatic-score">--</span>
-                            <div id="somatic-interpretation" style="font-size: 14px; color: #666; margin-top: 5px;">--</div>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Quejas Somáticas</div>
+                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="somatic-score">--</div>
+                            <div id="somatic-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
                         </div>
                     </div>
                 </div>
@@ -855,8 +859,15 @@
             const interpretation = getInterpretation(totalScore);
             const alerts = checkCriticalItems();
 
-            // Mostrar puntuación total
+            // Color map for severity levels
+            const colorMap = { 'Normal': '#48bb78', 'Leve': '#f6ad55', 'Moderado': '#ed8936', 'Severo': '#f56565' };
+            const severityColor = colorMap[interpretation.level] || '#29A98C';
+
+            // Mostrar puntuación total con color
             document.getElementById('total-score').textContent = totalScore;
+            document.getElementById('severity-badge').textContent = interpretation.level;
+            const scoreBox = document.getElementById('score-display-box');
+            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
             document.getElementById('total-interpretation').innerHTML = `
                 <div class="${interpretation.class}">
                     <strong>Nivel: ${interpretation.level}</strong><br>

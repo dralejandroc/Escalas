@@ -277,7 +277,7 @@
                 <strong>Preguntas:</strong> 10 ítems con escala de frecuencia
             </p>
 
-            <button class="complete-button" onclick="nextCard()">Comenzar Evaluación</button>
+            <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
         </div>
 
         <!-- Cards 1-10: Preguntas -->
@@ -558,16 +558,18 @@
                 Escala completada, muchas gracias.<br>
                 Por favor pase el dispositivo a su médico o profesional para su revisión.
             </p>
-            <button class="complete-button" onclick="showResults()">Revisar Resultados (Médico)</button>
+            <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
         </div>
 
         <!-- Card Resultados -->
         <div class="card" id="card-results">
             <h1>Resultados EsADFUN</h1>
             
-            <div class="score-display">
-                <div class="score-value" id="totalScore">0</div>
-                <div>Puntuación Total (0-40)</div>
+            <div class="score-display" id="esadfun-score-box">
+                <div style="font-size:0.9em;opacity:0.85;margin-bottom:4px;">Puntuación Total</div>
+                <div style="font-size:3.5em;font-weight:300;line-height:1;" id="totalScore">0</div>
+                <div style="font-size:0.9em;margin-top:6px;opacity:0.8;">/ 40 puntos</div>
+                <div style="margin-top:10px;font-size:1.05em;font-weight:600;" id="esadfun-severity-label">--</div>
             </div>
 
             <div id="interpretationSection" class="results-container"></div>
@@ -751,6 +753,10 @@
             const alerts = getHighAlertItems(responses);
 
             document.getElementById('totalScore').textContent = score;
+            document.getElementById('esadfun-severity-label').textContent = interpretation.level;
+            const colorMap = { 'level-normal': '#48bb78', 'level-mild': '#f6ad55', 'level-moderate': '#ed8936', 'level-severe': '#f56565' };
+            const scoreBox = document.getElementById('esadfun-score-box');
+            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${colorMap[interpretation.className] || '#29A98C'}, #112F33)`;
 
             let resultsHTML = `
                 <div class="interpretation ${interpretation.className}">

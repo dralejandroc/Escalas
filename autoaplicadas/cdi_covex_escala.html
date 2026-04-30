@@ -223,6 +223,7 @@
         }
 
         h1, h2 { color: #29A98C; }
+        .card-header h1, .card-header h2 { color: white !important; }
         h3 { color: #112F33; }
 
         @keyframes fadeIn {
@@ -572,20 +573,22 @@
                 <h2>Cuestionario de Depresión Infantil</h2>
             </div>
             
-            <div class="score-display" id="total-score">
-                Puntuación Total: <span id="score-value">--</span>/54
+            <div id="total-score" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 56px; font-weight: 900; color: #fff;" id="score-value">--</div>
+                <div style="font-size: 16px; color: rgba(255,255,255,0.8);">Puntuación Total / 54</div>
+                <div style="font-size: 20px; font-weight: 700; color: #fff; margin-top: 8px;" id="severity-label-cdi">--</div>
             </div>
-            
-            <div class="subscale-scores">
-                <div class="subscale">
-                    <h4 style="color: #29A98C; margin-bottom: 10px;">Disforia</h4>
-                    <div style="font-size: 20px; font-weight: bold;" id="disforia-score">--/20</div>
-                    <div style="font-size: 12px; color: #666;">Humor depresivo, tristeza</div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Disforia</div>
+                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="disforia-score">--</div>
+                    <div style="font-size: 11px; color: #888;">/ 20 · Humor depresivo, tristeza</div>
                 </div>
-                <div class="subscale">
-                    <h4 style="color: #29A98C; margin-bottom: 10px;">Autoestima Negativa</h4>
-                    <div style="font-size: 20px; font-weight: bold;" id="autoestima-score">--/18</div>
-                    <div style="font-size: 12px; color: #666;">Sentimientos de ineficacia</div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Autoestima Negativa</div>
+                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="autoestima-score">--</div>
+                    <div style="font-size: 11px; color: #888;">/ 18 · Sentimientos de ineficacia</div>
                 </div>
             </div>
 
@@ -628,7 +631,7 @@
             const currentCardElement = document.getElementById(`card-${currentCard}`);
             const options = currentCardElement.querySelectorAll('.option');
             options.forEach(option => option.classList.remove('selected'));
-            options[getOptionIndex(value)].classList.add('selected');
+            options[getOptionIndex(currentCard, value)].classList.add('selected');
             
             // Auto-avance después de 150ms
             setTimeout(() => {
@@ -636,13 +639,11 @@
             }, 150);
         }
 
-        function getOptionIndex(value) {
-            // Para algunas preguntas las opciones están en orden inverso
-            const reverseQuestions = [2, 5, 7, 8, 13, 15, 16, 18, 24, 25, 26];
-            const currentQuestion = currentCard;
-            
-            if (reverseQuestions.includes(currentQuestion)) {
-                return value; // Ya están en el orden correcto en el HTML
+        function getOptionIndex(question, value) {
+            // Reversed questions have options ordered 2,1,0 in HTML so DOM index = 2 - score
+            const reverseQuestions = [2, 5, 7, 8, 13, 15, 16, 18, 24, 25];
+            if (reverseQuestions.includes(question)) {
+                return 2 - value;
             }
             return value;
         }
@@ -680,7 +681,7 @@
                     const currentCardElement = document.getElementById(`card-${currentCard}`);
                     const options = currentCardElement.querySelectorAll('.option');
                     options.forEach(option => option.classList.remove('selected'));
-                    options[responses[currentCard]].classList.add('selected');
+                    options[getOptionIndex(currentCard, responses[currentCard])].classList.add('selected');
                 }
             } else if (currentCard === 1) {
                 currentCard = 0;
@@ -806,10 +807,17 @@
             const interpretation = getInterpretation(scores.total);
             const alerts = checkAlerts();
 
-            // Mostrar puntuaciones
+            // Color por severidad
+            const colorMap = { normal: '#48bb78', leve: '#f6ad55', moderada: '#ed8936', grave: '#f56565' };
+            const severityColor = colorMap[interpretation.level] || '#29A98C';
+
+            // Mostrar puntuaciones con color
             document.getElementById('score-value').textContent = scores.total;
-            document.getElementById('disforia-score').textContent = `${scores.disforia}/${disforiaItems.length * 2}`;
-            document.getElementById('autoestima-score').textContent = `${scores.autoestima}/${autoestimaItems.length * 2}`;
+            document.getElementById('severity-label-cdi').textContent = interpretation.title;
+            const scoreBox = document.getElementById('total-score');
+            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
+            document.getElementById('disforia-score').textContent = scores.disforia;
+            document.getElementById('autoestima-score').textContent = scores.autoestima;
 
             // Generar interpretación
             const interpretationHTML = `
