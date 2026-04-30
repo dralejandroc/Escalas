@@ -10,254 +10,268 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        .container {
+        .card-wrap {
+            display: none;
             max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
             overflow: hidden;
+            animation: fadeIn 0.4s ease;
+        }
+        .card-wrap.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+        .card-header {
+            background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
-            padding: 30px;
+            padding: 18px 28px;
             text-align: center;
         }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+        .card-header .scale-name { font-size: 0.82em; opacity: 0.82; margin-bottom: 2px; }
+        .card-header .card-title { font-size: 1.05em; font-weight: 600; }
 
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
+        .card-body {
+            padding: 28px 32px 24px;
         }
 
-        .card {
-            padding: 50px;
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
+        .question-text {
             font-size: 1.2em;
             font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
+            color: #112F33;
+            margin-bottom: 22px;
+            line-height: 1.5;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 13px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            transition: all 0.18s;
+            font-size: 1em;
             color: #112F33;
             text-align: left;
+            width: 100%;
         }
         .option:hover {
-            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
+            background: rgba(41,169,140,0.07);
         }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
+        .option.selected {
             border-color: #29A98C;
-            transform: translateY(-1px);
+            background: rgba(41,169,140,0.12);
+            font-weight: 600;
+            color: #112F33;
         }
 
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
+        .progress-inline {
+            margin-top: 18px;
+        }
+        .progress-inline .progress-track {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-inline .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px;
         }
 
         .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
+            background: none;
+            border: 1px solid #cbd5e0;
+            color: #718096;
+            padding: 7px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
+            font-size: 0.88em;
+            transition: all 0.18s;
+            margin-top: 14px;
         }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
+        .btn-back:hover {
+            border-color: #29A98C;
+            color: #29A98C;
+        }
 
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+        .btn {
+            background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
+            padding: 12px 26px;
+            border-radius: 12px;
             font-size: 1em;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
+            box-shadow: 0 5px 15px rgba(41,169,140,0.3);
         }
-
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
-            color: #112F33;
-        }
-
-        .welcome-text {
-            text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 30px;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
+        .btn-outline {
             background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
+            color: #29A98C;
+            border: 2px solid #29A98C;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover {
+            background: rgba(41,169,140,0.08);
         }
 
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
+        .instructions-box {
+            background: rgba(41,169,140,0.08);
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            font-size: 0.97em;
+            line-height: 1.65;
             color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .instructions-box h3 {
+            color: #29A98C;
+            margin-bottom: 10px;
+            font-size: 1em;
         }
 
-        .export-buttons, .action-buttons {
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .score-box {
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            color: #fff;
+        }
+        .score-box .score-label { font-size: 11px; opacity: 0.82; margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .score-box .score-number { font-size: 52px; font-weight: 900; line-height: 1; }
+        .score-box .score-range { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+        .score-box .score-badge { font-size: 17px; font-weight: 700; margin-top: 8px; }
+
+        .interpretacion-section {
+            display: none;
+            background: #f7fafc;
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+        .interpretacion-section h4 {
+            color: #29A98C;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+        .interpretacion-section p {
+            font-size: 0.92em;
+            line-height: 1.6;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        .interpretacion-section p:last-child { margin-bottom: 0; }
+
+        .items-atencion-section {
+            display: none;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+        .items-atencion-section h4 {
+            color: #c53030;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+        .items-atencion-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .items-atencion-section li {
+            font-size: 0.88em;
+            color: #2d3748;
+            padding: 4px 0;
+            border-bottom: 1px solid #fed7d7;
+            line-height: 1.5;
+        }
+        .items-atencion-section li:last-child { border-bottom: none; }
+
+        .nota-tecnica {
+            margin-top: 14px;
+            padding: 12px 14px;
+            background: #ebf8f5;
+            border-radius: 8px;
+            font-size: 0.8em;
+            color: #2d3748;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
             justify-content: center;
             margin-top: 20px;
-            flex-wrap: wrap;
         }
 
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
+        .completion-icon {
             text-align: center;
-            margin-top: 30px;
+            font-size: 3em;
+            margin-bottom: 16px;
+        }
+        .completion-text {
+            text-align: center;
+            color: #2d3748;
+            line-height: 1.7;
+            margin-bottom: 22px;
+            font-size: 0.97em;
         }
 
-        h1, h2 { color: #29A98C; }
-        h3 { color: #112F33; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .card-body { padding: 20px 18px 18px; }
+            .score-grid { grid-template-columns: 1fr; gap: 12px; }
+            .score-box .score-number { font-size: 42px; }
         }
     </style>
 </head>
 <body>
+
     <!-- Card 0: Bienvenida -->
-    <div class="container">
-        <div class="header">
-            <h1>STAI</h1>
-            <p>Inventario de Ansiedad Estado-Rasgo</p>
+    <div class="card-wrap active" id="card-0">
+        <div class="card-header">
+            <div class="scale-name">Evaluación Psicológica</div>
+            <div class="card-title">STAI — Inventario de Ansiedad Estado-Rasgo</div>
         </div>
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <div class="card active" id="card-0">
-            <div class="instructions">
-                <h3 style="color: #29A98C; margin-bottom: 15px;">Instrucciones Generales</h3>
+        <div class="card-body">
+            <div class="instructions-box">
+                <h3>Instrucciones Generales</h3>
                 <p><strong>Esta evaluación consta de dos partes:</strong></p>
                 <br>
                 <p><strong>PARTE 1 - ANSIEDAD ESTADO:</strong> Evalúa cómo se siente usted <strong>ahora mismo, en este momento</strong>. Las opciones van desde "Nada" hasta "Mucho" según la intensidad.</p>
@@ -266,531 +280,872 @@
                 <br>
                 <p><strong>No hay respuestas correctas o incorrectas.</strong> Responda con sinceridad según su experiencia personal. No emplee demasiado tiempo en cada pregunta y seleccione la opción que mejor describa su situación.</p>
                 <br>
-                <p style="color: #29A98C; font-weight: bold;">La evaluación completa toma aproximadamente 10-15 minutos.</p>
+                <p style="color:#29A98C;font-weight:600;">La evaluación completa toma aproximadamente 10-15 minutos.</p>
             </div>
-            <button class="option" onclick="nextCard()">Comenzar Evaluación</button>
-        </div>
-
-        <!-- Card instrucciones Parte 1 -->
-        <div class="card" id="card-1">
-            <div class="section-header">PARTE 1: ANSIEDAD ESTADO</div>
-            <div class="instructions">
-                <p><strong>Instrucciones:</strong> A continuación, encontrará algunas frases que se utilizan corrientemente para describirse uno a sí mismo. Lea cada frase y señale la opción que indique mejor cómo se <strong>SIENTE usted AHORA MISMO, en este momento</strong>. No hay respuestas buenas ni malas. No emplee demasiado tiempo en cada frase y conteste señalando la respuesta que mejor describa su situación presente.</p>
-            </div>
-            <button class="option" onclick="nextCard()">Continuar con Parte 1</button>
-        </div>
-
-        <!-- Cards 2-21: Items de Estado -->
-        <div class="card" id="card-2">
-            <div class="question-number">Pregunta 1 de 40</div>
-            <div class="question-text">Me siento calmado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(1, 0)">Nada</button>
-                <button class="option" onclick="selectOption(1, 1)">Algo</button>
-                <button class="option" onclick="selectOption(1, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(1, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-3">
-            <div class="question-number">Pregunta 2 de 40</div>
-            <div class="question-text">Me siento seguro</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(2, 0)">Nada</button>
-                <button class="option" onclick="selectOption(2, 1)">Algo</button>
-                <button class="option" onclick="selectOption(2, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(2, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-4">
-            <div class="question-number">Pregunta 3 de 40</div>
-            <div class="question-text">Estoy tenso</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(3, 0)">Nada</button>
-                <button class="option" onclick="selectOption(3, 1)">Algo</button>
-                <button class="option" onclick="selectOption(3, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(3, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-5">
-            <div class="question-number">Pregunta 4 de 40</div>
-            <div class="question-text">Estoy contrariado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(4, 0)">Nada</button>
-                <button class="option" onclick="selectOption(4, 1)">Algo</button>
-                <button class="option" onclick="selectOption(4, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(4, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-6">
-            <div class="question-number">Pregunta 5 de 40</div>
-            <div class="question-text">Me siento cómodo (estoy a gusto)</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(5, 0)">Nada</button>
-                <button class="option" onclick="selectOption(5, 1)">Algo</button>
-                <button class="option" onclick="selectOption(5, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(5, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-7">
-            <div class="question-number">Pregunta 6 de 40</div>
-            <div class="question-text">Me siento alterado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(6, 0)">Nada</button>
-                <button class="option" onclick="selectOption(6, 1)">Algo</button>
-                <button class="option" onclick="selectOption(6, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(6, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-8">
-            <div class="question-number">Pregunta 7 de 40</div>
-            <div class="question-text">Estoy preocupado ahora por posibles desgracias futuras</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(7, 0)">Nada</button>
-                <button class="option" onclick="selectOption(7, 1)">Algo</button>
-                <button class="option" onclick="selectOption(7, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(7, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-9">
-            <div class="question-number">Pregunta 8 de 40</div>
-            <div class="question-text">Me siento descansado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(8, 0)">Nada</button>
-                <button class="option" onclick="selectOption(8, 1)">Algo</button>
-                <button class="option" onclick="selectOption(8, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(8, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-10">
-            <div class="question-number">Pregunta 9 de 40</div>
-            <div class="question-text">Me siento angustiado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(9, 0)">Nada</button>
-                <button class="option" onclick="selectOption(9, 1)">Algo</button>
-                <button class="option" onclick="selectOption(9, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(9, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-11">
-            <div class="question-number">Pregunta 10 de 40</div>
-            <div class="question-text">Me siento confortable</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(10, 0)">Nada</button>
-                <button class="option" onclick="selectOption(10, 1)">Algo</button>
-                <button class="option" onclick="selectOption(10, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(10, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-12">
-            <div class="question-number">Pregunta 11 de 40</div>
-            <div class="question-text">Tengo confianza en mí mismo</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(11, 0)">Nada</button>
-                <button class="option" onclick="selectOption(11, 1)">Algo</button>
-                <button class="option" onclick="selectOption(11, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(11, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-13">
-            <div class="question-number">Pregunta 12 de 40</div>
-            <div class="question-text">Me siento nervioso</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(12, 0)">Nada</button>
-                <button class="option" onclick="selectOption(12, 1)">Algo</button>
-                <button class="option" onclick="selectOption(12, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(12, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-14">
-            <div class="question-number">Pregunta 13 de 40</div>
-            <div class="question-text">Estoy inquieto/intranquilo/perturbado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(13, 0)">Nada</button>
-                <button class="option" onclick="selectOption(13, 1)">Algo</button>
-                <button class="option" onclick="selectOption(13, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(13, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-15">
-            <div class="question-number">Pregunta 14 de 40</div>
-            <div class="question-text">Me siento muy "atado" (como oprimido)</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(14, 0)">Nada</button>
-                <button class="option" onclick="selectOption(14, 1)">Algo</button>
-                <button class="option" onclick="selectOption(14, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(14, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-16">
-            <div class="question-number">Pregunta 15 de 40</div>
-            <div class="question-text">Estoy relajado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(15, 0)">Nada</button>
-                <button class="option" onclick="selectOption(15, 1)">Algo</button>
-                <button class="option" onclick="selectOption(15, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(15, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-17">
-            <div class="question-number">Pregunta 16 de 40</div>
-            <div class="question-text">Me siento satisfecho</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(16, 0)">Nada</button>
-                <button class="option" onclick="selectOption(16, 1)">Algo</button>
-                <button class="option" onclick="selectOption(16, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(16, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-18">
-            <div class="question-number">Pregunta 17 de 40</div>
-            <div class="question-text">Estoy preocupado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(17, 0)">Nada</button>
-                <button class="option" onclick="selectOption(17, 1)">Algo</button>
-                <button class="option" onclick="selectOption(17, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(17, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-19">
-            <div class="question-number">Pregunta 18 de 40</div>
-            <div class="question-text">Me siento aturdido y sobreexcitado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(18, 0)">Nada</button>
-                <button class="option" onclick="selectOption(18, 1)">Algo</button>
-                <button class="option" onclick="selectOption(18, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(18, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-20">
-            <div class="question-number">Pregunta 19 de 40</div>
-            <div class="question-text">Me siento alegre</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(19, 0)">Nada</button>
-                <button class="option" onclick="selectOption(19, 1)">Algo</button>
-                <button class="option" onclick="selectOption(19, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(19, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-21">
-            <div class="question-number">Pregunta 20 de 40</div>
-            <div class="question-text">En este momento me siento bien</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(20, 0)">Nada</button>
-                <button class="option" onclick="selectOption(20, 1)">Algo</button>
-                <button class="option" onclick="selectOption(20, 2)">Bastante</button>
-                <button class="option" onclick="selectOption(20, 3)">Mucho</button>
-            </div>
-        </div>
-
-        <!-- Card instrucciones Parte 2 -->
-        <div class="card" id="card-22">
-            <div class="section-header">PARTE 2: ANSIEDAD RASGO</div>
-            <div class="instructions">
-                <p><strong>Instrucciones:</strong> A continuación encontrará unas frases que se utilizan corrientemente para describirse uno a sí mismo. Lea cada frase y señale la opción que indique mejor cómo se <strong>SIENTE usted EN GENERAL en la mayoría de las ocasiones</strong>. No hay respuestas buenas ni malas. No emplee demasiado tiempo en cada frase y conteste señalando lo que mejor describa cómo se siente usted generalmente.</p>
-            </div>
-            <button class="option" onclick="nextCard()">Continuar con Parte 2</button>
-        </div>
-
-        <!-- Cards 23-42: Items de Rasgo -->
-        <div class="card" id="card-23">
-            <div class="question-number">Pregunta 21 de 40</div>
-            <div class="question-text">Me siento bien</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(21, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(21, 1)">A veces</button>
-                <button class="option" onclick="selectOption(21, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(21, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-24">
-            <div class="question-number">Pregunta 22 de 40</div>
-            <div class="question-text">Me canso rápidamente</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(22, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(22, 1)">A veces</button>
-                <button class="option" onclick="selectOption(22, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(22, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-25">
-            <div class="question-number">Pregunta 23 de 40</div>
-            <div class="question-text">Siento ganas de llorar</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(23, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(23, 1)">A veces</button>
-                <button class="option" onclick="selectOption(23, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(23, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-26">
-            <div class="question-number">Pregunta 24 de 40</div>
-            <div class="question-text">Me gustaría ser tan feliz como otros</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(24, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(24, 1)">A veces</button>
-                <button class="option" onclick="selectOption(24, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(24, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-27">
-            <div class="question-number">Pregunta 25 de 40</div>
-            <div class="question-text">Pierdo oportunidades por no decidirme pronto</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(25, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(25, 1)">A veces</button>
-                <button class="option" onclick="selectOption(25, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(25, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-28">
-            <div class="question-number">Pregunta 26 de 40</div>
-            <div class="question-text">Me siento descansado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(26, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(26, 1)">A veces</button>
-                <button class="option" onclick="selectOption(26, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(26, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-29">
-            <div class="question-number">Pregunta 27 de 40</div>
-            <div class="question-text">Soy una persona tranquila, serena y sosegada</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(27, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(27, 1)">A veces</button>
-                <button class="option" onclick="selectOption(27, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(27, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-30">
-            <div class="question-number">Pregunta 28 de 40</div>
-            <div class="question-text">Veo que las dificultades se amontonan y no puedo con ellas</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(28, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(28, 1)">A veces</button>
-                <button class="option" onclick="selectOption(28, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(28, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-31">
-            <div class="question-number">Pregunta 29 de 40</div>
-            <div class="question-text">Me preocupo demasiado por cosas sin importancia</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(29, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(29, 1)">A veces</button>
-                <button class="option" onclick="selectOption(29, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(29, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-32">
-            <div class="question-number">Pregunta 30 de 40</div>
-            <div class="question-text">Soy feliz</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(30, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(30, 1)">A veces</button>
-                <button class="option" onclick="selectOption(30, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(30, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-33">
-            <div class="question-number">Pregunta 31 de 40</div>
-            <div class="question-text">Suelo tomar las cosas demasiado seriamente</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(31, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(31, 1)">A veces</button>
-                <button class="option" onclick="selectOption(31, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(31, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-34">
-            <div class="question-number">Pregunta 32 de 40</div>
-            <div class="question-text">Me falta confianza en mí mismo</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(32, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(32, 1)">A veces</button>
-                <button class="option" onclick="selectOption(32, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(32, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-35">
-            <div class="question-number">Pregunta 33 de 40</div>
-            <div class="question-text">Me siento seguro</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(33, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(33, 1)">A veces</button>
-                <button class="option" onclick="selectOption(33, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(33, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-36">
-            <div class="question-number">Pregunta 34 de 40</div>
-            <div class="question-text">No suelo afrontar las crisis o dificultades</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(34, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(34, 1)">A veces</button>
-                <button class="option" onclick="selectOption(34, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(34, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-37">
-            <div class="question-number">Pregunta 35 de 40</div>
-            <div class="question-text">Me siento triste (melancólico)</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(35, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(35, 1)">A veces</button>
-                <button class="option" onclick="selectOption(35, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(35, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-38">
-            <div class="question-number">Pregunta 36 de 40</div>
-            <div class="question-text">Estoy satisfecho</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(36, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(36, 1)">A veces</button>
-                <button class="option" onclick="selectOption(36, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(36, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-39">
-            <div class="question-number">Pregunta 37 de 40</div>
-            <div class="question-text">Me rondan y molestan pensamientos sin importancia</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(37, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(37, 1)">A veces</button>
-                <button class="option" onclick="selectOption(37, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(37, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-40">
-            <div class="question-number">Pregunta 38 de 40</div>
-            <div class="question-text">Me afectan tanto los desengaños que no puedo olvidarlos</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(38, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(38, 1)">A veces</button>
-                <button class="option" onclick="selectOption(38, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(38, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-41">
-            <div class="question-number">Pregunta 39 de 40</div>
-            <div class="question-text">Soy una persona estable</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(39, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(39, 1)">A veces</button>
-                <button class="option" onclick="selectOption(39, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(39, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-42">
-            <div class="question-number">Pregunta 40 de 40</div>
-            <div class="question-text">Cuando pienso sobre asuntos y preocupaciones actuales me pongo tenso y agitado</div>
-            <div class="options">
-                <button class="option" onclick="selectOption(40, 0)">Casi nunca</button>
-                <button class="option" onclick="selectOption(40, 1)">A veces</button>
-                <button class="option" onclick="selectOption(40, 2)">A menudo</button>
-                <button class="option" onclick="selectOption(40, 3)">Casi siempre</button>
-            </div>
-        </div>
-
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <h2>¡Evaluación Completada!</h2>
-            <div class="completion-message">
-                <p>Ha completado exitosamente el Inventario de Ansiedad Estado-Rasgo (STAI).</p>
-                <p><strong>Por favor, pase el dispositivo a su médico</strong> o profesional de salud mental para la revisión de los resultados.</p>
-                <p>Sus respuestas han sido procesadas y están listas para la interpretación clínica profesional.</p>
-            </div>
-            <button class="action-button" onclick="showResults()">Revisar Resultados (Médico)</button>
-        </div>
-
-        <!-- Card Resultados -->
-        <div class="card" id="card-results">
-            <h1>Resultados STAI</h1>
-            <h2>Inventario de Ansiedad Estado-Rasgo</h2>
-            <div class="results-content" id="results-content">
-                <!-- Los resultados se generan dinámicamente aquí -->
-            </div>
-            <div class="action-buttons">
-                <button class="action-button" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="action-button" onclick="captureResults()">📷 Capturar Imagen</button>
-                <button class="action-button" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+            <div style="text-align:center;">
+                <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
             </div>
         </div>
     </div>
 
+    <!-- Card 1: Instrucciones Parte 1 -->
+    <div class="card-wrap" id="card-1">
+        <div class="card-header">
+            <div class="scale-name">STAI</div>
+            <div class="card-title">PARTE 1: Ansiedad Estado</div>
+        </div>
+        <div class="card-body">
+            <div class="instructions-box">
+                <p><strong>Instrucciones:</strong> A continuación, encontrará algunas frases que se utilizan corrientemente para describirse uno a sí mismo. Lea cada frase y señale la opción que indique mejor cómo se <strong>SIENTE usted AHORA MISMO, en este momento</strong>. No hay respuestas buenas ni malas. No emplee demasiado tiempo en cada frase y conteste señalando la respuesta que mejor describa su situación presente.</p>
+            </div>
+            <div style="text-align:center;margin-bottom:14px;">
+                <button class="btn" onclick="nextCard()">Continuar con Parte 1</button>
+            </div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <!-- Cards 2-21: Ítems de Estado (Q1-Q20) -->
+    <div class="card-wrap" id="card-2">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 1 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento calmado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(1, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(1, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(1, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(1, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:2.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-3">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 2 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento seguro</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(2, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(2, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(2, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(2, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-4">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 3 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy tenso</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(3, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(3, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(3, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(3, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:7.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-5">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 4 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy contrariado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(4, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(4, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(4, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(4, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:10%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-6">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 5 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento cómodo (estoy a gusto)</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(5, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(5, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(5, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(5, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:12.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-7">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 6 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento alterado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(6, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(6, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(6, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(6, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:15%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-8">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 7 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy preocupado ahora por posibles desgracias futuras</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(7, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(7, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(7, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(7, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:17.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-9">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 8 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento descansado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(8, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(8, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(8, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(8, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:20%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-10">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 9 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento angustiado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(9, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(9, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(9, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(9, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:22.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-11">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 10 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento confortable</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(10, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(10, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(10, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(10, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:25%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-12">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 11 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Tengo confianza en mí mismo</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(11, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(11, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(11, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(11, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:27.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-13">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 12 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento nervioso</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(12, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(12, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(12, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(12, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:30%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-14">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 13 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy inquieto / intranquilo / perturbado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(13, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(13, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(13, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(13, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:32.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-15">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 14 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento muy "atado" (como oprimido)</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(14, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(14, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(14, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(14, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:35%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-16">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 15 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy relajado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(15, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(15, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(15, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(15, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:37.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-17">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 16 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento satisfecho</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(16, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(16, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(16, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(16, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:40%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-18">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 17 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy preocupado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(17, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(17, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(17, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(17, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:42.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-19">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 18 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento aturdido y sobreexcitado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(18, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(18, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(18, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(18, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:45%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-20">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 19 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento alegre</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(19, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(19, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(19, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(19, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:47.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-21">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 1: Ansiedad Estado</div>
+            <div class="card-title">Pregunta 20 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">En este momento me siento bien</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(20, 0, this)">Nada</button>
+                <button class="option" onclick="selectOption(20, 1, this)">Algo</button>
+                <button class="option" onclick="selectOption(20, 2, this)">Bastante</button>
+                <button class="option" onclick="selectOption(20, 3, this)">Mucho</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:50%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <!-- Card 22: Instrucciones Parte 2 -->
+    <div class="card-wrap" id="card-22">
+        <div class="card-header">
+            <div class="scale-name">STAI</div>
+            <div class="card-title">PARTE 2: Ansiedad Rasgo</div>
+        </div>
+        <div class="card-body">
+            <div class="instructions-box">
+                <p><strong>Instrucciones:</strong> A continuación encontrará unas frases que se utilizan corrientemente para describirse uno a sí mismo. Lea cada frase y señale la opción que indique mejor cómo se <strong>SIENTE usted EN GENERAL en la mayoría de las ocasiones</strong>. No hay respuestas buenas ni malas. No emplee demasiado tiempo en cada frase y conteste señalando lo que mejor describa cómo se siente usted generalmente.</p>
+            </div>
+            <div style="text-align:center;margin-bottom:14px;">
+                <button class="btn" onclick="nextCard()">Continuar con Parte 2</button>
+            </div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <!-- Cards 23-42: Ítems de Rasgo (Q21-Q40) -->
+    <div class="card-wrap" id="card-23">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 21 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento bien</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(21, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(21, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(21, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(21, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:52.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-24">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 22 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me canso rápidamente</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(22, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(22, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(22, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(22, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:55%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-25">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 23 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Siento ganas de llorar</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(23, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(23, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(23, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(23, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:57.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-26">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 24 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me gustaría ser tan feliz como otros</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(24, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(24, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(24, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(24, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:60%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-27">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 25 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Pierdo oportunidades por no decidirme pronto</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(25, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(25, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(25, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(25, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:62.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-28">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 26 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento descansado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(26, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(26, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(26, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(26, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:65%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-29">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 27 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Soy una persona tranquila, serena y sosegada</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(27, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(27, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(27, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(27, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:67.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-30">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 28 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Veo que las dificultades se amontonan y no puedo con ellas</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(28, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(28, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(28, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(28, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:70%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-31">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 29 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me preocupo demasiado por cosas sin importancia</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(29, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(29, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(29, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(29, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:72.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-32">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 30 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Soy feliz</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(30, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(30, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(30, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(30, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:75%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-33">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 31 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Suelo tomar las cosas demasiado seriamente</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(31, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(31, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(31, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(31, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:77.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-34">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 32 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me falta confianza en mí mismo</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(32, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(32, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(32, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(32, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:80%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-35">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 33 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento seguro</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(33, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(33, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(33, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(33, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:82.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-36">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 34 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">No suelo afrontar las crisis o dificultades</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(34, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(34, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(34, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(34, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:85%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-37">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 35 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me siento triste (melancólico)</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(35, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(35, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(35, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(35, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:87.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-38">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 36 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Estoy satisfecho</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(36, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(36, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(36, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(36, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:90%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-39">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 37 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me rondan y molestan pensamientos sin importancia</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(37, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(37, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(37, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(37, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:92.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-40">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 38 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Me afectan tanto los desengaños que no puedo olvidarlos</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(38, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(38, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(38, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(38, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:95%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-41">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 39 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Soy una persona estable</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(39, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(39, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(39, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(39, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:97.5%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <div class="card-wrap" id="card-42">
+        <div class="card-header">
+            <div class="scale-name">STAI — Parte 2: Ansiedad Rasgo</div>
+            <div class="card-title">Pregunta 40 de 40</div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">Cuando pienso sobre asuntos y preocupaciones actuales me pongo tenso y agitado</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(40, 0, this)">Casi nunca</button>
+                <button class="option" onclick="selectOption(40, 1, this)">A veces</button>
+                <button class="option" onclick="selectOption(40, 2, this)">A menudo</button>
+                <button class="option" onclick="selectOption(40, 3, this)">Casi siempre</button>
+            </div>
+            <div class="progress-inline"><div class="progress-track"><div class="progress-fill" style="width:100%"></div></div></div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <!-- Card Final -->
+    <div class="card-wrap" id="card-final">
+        <div class="card-header">
+            <div class="scale-name">STAI</div>
+            <div class="card-title">Evaluación Completada</div>
+        </div>
+        <div class="card-body">
+            <div class="completion-icon">✅</div>
+            <div class="completion-text">
+                <p>Ha completado exitosamente el <strong>Inventario de Ansiedad Estado-Rasgo (STAI)</strong>.</p>
+                <br>
+                <p><strong>Por favor, entregue el dispositivo a su médico</strong> o profesional de salud mental para la revisión de los resultados.</p>
+                <br>
+                <p>Sus respuestas han sido procesadas y están listas para interpretación clínica.</p>
+            </div>
+            <div style="text-align:center;margin-bottom:14px;">
+                <button class="btn" onclick="showResults()">Ver Resultados (Médico)</button>
+            </div>
+            <button class="btn-back" onclick="goBack()">← Regresar</button>
+        </div>
+    </div>
+
+    <!-- Card Resultados -->
+    <div class="card-wrap" id="card-results">
+        <div class="card-header">
+            <div class="scale-name">STAI — Inventario de Ansiedad Estado-Rasgo</div>
+            <div class="card-title">Resultados de Evaluación</div>
+        </div>
+        <div class="card-body">
+
+            <!-- Score boxes: Estado + Rasgo side by side -->
+            <div class="score-grid">
+                <div class="score-box" id="state-score-box" style="background:linear-gradient(135deg,#48bb78,#112F33);">
+                    <div class="score-label">Ansiedad Estado (A-E)</div>
+                    <div class="score-number" id="state-score-value">--</div>
+                    <div class="score-range">/ 60 puntos</div>
+                    <div class="score-badge" id="state-severity-badge">--</div>
+                </div>
+                <div class="score-box" id="trait-score-box" style="background:linear-gradient(135deg,#48bb78,#112F33);">
+                    <div class="score-label">Ansiedad Rasgo (A-R)</div>
+                    <div class="score-number" id="trait-score-value">--</div>
+                    <div class="score-range">/ 60 puntos</div>
+                    <div class="score-badge" id="trait-severity-badge">--</div>
+                </div>
+            </div>
+
+            <!-- Interpretación Clínica -->
+            <div class="interpretacion-section" id="interpretacion-section">
+                <h4>Interpretación Clínica</h4>
+                <div id="interpretacion-content"></div>
+            </div>
+
+            <!-- Ítems de Atención -->
+            <div class="items-atencion-section" id="items-atencion-section">
+                <h4>⚠️ Ítems de Atención (puntuación ≥ 2)</h4>
+                <ul id="items-atencion-list"></ul>
+            </div>
+
+            <!-- Nota técnica -->
+            <div class="nota-tecnica" id="nota-tecnica" style="display:none;">
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
+                <button class="btn-outline" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Variables globales
         let currentCard = 0;
         let responses = {};
         const totalQuestions = 40;
 
-        // Ítems inversos según la literatura del STAI
         const reversedItemsState = [1, 2, 5, 8, 10, 11, 15, 16, 19, 20];
         const reversedItemsTrait = [21, 26, 27, 30, 33, 36, 39];
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgressBar();
-            updateBackButton();
-        });
+        const colorMap = {
+            'Bajo': '#48bb78',
+            'Medio-Bajo': '#f6ad55',
+            'Medio': '#ed8936',
+            'Alto': '#f56565',
+            'Muy Alto': '#c53030'
+        };
 
         function nextCard() {
             currentCard++;
             showCard(currentCard);
-            updateProgressBar();
-            updateBackButton();
         }
 
-        function selectOption(question, value) {
+        function selectOption(question, value, btn) {
             responses[question] = value;
-            
-            // Auto-avance después de 150ms
+
+            // Visual feedback: mark selected option
+            const card = btn.closest('.card-wrap');
+            card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            btn.classList.add('selected');
+
             setTimeout(() => {
                 if (question === 20) {
-                    // Después de la pregunta 20, ir a las instrucciones de la parte 2
                     showCard(22);
                 } else if (question === totalQuestions) {
-                    // Después de la pregunta 40, ir a la card final
                     showCard('final');
                 } else {
                     nextCard();
@@ -799,366 +1154,281 @@
         }
 
         function showCard(cardId) {
-            // Ocultar todas las cards
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => card.classList.remove('active'));
-            
-            // Mostrar la card solicitada
-            const targetCard = document.getElementById(`card-${cardId}`);
-            if (targetCard) {
-                targetCard.classList.add('active');
-                currentCard = cardId === 'final' ? 'final' : cardId === 'results' ? 'results' : cardId;
+            document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+            const target = document.getElementById('card-' + cardId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-            
-            updateProgressBar();
-            updateBackButton();
+            currentCard = (cardId === 'final' || cardId === 'results') ? cardId : cardId;
         }
 
         function goBack() {
             if (currentCard === 'results') {
                 showCard('final');
             } else if (currentCard === 'final') {
-                showCard(42); // Última pregunta
+                showCard(42);
             } else if (currentCard === 22) {
-                // Si está en instrucciones de parte 2, volver a la última pregunta de parte 1
                 showCard(21);
             } else if (currentCard === 1) {
-                // Si está en instrucciones de parte 1, volver a inicio
                 showCard(0);
-            } else if (currentCard > 0) {
+            } else if (typeof currentCard === 'number' && currentCard > 0) {
                 currentCard--;
                 showCard(currentCard);
-            }
-        }
-
-        function updateProgressBar() {
-            const progressBar = document.getElementById('progress-bar');
-            let progress = 0;
-            
-            if (currentCard === 'final' || currentCard === 'results') {
-                progress = 100;
-            } else if (currentCard === 0) {
-                progress = 0;
-            } else if (currentCard === 1 || currentCard === 22) {
-                // Cards de instrucciones - mantener progreso de la parte anterior
-                if (currentCard === 1) {
-                    progress = 5; // Al empezar parte 1
-                } else {
-                    progress = 50; // Al empezar parte 2
-                }
-            } else {
-                // Cards de preguntas: 2-21 (preguntas 1-20) y 23-42 (preguntas 21-40)
-                let questionNumber = 0;
-                if (currentCard >= 2 && currentCard <= 21) {
-                    questionNumber = currentCard - 1; // Cards 2-21 = preguntas 1-20
-                } else if (currentCard >= 23 && currentCard <= 42) {
-                    questionNumber = currentCard - 2; // Cards 23-42 = preguntas 21-40
-                }
-                progress = (questionNumber / totalQuestions) * 100;
-            }
-            
-            progressBar.style.width = progress + '%';
-        }
-
-        function updateBackButton() {
-            const backButton = document.getElementById('back-button');
-            if (currentCard === 0) {
-                backButton.classList.add('hide-back');
-            } else {
-                backButton.classList.remove('hide-back');
             }
         }
 
         function calculateScore() {
             let stateScore = 0;
             let traitScore = 0;
-            
-            // Calcular puntuación de Estado (ítems 1-20)
+
             for (let i = 1; i <= 20; i++) {
                 let score = responses[i] || 0;
-                if (reversedItemsState.includes(i)) {
-                    score = 3 - score; // Invertir puntuación
-                }
+                if (reversedItemsState.includes(i)) score = 3 - score;
                 stateScore += score;
             }
-            
-            // Calcular puntuación de Rasgo (ítems 21-40)
+
             for (let i = 21; i <= 40; i++) {
                 let score = responses[i] || 0;
-                if (reversedItemsTrait.includes(i)) {
-                    score = 3 - score; // Invertir puntuación
-                }
+                if (reversedItemsTrait.includes(i)) score = 3 - score;
                 traitScore += score;
             }
-            
+
             return { stateScore, traitScore };
         }
 
         function getInterpretation(score, type) {
             let level, description, percentile, recommendation;
-            
-            // Puntos de corte basados en la literatura del STAI
+
             if (score <= 25) {
                 level = "Bajo";
                 percentile = "< 50";
-                description = type === 'state' 
+                description = type === 'state'
                     ? "Nivel de ansiedad estado bajo. El paciente reporta sentirse calmado y relajado en el momento actual."
                     : "Nivel de ansiedad rasgo bajo. El paciente tiende a experimentar ansiedad con poca frecuencia en situaciones generales.";
                 recommendation = "Nivel óptimo de funcionamiento. Mantener estrategias actuales de afrontamiento.";
             } else if (score <= 35) {
                 level = "Medio-Bajo";
                 percentile = "50-65";
-                description = type === 'state' 
+                description = type === 'state'
                     ? "Nivel de ansiedad estado medio-bajo. Ligera tensión situacional dentro de parámetros normales."
                     : "Nivel de ansiedad rasgo medio-bajo. Tendencia ocasional a experimentar ansiedad, pero manejable.";
                 recommendation = "Rango normal. Considerar técnicas preventivas de manejo del estrés.";
             } else if (score <= 45) {
                 level = "Medio";
                 percentile = "65-75";
-                description = type === 'state' 
+                description = type === 'state'
                     ? "Nivel de ansiedad estado moderado. Tensión y preocupación evidentes en el momento actual."
                     : "Nivel de ansiedad rasgo moderado. Propensión regular a experimentar ansiedad ante diversas situaciones.";
                 recommendation = "Explorar factores desencadenantes. Implementar técnicas de relajación y manejo de ansiedad.";
             } else if (score <= 55) {
                 level = "Alto";
                 percentile = "75-85";
-                description = type === 'state' 
+                description = type === 'state'
                     ? "Nivel de ansiedad estado alto. Malestar significativo, nerviosismo y tensión en el momento presente."
                     : "Nivel de ansiedad rasgo alto. Tendencia pronunciada a percibir situaciones como amenazantes y reaccionar con ansiedad.";
                 recommendation = "Intervención terapéutica recomendada. Técnicas cognitivo-conductuales y estrategias de afrontamiento.";
             } else {
                 level = "Muy Alto";
                 percentile = "85-99";
-                description = type === 'state' 
+                description = type === 'state'
                     ? "Nivel de ansiedad estado muy alto. Angustia intensa, alteración significativa y síntomas somáticos evidentes."
                     : "Nivel de ansiedad rasgo muy alto. Propensión muy elevada a experimentar ansiedad como respuesta estable de personalidad.";
                 recommendation = "Intervención inmediata recomendada. Evaluar necesidad de tratamiento farmacológico y psicoterapéutico intensivo.";
             }
-            
+
             return { level, description, percentile, recommendation };
         }
 
         function getHighItems() {
             const highItems = [];
-            const threshold = 2; // 66% del máximo (3)
-            
             for (let i = 1; i <= totalQuestions; i++) {
                 const response = responses[i] || 0;
-                let actualScore = response;
-                
-                // Para ítems inversos, la puntuación alta original indica bienestar, no ansiedad
-                const isReversed = (i <= 20 && reversedItemsState.includes(i)) || 
-                                 (i > 20 && reversedItemsTrait.includes(i));
-                
-                if (!isReversed && response >= threshold) {
-                    const itemText = getItemText(i);
-                    highItems.push({ item: i, text: itemText, score: response });
+                const isReversed = (i <= 20 && reversedItemsState.includes(i)) ||
+                                   (i > 20 && reversedItemsTrait.includes(i));
+                if (!isReversed && response >= 2) {
+                    highItems.push({ item: i, text: getItemText(i), score: response });
                 }
             }
-            
             return highItems;
         }
 
         function getItemText(itemNumber) {
             const items = {
                 1: "Me siento calmado", 2: "Me siento seguro", 3: "Estoy tenso", 4: "Estoy contrariado",
-                5: "Me siento cómodo (estoy a gusto)", 6: "Me siento alterado", 7: "Estoy preocupado ahora por posibles desgracias futuras",
+                5: "Me siento cómodo (estoy a gusto)", 6: "Me siento alterado",
+                7: "Estoy preocupado ahora por posibles desgracias futuras",
                 8: "Me siento descansado", 9: "Me siento angustiado", 10: "Me siento confortable",
-                11: "Tengo confianza en mí mismo", 12: "Me siento nervioso", 13: "Estoy inquieto/intranquilo/perturbado",
-                14: "Me siento muy \"atado\" (como oprimido)", 15: "Estoy relajado", 16: "Me siento satisfecho",
-                17: "Estoy preocupado", 18: "Me siento aturdido y sobreexcitado", 19: "Me siento alegre",
-                20: "En este momento me siento bien", 21: "Me siento bien", 22: "Me canso rápidamente",
-                23: "Siento ganas de llorar", 24: "Me gustaría ser tan feliz como otros", 25: "Pierdo oportunidades por no decidirme pronto",
-                26: "Me siento descansado", 27: "Soy una persona tranquila, serena y sosegada", 28: "Veo que las dificultades se amontonan y no puedo con ellas",
-                29: "Me preocupo demasiado por cosas sin importancia", 30: "Soy feliz", 31: "Suelo tomar las cosas demasiado seriamente",
-                32: "Me falta confianza en mí mismo", 33: "Me siento seguro", 34: "No suelo afrontar las crisis o dificultades",
-                35: "Me siento triste (melancólico)", 36: "Estoy satisfecho", 37: "Me rondan y molestan pensamientos sin importancia",
-                38: "Me afectan tanto los desengaños que no puedo olvidarlos", 39: "Soy una persona estable",
+                11: "Tengo confianza en mí mismo", 12: "Me siento nervioso",
+                13: "Estoy inquieto/intranquilo/perturbado",
+                14: "Me siento muy \"atado\" (como oprimido)", 15: "Estoy relajado",
+                16: "Me siento satisfecho", 17: "Estoy preocupado",
+                18: "Me siento aturdido y sobreexcitado", 19: "Me siento alegre",
+                20: "En este momento me siento bien", 21: "Me siento bien",
+                22: "Me canso rápidamente", 23: "Siento ganas de llorar",
+                24: "Me gustaría ser tan feliz como otros",
+                25: "Pierdo oportunidades por no decidirme pronto",
+                26: "Me siento descansado", 27: "Soy una persona tranquila, serena y sosegada",
+                28: "Veo que las dificultades se amontonan y no puedo con ellas",
+                29: "Me preocupo demasiado por cosas sin importancia", 30: "Soy feliz",
+                31: "Suelo tomar las cosas demasiado seriamente",
+                32: "Me falta confianza en mí mismo", 33: "Me siento seguro",
+                34: "No suelo afrontar las crisis o dificultades",
+                35: "Me siento triste (melancólico)", 36: "Estoy satisfecho",
+                37: "Me rondan y molestan pensamientos sin importancia",
+                38: "Me afectan tanto los desengaños que no puedo olvidarlos",
+                39: "Soy una persona estable",
                 40: "Cuando pienso sobre asuntos y preocupaciones actuales me pongo tenso y agitado"
             };
-            return items[itemNumber] || `Ítem ${itemNumber}`;
+            return items[itemNumber] || 'Ítem ' + itemNumber;
         }
 
         function showResults() {
             const { stateScore, traitScore } = calculateScore();
-            const stateInterpretation = getInterpretation(stateScore, 'state');
-            const traitInterpretation = getInterpretation(traitScore, 'trait');
+            const stateInterp = getInterpretation(stateScore, 'state');
+            const traitInterp = getInterpretation(traitScore, 'trait');
             const highItems = getHighItems();
-            
-            const resultsHTML = `
-                <div class="result-section">
-                    <div class="result-title">Ansiedad Estado (A-E)</div>
-                    <div class="score ${stateScore > 45 ? 'high' : stateScore > 35 ? 'moderate' : 'normal'}">
-                        Puntuación: ${stateScore}/60 (Percentil: ${stateInterpretation.percentile})
-                    </div>
-                    <div class="score ${stateScore > 45 ? 'high' : stateScore > 35 ? 'moderate' : 'normal'}">
-                        Nivel: ${stateInterpretation.level}
-                    </div>
-                    <div class="interpretation">${stateInterpretation.description}</div>
-                    <div class="interpretation"><strong>Recomendación:</strong> ${stateInterpretation.recommendation}</div>
-                </div>
 
-                <div class="result-section">
-                    <div class="result-title">Ansiedad Rasgo (A-R)</div>
-                    <div class="score ${traitScore > 45 ? 'high' : traitScore > 35 ? 'moderate' : 'normal'}">
-                        Puntuación: ${traitScore}/60 (Percentil: ${traitInterpretation.percentile})
-                    </div>
-                    <div class="score ${traitScore > 45 ? 'high' : traitScore > 35 ? 'moderate' : 'normal'}">
-                        Nivel: ${traitInterpretation.level}
-                    </div>
-                    <div class="interpretation">${traitInterpretation.description}</div>
-                    <div class="interpretation"><strong>Recomendación:</strong> ${traitInterpretation.recommendation}</div>
-                </div>
+            // Update score boxes
+            document.getElementById('state-score-value').textContent = stateScore;
+            document.getElementById('state-severity-badge').textContent = stateInterp.level;
+            document.getElementById('state-score-box').style.background =
+                'linear-gradient(135deg, ' + (colorMap[stateInterp.level] || '#48bb78') + ', #112F33)';
 
-                <div class="result-section">
-                    <div class="result-title">Interpretación Clínica</div>
-                    <div class="interpretation">
-                        <strong>Análisis Diferencial:</strong> ${stateScore > traitScore + 10 ? 
-                            'La ansiedad estado supera significativamente a la ansiedad rasgo, sugiriendo una reacción situacional específica.' :
-                            traitScore > stateScore + 10 ? 
-                            'La ansiedad rasgo supera a la ansiedad estado, indicando una disposición estable hacia la ansiedad.' :
-                            'Los niveles de ansiedad estado y rasgo son congruentes, sugiriendo un patrón estable de respuesta.'}
-                    </div>
-                    <div class="interpretation">
-                        <strong>Consideraciones Diagnósticas:</strong> ${(stateScore > 45 || traitScore > 45) ? 
-                            'Los niveles elevados justifican una evaluación más detallada de trastornos de ansiedad según criterios DSM-5-TR.' :
-                            'Los niveles actuales no sugieren patología ansiosa significativa, pero se recomienda monitoreo regular.'}
-                    </div>
-                </div>
+            document.getElementById('trait-score-value').textContent = traitScore;
+            document.getElementById('trait-severity-badge').textContent = traitInterp.level;
+            document.getElementById('trait-score-box').style.background =
+                'linear-gradient(135deg, ' + (colorMap[traitInterp.level] || '#48bb78') + ', #112F33)';
 
-                ${highItems.length > 0 ? `
-                <div class="result-section">
-                    <div class="result-title">Ítems de Alerta (Puntuación ≥ 2)</div>
-                    <div class="interpretation">Los siguientes ítems obtuvieron puntuaciones elevadas y merecen atención clínica específica:</div>
-                    ${highItems.map(item => `
-                        <div class="alert ${item.score === 3 ? 'high' : ''}">
-                            <strong>Ítem ${item.item}:</strong> "${item.text}" - Puntuación: ${item.score}/3
-                        </div>
-                    `).join('')}
-                </div>
-                ` : ''}
+            // Interpretación Clínica
+            const diffAnalysis = stateScore > traitScore + 10
+                ? 'La ansiedad estado supera significativamente a la ansiedad rasgo, lo que sugiere una reacción situacional específica más que una disposición de personalidad.'
+                : traitScore > stateScore + 10
+                    ? 'La ansiedad rasgo supera a la ansiedad estado, indicando una disposición estable hacia la ansiedad que trasciende la situación actual.'
+                    : 'Los niveles de ansiedad estado y rasgo son congruentes, lo que sugiere un patrón estable de respuesta ansiosa.';
 
-                <div class="result-section">
-                    <div class="result-title">Recomendaciones de Seguimiento</div>
-                    <div class="interpretation">
-                        • <strong>Reevaluación:</strong> ${(stateScore > 45 || traitScore > 45) ? 
-                            'Se recomienda reevaluación en 2-4 semanas para monitorear evolución.' :
-                            'Reevaluación en 3-6 meses para seguimiento preventivo.'}
-                    </div>
-                    <div class="interpretation">
-                        • <strong>Intervenciones:</strong> ${(stateScore > 45 || traitScore > 45) ? 
-                            'Considerar terapia cognitivo-conductual, técnicas de relajación y evaluación farmacológica.' :
-                            'Mantener estrategias actuales de autocuidado y prevención.'}
-                    </div>
-                    <div class="interpretation">
-                        • <strong>Factores Contextuales:</strong> Evaluar estresores actuales, apoyo social y recursos de afrontamiento disponibles.
-                    </div>
-                </div>
+            const diagConsiderations = (stateScore > 45 || traitScore > 45)
+                ? 'Los niveles elevados justifican una evaluación detallada de trastornos de ansiedad según criterios DSM-5-TR.'
+                : 'Los niveles actuales no sugieren patología ansiosa significativa, pero se recomienda monitoreo regular.';
 
-                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #29A98C;">
-                    <small><strong>Nota Técnica:</strong> Resultados basados en STAI (Spielberger, Gorsuch & Lushene). Puntuaciones de 0-60 para cada escala. 
-                    Interpretación basada en baremos poblacionales y literatura científica actualizada. Fecha de evaluación: ${new Date().toLocaleDateString('es-ES')}.</small>
-                </div>
-            `;
-            
-            document.getElementById('results-content').innerHTML = resultsHTML;
+            const followUp = (stateScore > 45 || traitScore > 45)
+                ? 'Reevaluación en 2-4 semanas para monitorear evolución. Considerar terapia cognitivo-conductual y evaluación farmacológica.'
+                : 'Reevaluación en 3-6 meses para seguimiento preventivo. Mantener estrategias de autocuidado.';
+
+            const interpContent = document.getElementById('interpretacion-content');
+            interpContent.innerHTML =
+                '<p><strong>A-E:</strong> ' + stateInterp.description + ' <em>Percentil: ' + stateInterp.percentile + '.</em> ' + stateInterp.recommendation + '</p>' +
+                '<p><strong>A-R:</strong> ' + traitInterp.description + ' <em>Percentil: ' + traitInterp.percentile + '.</em> ' + traitInterp.recommendation + '</p>' +
+                '<p><strong>Análisis Diferencial:</strong> ' + diffAnalysis + '</p>' +
+                '<p><strong>Consideraciones Diagnósticas:</strong> ' + diagConsiderations + '</p>' +
+                '<p><strong>Seguimiento:</strong> ' + followUp + '</p>';
+            document.getElementById('interpretacion-section').style.display = 'block';
+
+            // Ítems de Atención
+            if (highItems.length > 0) {
+                const list = document.getElementById('items-atencion-list');
+                list.innerHTML = highItems.map(item =>
+                    '<li><strong>' + item.text + '</strong> (Ítem ' + item.item + '): ' + item.score + '/3</li>'
+                ).join('');
+                document.getElementById('items-atencion-section').style.display = 'block';
+            }
+
+            // Nota técnica
+            const nota = document.getElementById('nota-tecnica');
+            nota.innerHTML = '<strong>Nota Técnica:</strong> Resultados basados en STAI (Spielberger, Gorsuch & Lushene). Puntuaciones de 0-60 para cada escala. Interpretación basada en baremos poblacionales y literatura científica actualizada. Fecha de evaluación: ' + new Date().toLocaleDateString('es-ES') + '.';
+            nota.style.display = 'block';
+
             showCard('results');
         }
 
         function exportToPDF() {
-            const printContent = document.getElementById('results-content').cloneNode(true);
-            const printWindow = window.open('', '', 'height=600,width=800');
-            
+            const { stateScore, traitScore } = calculateScore();
+            const stateInterp = getInterpretation(stateScore, 'state');
+            const traitInterp = getInterpretation(traitScore, 'trait');
+            const highItems = getHighItems();
+
+            const printWindow = window.open('', '', 'height=700,width=900');
             printWindow.document.write(`
                 <html>
                 <head>
                     <title>Resultados STAI</title>
                     <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                        .result-section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
-                        .result-title { font-size: 18px; font-weight: bold; color: #29A98C; margin-bottom: 10px; }
-                        .score { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
-                        .interpretation { margin-bottom: 10px; }
-                        .alert { background: #fff3cd; padding: 10px; border-radius: 5px; margin: 5px 0; }
-                        .alert.high { background: #f8d7da; }
-                        .normal { color: #48bb78; }
-                        .moderate { color: #ed8936; }
-                        .high { color: #f56565; }
+                        body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; color: #333; }
+                        h1 { color: #29A98C; border-bottom: 2px solid #29A98C; padding-bottom: 8px; }
+                        h2 { color: #112F33; margin-top: 20px; }
+                        .score-row { display: flex; gap: 20px; margin: 16px 0; }
+                        .score-box { flex: 1; border: 2px solid #29A98C; border-radius: 10px; padding: 14px; text-align: center; }
+                        .score-box .num { font-size: 40px; font-weight: 900; color: #112F33; }
+                        .score-box .level { font-size: 16px; font-weight: 700; color: #29A98C; }
+                        .interp { background: #f7fafc; border-left: 4px solid #29A98C; padding: 12px 14px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+                        .alerts { background: #fff5f5; border: 1px solid #feb2b2; border-radius: 8px; padding: 12px 14px; margin: 12px 0; }
+                        .alerts h3 { color: #c53030; margin-bottom: 8px; }
+                        ul { padding-left: 18px; }
+                        li { margin-bottom: 4px; font-size: 13px; }
+                        .nota { font-size: 11px; color: #718096; margin-top: 20px; padding: 10px; background: #f7fafc; border-radius: 6px; }
                     </style>
                 </head>
                 <body>
-                    <h1>STAI - Resultados de Evaluación</h1>
-                    <h2>Inventario de Ansiedad Estado-Rasgo</h2>
-                    ${printContent.innerHTML}
-                    </body>
+                    <h1>STAI — Resultados de Evaluación</h1>
+                    <p><em>Inventario de Ansiedad Estado-Rasgo</em></p>
+                    <div class="score-row">
+                        <div class="score-box">
+                            <div style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Ansiedad Estado (A-E)</div>
+                            <div class="num">${stateScore}</div>
+                            <div style="font-size:12px;color:#999;">/ 60 puntos</div>
+                            <div class="level">${stateInterp.level} — Percentil ${stateInterp.percentile}</div>
+                        </div>
+                        <div class="score-box">
+                            <div style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Ansiedad Rasgo (A-R)</div>
+                            <div class="num">${traitScore}</div>
+                            <div style="font-size:12px;color:#999;">/ 60 puntos</div>
+                            <div class="level">${traitInterp.level} — Percentil ${traitInterp.percentile}</div>
+                        </div>
+                    </div>
+                    <div class="interp">
+                        <strong>A-E:</strong> ${stateInterp.description}<br>
+                        <em>Recomendación:</em> ${stateInterp.recommendation}
+                    </div>
+                    <div class="interp">
+                        <strong>A-R:</strong> ${traitInterp.description}<br>
+                        <em>Recomendación:</em> ${traitInterp.recommendation}
+                    </div>
+                    ${highItems.length > 0 ? `
+                    <div class="alerts">
+                        <h3>Ítems de Atención (puntuación ≥ 2)</h3>
+                        <ul>${highItems.map(item => '<li><strong>' + item.text + '</strong> (Ítem ' + item.item + '): ' + item.score + '/3</li>').join('')}</ul>
+                    </div>` : ''}
+                    <div class="nota">Resultados basados en STAI (Spielberger, Gorsuch & Lushene). Puntuaciones de 0-60 para cada escala. Fecha: ${new Date().toLocaleDateString('es-ES')}.</div>
+                </body>
                 </html>
             `);
-            
             printWindow.document.close();
             printWindow.focus();
             printWindow.print();
             printWindow.close();
         }
 
-        function captureResults() {
-            const element = document.getElementById('card-results');
-            
-            // Crear un canvas temporal para la captura
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Configurar el canvas
-            canvas.width = element.offsetWidth;
-            canvas.height = element.offsetHeight;
-            
-            // Capturar el elemento (simulación)
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#000000';
-            ctx.font = '16px Arial';
-            ctx.fillText('Resultados STAI - Captura generada', 20, 30);
-            ctx.fillText('Para captura completa, use herramientas del navegador', 20, 60);
-            
-            // Crear enlace de descarga
-            const link = document.createElement('a');
-            link.download = 'resultados-stai.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        }
-
         function newEvaluation() {
             if (confirm('¿Está seguro de que desea iniciar una nueva evaluación? Se perderán los datos actuales.')) {
                 currentCard = 0;
                 responses = {};
+                // Reset results card
+                document.getElementById('interpretacion-section').style.display = 'none';
+                document.getElementById('items-atencion-section').style.display = 'none';
+                document.getElementById('nota-tecnica').style.display = 'none';
+                document.getElementById('state-score-value').textContent = '--';
+                document.getElementById('trait-score-value').textContent = '--';
+                document.getElementById('state-severity-badge').textContent = '--';
+                document.getElementById('trait-severity-badge').textContent = '--';
+                document.getElementById('state-score-box').style.background = 'linear-gradient(135deg,#48bb78,#112F33)';
+                document.getElementById('trait-score-box').style.background = 'linear-gradient(135deg,#48bb78,#112F33)';
                 showCard(0);
-                updateProgressBar();
-                updateBackButton();
             }
         }
+
+        // No-ops kept for safety (no longer needed but harmless)
+        function updateProgressBar() {}
+        function updateBackButton() {}
     </script>
-<script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
-        }
-    });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
-</script>
 </body>
 </html>
