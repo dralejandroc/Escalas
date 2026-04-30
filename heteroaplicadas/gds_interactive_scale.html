@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escala de Depresión Geriátrica (GDS)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,311 +16,297 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: #fff;
             border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
             display: none;
-            animation: fadeIn 0.5s ease-in;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
         }
 
-        .card.active {
-            display: block;
-        }
+        .card.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .header {
+        .card-header {
             background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            text-align: center;
+            color: #fff;
+            padding: 28px 32px 22px;
         }
 
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
+        .card-header h1 { font-size: 1.65rem; font-weight: 700; margin-bottom: 5px; }
+        .card-header p { opacity: 0.85; font-size: 0.95rem; }
 
-        .header p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
+        .card-body { padding: 28px 32px 24px; }
 
-        .question-number {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+        /* Question badge */
+        .question-badge {
             display: inline-block;
-            margin-bottom: 20px;
-            font-weight: bold;
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 18px;
         }
 
         .question-text {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             line-height: 1.6;
-            margin-bottom: 25px;
             color: #112F33;
+            margin-bottom: 22px;
         }
 
+        /* Options — white bordered, not gradient */
         .options {
             display: grid;
-            gap: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .option {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 20px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            color: #112F33;
+            padding: 14px 20px;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
+            text-align: left;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .option:hover { border-color: #29A98C; background: rgba(41, 169, 140, 0.07); }
+        .option.selected { border-color: #29A98C; background: rgba(41, 169, 140, 0.12); font-weight: 600; }
+
+        /* Inline progress bar */
+        .progress-wrap {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Inline back button */
+        .navigation { display: flex; align-items: center; }
+
+        .btn-back {
+            background: none;
+            border: 1px solid #cbd5e0;
+            color: #718096;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(41, 169, 140, 0.08);
+            padding: 16px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #29A98C;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .instructions h3 { color: #112F33; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+
+        /* Version selection buttons */
+        .version-grid { display: grid; gap: 12px; }
+
+        .btn {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
             text-align: left;
         }
 
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .version-selection {
-            display: grid;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .version-btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .btn-secondary {
+            background: #fff;
+            color: #29A98C;
+            border: 2px solid #29A98C;
             text-align: center;
         }
 
-        .version-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
+        .btn-secondary:hover { background: rgba(41, 169, 140, 0.08); transform: translateY(-1px); }
 
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+        /* Results */
+        .clinical-section {
+            background: #f7fafc;
             border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
         }
 
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 1000;
+        .differential-section {
+            background: #fffaf0;
+            border: 1px solid #fbd38d;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
         }
 
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .cognitive-section {
+            background: #fffbeb;
+            border: 1px solid #fbd38d;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
         }
 
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.3s ease;
-            z-index: 1000;
+        .alert-section {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
         }
 
-        .results-section {
-            margin-top: 20px;
+        .action-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
         }
 
-        .score-display {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .score-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .interpretation {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid #29A98C;
-        }
-
-        .level-normal { border-left-color: #48bb78; }
-        .level-mild { border-left-color: #f6ad55; }
-        .level-severe { border-left-color: #f56565; }
-
-        .alerts {
-            background: rgba(245, 101, 101, 0.1);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid #f56565;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 12px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
+        .action-row .btn { text-align: center; }
 
         @media (max-width: 600px) {
-            .container {
-                margin: 0 10px;
-            }
-            .card {
-                padding: 20px;
-            }
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .question-text {
-                font-size: 1.1rem;
-            }
+            .card-header { padding: 20px; }
+            .card-body { padding: 20px; }
+            .card-header h1 { font-size: 1.35rem; }
+            .question-text { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Card 0: Bienvenida y selección de versión -->
+        <!-- Card 0: Welcome + version selection -->
         <div class="card active" id="card-0">
-            <div class="header">
+            <div class="card-header">
                 <h1>Escala de Depresión Geriátrica</h1>
-                <p>(Geriatric Depression Scale - GDS)</p>
+                <p>Geriatric Depression Scale (GDS) — Heteroaplicada</p>
             </div>
-            
-            <div class="instructions">
-                <h3>Instrucciones para el Profesional:</h3>
-                <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.6;">
-                    <li>Lea cada pregunta claramente al paciente</li>
-                    <li>Espere la respuesta y registre SÍ o NO</li>
-                    <li>No influya en las respuestas del paciente</li>
-                    <li>Seleccione la versión apropiada según el tiempo disponible y capacidad del paciente</li>
-                </ul>
-            </div>
+            <div class="card-body">
+                <div class="instructions">
+                    <h3>Instrucciones para el Profesional:</h3>
+                    <ul style="margin-left: 18px; margin-top: 6px;">
+                        <li>Lea cada pregunta claramente al paciente</li>
+                        <li>Espere la respuesta y registre SÍ o NO</li>
+                        <li>No influya en las respuestas del paciente</li>
+                        <li>Seleccione la versión apropiada según el tiempo disponible y capacidad del paciente</li>
+                    </ul>
+                </div>
 
-            <h3 style="margin-bottom: 15px; color: #112F33;">Seleccione la versión a aplicar:</h3>
-            
-            <div class="version-selection">
-                <button class="version-btn" onclick="startScale(30)">
-                    <strong>Versión Completa (30 ítems)</strong><br>
-                    <small>Evaluación completa - 10-15 minutos</small>
-                </button>
-                
-                <button class="version-btn" onclick="startScale(15)">
-                    <strong>Versión Abreviada (15 ítems)</strong><br>
-                    <small>Evaluación estándar - 5-8 minutos</small>
-                </button>
-                
-                <button class="version-btn" onclick="startScale(5)">
-                    <strong>Versión Ultracorta (5 ítems)</strong><br>
-                    <small>Tamizaje rápido - 2-3 minutos</small>
-                </button>
+                <div style="font-size: 14px; font-weight: 600; color: #112F33; margin-bottom: 12px;">Seleccione la versión a aplicar:</div>
+
+                <div class="version-grid">
+                    <button class="btn" onclick="startScale(30)">
+                        <strong>Versión Completa (30 ítems)</strong><br>
+                        <small style="opacity: 0.8;">Evaluación completa — 10-15 minutos</small>
+                    </button>
+                    <button class="btn" onclick="startScale(15)">
+                        <strong>Versión Abreviada (15 ítems)</strong><br>
+                        <small style="opacity: 0.8;">Evaluación estándar — 5-8 minutos</small>
+                    </button>
+                    <button class="btn" onclick="startScale(5)">
+                        <strong>Versión Ultracorta (5 ítems)</strong><br>
+                        <small style="opacity: 0.8;">Tamizaje rápido — 2-3 minutos</small>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Cards dinámicas para preguntas -->
+        <!-- Dynamic question cards injected here -->
         <div id="question-cards"></div>
 
-        <!-- Card de resultados -->
+        <!-- Results card -->
         <div class="card" id="card-results">
-            <div class="header">
-                <h1>Resultados de la Evaluación</h1>
-                <p>Escala de Depresión Geriátrica</p>
+            <div class="card-header">
+                <h1>Resultados GDS</h1>
+                <p id="results-version-label">Escala de Depresión Geriátrica</p>
             </div>
-            
-            <div class="score-display">
-                <div class="score-number" id="total-score">0</div>
-                <div id="score-range">de X puntos</div>
-            </div>
-            
-            <div class="interpretation" id="interpretation-section">
-                <!-- Interpretación dinámica -->
-            </div>
-            
-            <div class="alerts" id="alerts-section" style="display: none;">
-                <!-- Alertas dinámicas -->
-            </div>
-            
-            <div class="action-buttons">
-                <button class="action-btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="action-btn" onclick="exportToImage()">📸 Capturar</button>
-                <button class="action-btn" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+            <div class="card-body">
+                <!-- Score box — gradient updated dynamically -->
+                <div id="gds-score-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px; color: #fff;">
+                    <div style="font-size: 56px; font-weight: 900; line-height: 1;" id="total-score">--</div>
+                    <div style="font-size: 15px; opacity: 0.85; margin-top: 4px;" id="score-range">de N puntos</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-top: 8px;" id="severity-badge">--</div>
+                </div>
+
+                <!-- Clinical interpretation -->
+                <div id="interpretation-section" class="clinical-section" style="display: none;">
+                    <div style="font-size: 13px; font-weight: 700; color: #112F33; margin-bottom: 8px;">Interpretación Clínica</div>
+                    <div id="interpretation-body" style="font-size: 13px; color: #444; line-height: 1.7;"></div>
+                </div>
+
+                <!-- Differential diagnosis -->
+                <div id="differential-section" class="differential-section" style="display: none;">
+                    <div style="font-size: 13px; font-weight: 700; color: #744210; margin-bottom: 6px;">🔍 Diagnóstico Diferencial</div>
+                    <div id="differential-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
+                </div>
+
+                <!-- Cognitive symptoms alert -->
+                <div id="cognitive-section" class="cognitive-section" style="display: none;">
+                    <div style="font-size: 13px; font-weight: 700; color: #744210; margin-bottom: 6px;">🧠 Síntomas Cognitivos Reportados</div>
+                    <div id="cognitive-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
+                </div>
+
+                <!-- High-score alert -->
+                <div id="alerts-section" class="alert-section" style="display: none;">
+                    <div style="font-size: 13px; font-weight: 700; color: #c53030; margin-bottom: 6px;">⚠️ Alerta Clínica</div>
+                    <div id="alerts-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
+                    <button class="btn btn-secondary" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <button class="back-button" id="back-btn" onclick="goBack()" style="display: none;">← Regresar</button>
-    <div class="progress-bar" id="progress" style="width: 0%;"></div>
-
     <script>
-        // Variables globales
         var currentCard = 0;
         var responses = {};
         var totalQuestions = 0;
         var selectedVersion = 0;
         var questions = [];
 
-        // Definición de preguntas para cada versión
         var questionsData = {
             30: [
                 { text: "¿Está usted satisfecho con su vida?", positive: true },
@@ -388,226 +370,207 @@
             selectedVersion = version;
             totalQuestions = version;
             questions = questionsData[version];
-            
             createQuestionCards();
-            
             currentCard = 1;
             showCard(currentCard);
-            updateProgress();
-            updateBackButton();
         }
 
         function createQuestionCards() {
             var container = document.getElementById('question-cards');
             container.innerHTML = '';
-            
+
             for (var i = 0; i < questions.length; i++) {
-                var question = questions[i];
-                var cardHTML = '<div class="card" id="card-' + (i + 1) + '">' +
-                    '<div class="question-number">Pregunta ' + (i + 1) + ' de ' + totalQuestions + '</div>' +
-                    '<div class="question-text">' + question.text + '</div>' +
-                    '<div class="options">' +
-                        '<button class="option" onclick="selectOption(' + (i + 1) + ', true)">SÍ</button>' +
-                        '<button class="option" onclick="selectOption(' + (i + 1) + ', false)">NO</button>' +
-                    '</div>' +
-                '</div>';
+                var num = i + 1;
+                var pct = Math.round((num / totalQuestions) * 100);
+                var cardHTML =
+                    '<div class="card" id="card-' + num + '">' +
+                        '<div class="card-header">' +
+                            '<h1 style="font-size:1.1rem; font-weight:600; opacity:0.9; margin:0;">GDS — Pregunta ' + num + ' de ' + totalQuestions + '</h1>' +
+                        '</div>' +
+                        '<div class="card-body">' +
+                            '<div class="question-text">' + questions[i].text + '</div>' +
+                            '<div class="options">' +
+                                '<button class="option" onclick="selectOption(' + num + ', true)">SÍ</button>' +
+                                '<button class="option" onclick="selectOption(' + num + ', false)">NO</button>' +
+                            '</div>' +
+                            '<div class="progress-wrap">' +
+                                '<div class="progress-fill" style="width:' + pct + '%;"></div>' +
+                            '</div>' +
+                            '<div class="navigation">' +
+                                '<button class="btn-back" onclick="goBack()">← Regresar</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
                 container.innerHTML += cardHTML;
             }
         }
 
         function selectOption(questionNumber, answer) {
             responses[questionNumber] = answer;
-            
+            // Visual feedback on selected button
+            var card = document.getElementById('card-' + questionNumber);
+            var opts = card.querySelectorAll('.option');
+            opts[0].classList.toggle('selected', answer === true);
+            opts[1].classList.toggle('selected', answer === false);
+
             setTimeout(function() {
                 if (questionNumber < totalQuestions) {
                     currentCard = questionNumber + 1;
                     showCard(currentCard);
-                    updateProgress();
                 } else {
                     showResults();
                 }
             }, 150);
         }
 
-        function showCard(cardNumber) {
+        function showCard(cardId) {
             var cards = document.querySelectorAll('.card');
             for (var i = 0; i < cards.length; i++) {
                 cards[i].classList.remove('active');
             }
-            
-            var targetCard = document.getElementById('card-' + cardNumber);
-            if (targetCard) {
-                targetCard.classList.add('active');
-            }
-            
-            updateBackButton();
+            var target = document.getElementById('card-' + cardId);
+            if (target) target.classList.add('active');
         }
 
         function calculateScore() {
             var score = 0;
-            
             for (var i = 1; i <= totalQuestions; i++) {
                 var response = responses[i];
                 var question = questions[i - 1];
-                
                 if ((question.positive && !response) || (!question.positive && response)) {
-                    score += 1;
+                    score++;
                 }
             }
-            
             return score;
         }
 
         function getInterpretation(score) {
-            var level, description, recommendations, className, differentialDx = "";
-            
+            var level, description, recommendations, colorKey, differentialDx = '';
+
             if (selectedVersion === 30) {
                 if (score <= 9) {
-                    level = "Normal";
-                    description = "Ausencia de sintomatología depresiva clínicamente significativa.";
-                    className = "level-normal";
-                    recommendations = "Mantener seguimiento de rutina. Promover actividades de bienestar.";
+                    level = 'Normal'; colorKey = 'normal';
+                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
+                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
                 } else if (score <= 19) {
-                    level = "Depresión Leve a Moderada";
-                    description = "Presencia de síntomas depresivos que requieren evaluación especializada.";
-                    className = "level-mild";
-                    recommendations = "Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.";
-                    differentialDx = "En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados (memoria, concentración) corresponden a pseudodemencia depresiva o demencia primaria.";
+                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
+                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
+                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
+                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados (memoria, concentración) corresponden a pseudodemencia depresiva o demencia primaria.';
                 } else {
-                    level = "Depresión Severa";
-                    description = "Sintomatología depresiva severa que requiere intervención inmediata.";
-                    className = "level-severe";
-                    recommendations = "Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.";
-                    differentialDx = "PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos, patrón de deterioro.";
+                    level = 'Depresión Severa'; colorKey = 'severe';
+                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
+                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
+                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos, patrón de deterioro.';
                 }
             } else if (selectedVersion === 15) {
                 if (score <= 4) {
-                    level = "Normal";
-                    description = "Ausencia de sintomatología depresiva clínicamente significativa.";
-                    className = "level-normal";
-                    recommendations = "Mantener seguimiento de rutina. Promover actividades de bienestar.";
+                    level = 'Normal'; colorKey = 'normal';
+                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
+                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
                 } else if (score <= 8) {
-                    level = "Depresión Leve a Moderada";
-                    description = "Presencia de síntomas depresivos que requieren evaluación especializada.";
-                    className = "level-mild";
-                    recommendations = "Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.";
-                    differentialDx = "En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados corresponden a pseudodemencia depresiva o demencia primaria.";
+                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
+                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
+                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
+                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados corresponden a pseudodemencia depresiva o demencia primaria.';
                 } else {
-                    level = "Depresión Severa";
-                    description = "Sintomatología depresiva severa que requiere intervención inmediata.";
-                    className = "level-severe";
-                    recommendations = "Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.";
-                    differentialDx = "PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos.";
+                    level = 'Depresión Severa'; colorKey = 'severe';
+                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
+                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
+                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos.';
                 }
             } else {
                 if (score <= 1) {
-                    level = "Normal";
-                    description = "Ausencia de sintomatología depresiva clínicamente significativa.";
-                    className = "level-normal";
-                    recommendations = "Mantener seguimiento de rutina. Promover actividades de bienestar.";
+                    level = 'Normal'; colorKey = 'normal';
+                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
+                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
                 } else if (score === 2) {
-                    level = "Depresión Leve a Moderada";
-                    description = "Presencia de síntomas depresivos que requieren evaluación especializada.";
-                    className = "level-mild";
-                    recommendations = "Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.";
-                    differentialDx = "En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales.";
+                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
+                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
+                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
+                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales.';
                 } else {
-                    level = "Depresión Severa";
-                    description = "Sintomatología depresiva severa que requiere intervención inmediata.";
-                    className = "level-severe";
-                    recommendations = "Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.";
-                    differentialDx = "PRIORITARIO: Diagnóstico diferencial con demencia. Evaluar pseudodemencia depresiva vs demencia primaria.";
+                    level = 'Depresión Severa'; colorKey = 'severe';
+                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
+                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
+                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Evaluar pseudodemencia depresiva vs demencia primaria.';
                 }
             }
-            
-            return { level: level, description: description, recommendations: recommendations, className: className, differentialDx: differentialDx };
+
+            return { level: level, colorKey: colorKey, description: description, recommendations: recommendations, differentialDx: differentialDx };
         }
 
         function checkMemoryResponses() {
             var memoryQuestions = {
-                30: [
-                    { index: 14, text: "problemas de memoria" },
-                    { index: 26, text: "dificultad para concentrarse" },
-                    { index: 30, text: "mente menos clara" }
-                ],
-                15: [
-                    { index: 10, text: "problemas de memoria" }
-                ],
+                30: [ { index: 14, text: 'problemas de memoria' }, { index: 26, text: 'dificultad para concentrarse' }, { index: 30, text: 'mente menos clara' } ],
+                15: [ { index: 10, text: 'problemas de memoria' } ],
                 5: []
             };
-            
             var alerts = [];
-            var questionsToCheck = memoryQuestions[selectedVersion] || [];
-            
-            for (var i = 0; i < questionsToCheck.length; i++) {
-                var item = questionsToCheck[i];
+            var toCheck = memoryQuestions[selectedVersion] || [];
+            for (var i = 0; i < toCheck.length; i++) {
+                var item = toCheck[i];
                 var response = responses[item.index];
                 var question = questions[item.index - 1];
-                
                 if ((question.positive && !response) || (!question.positive && response)) {
                     alerts.push(item.text);
                 }
             }
-            
             return alerts;
         }
 
         function getMinScoreForDifferential() {
             if (selectedVersion === 30) return 10;
             if (selectedVersion === 15) return 5;
-            if (selectedVersion === 5) return 2;
-            return 0;
+            return 2;
         }
 
         function showResults() {
             var score = calculateScore();
             var interpretation = getInterpretation(score);
-            
+
+            // Color by severity
+            var colorMap = { normal: '#48bb78', mild: '#f6ad55', severe: '#f56565' };
+            var scoreBox = document.getElementById('gds-score-box');
+            if (scoreBox) scoreBox.style.background = 'linear-gradient(135deg, ' + (colorMap[interpretation.colorKey] || '#29A98C') + ', #112F33)';
+
+            // Score display
             document.getElementById('total-score').textContent = score;
             document.getElementById('score-range').textContent = 'de ' + totalQuestions + ' puntos';
-            
-            var interpretationHTML = '<h3>' + interpretation.level + '</h3>' +
-                '<p style="margin: 10px 0;"><strong>Interpretación:</strong> ' + interpretation.description + '</p>' +
-                '<p style="margin: 10px 0;"><strong>Recomendaciones:</strong> ' + interpretation.recommendations + '</p>';
-            
+            document.getElementById('severity-badge').textContent = interpretation.level;
+            document.getElementById('results-version-label').textContent = 'Versión de ' + totalQuestions + ' ítems';
+
+            // Clinical interpretation
+            var interpBody = '<strong>' + interpretation.description + '</strong><br>' + interpretation.recommendations;
+            document.getElementById('interpretation-body').innerHTML = interpBody;
+            document.getElementById('interpretation-section').style.display = 'block';
+
+            // Differential diagnosis
             if (interpretation.differentialDx) {
-                interpretationHTML += '<div style="margin-top: 15px; padding: 15px; background: rgba(245, 101, 101, 0.1); border-radius: 8px; border-left: 4px solid #f56565;">' +
-                    '<h4 style="color: #742a2a; margin-bottom: 8px;">🔍 Diagnóstico Diferencial</h4>' +
-                    '<p style="margin: 0;"><strong>' + interpretation.differentialDx + '</strong></p>' +
-                '</div>';
+                document.getElementById('differential-body').textContent = interpretation.differentialDx;
+                document.getElementById('differential-section').style.display = 'block';
             }
-            
+
+            // Cognitive alerts
             var memoryAlerts = checkMemoryResponses();
             if (memoryAlerts.length > 0 && score > getMinScoreForDifferential()) {
-                interpretationHTML += '<div style="margin-top: 15px; padding: 15px; background: rgba(255, 193, 7, 0.1); border-radius: 8px; border-left: 4px solid #ffc107;">' +
-                    '<h4 style="color: #856404; margin-bottom: 8px;">🧠 Atención: Síntomas Cognitivos Reportados</h4>' +
-                    '<p style="margin: 0;">Respuestas positivas en: ' + memoryAlerts.join(', ') + '. <strong>Considerar evaluación cognitiva específica para descartar deterioro cognitivo vs pseudodemencia depresiva.</strong></p>' +
-                '</div>';
+                document.getElementById('cognitive-body').innerHTML =
+                    'Respuestas positivas en: <strong>' + memoryAlerts.join(', ') + '</strong>. ' +
+                    'Considerar evaluación cognitiva específica para descartar deterioro cognitivo vs pseudodemencia depresiva.';
+                document.getElementById('cognitive-section').style.display = 'block';
             }
-            
-            var interpretationSection = document.getElementById('interpretation-section');
-            interpretationSection.className = 'interpretation ' + interpretation.className;
-            interpretationSection.innerHTML = interpretationHTML;
-            
-            checkAlerts(score);
-            
+
+            // High-score alert
+            var threshold = Math.ceil(totalQuestions * 0.66);
+            if (score >= threshold) {
+                document.getElementById('alerts-body').innerHTML =
+                    'Puntuación elevada (≥66% del máximo): <strong>' + score + '/' + totalQuestions + '</strong>. ' +
+                    'Se recomienda evaluación prioritaria del estado mental y riesgo suicida.';
+                document.getElementById('alerts-section').style.display = 'block';
+            }
+
             currentCard = 'results';
             showCard('results');
-            updateProgress();
-        }
-
-        function checkAlerts(score) {
-            var alertsSection = document.getElementById('alerts-section');
-            var threshold = Math.ceil(totalQuestions * 0.66);
-            
-            if (score >= threshold) {
-                alertsSection.style.display = 'block';
-                alertsSection.innerHTML = '<h3>⚠️ Alerta Clínica</h3>' +
-                    '<p>Puntuación elevada (≥66% del máximo): <strong>' + score + '/' + totalQuestions + '</strong></p>' +
-                    '<p>Se recomienda evaluación prioritaria del estado mental y riesgo suicida.</p>';
-            } else {
-                alertsSection.style.display = 'none';
-            }
         }
 
         function goBack() {
@@ -618,79 +581,50 @@
             } else {
                 currentCard = 0;
             }
-            
             showCard(currentCard);
-            updateProgress();
-        }
-
-        function updateProgress() {
-            var progress = document.getElementById('progress');
-            var percentage = 0;
-            
-            if (currentCard === 0) {
-                percentage = 0;
-            } else if (currentCard === 'results') {
-                percentage = 100;
-            } else {
-                percentage = (currentCard / totalQuestions) * 100;
-            }
-            
-            progress.style.width = percentage + '%';
-        }
-
-        function updateBackButton() {
-            var backBtn = document.getElementById('back-btn');
-            if (currentCard === 0) {
-                backBtn.style.display = 'none';
-            } else {
-                backBtn.style.display = 'block';
-            }
         }
 
         function exportToPDF() {
-            var resultsCard = document.getElementById('card-results');
-            var printWindow = window.open('', '_blank');
-            
-            printWindow.document.write('<html><head><title>Resultados GDS</title>' +
-                '<style>body { font-family: Arial, sans-serif; margin: 20px; }' +
-                '.header { text-align: center; margin-bottom: 30px; }' +
-                '.score { font-size: 2em; text-align: center; margin: 20px 0; }' +
-                '.interpretation { margin: 20px 0; padding: 15px; border-left: 4px solid #29A98C; }' +
-                '</style></head><body>' +
-                '<div class="header"><h1>Escala de Depresión Geriátrica (GDS)</h1>' +
-                '<p>Versión de ' + selectedVersion + ' ítems</p>' +
-                '<p>Fecha: ' + new Date().toLocaleDateString() + '</p></div>' +
-                resultsCard.innerHTML + '</body></html>');
-            
-            printWindow.document.close();
-            printWindow.print();
-        }
+            var score = calculateScore();
+            var interpretation = getInterpretation(score);
+            var fecha = new Date().toLocaleDateString('es-ES');
+            var hora = new Date().toLocaleTimeString('es-ES');
 
-        function exportToImage() {
-            if (navigator.share) {
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                
-                canvas.width = 800;
-                canvas.height = 600;
-                ctx.fillStyle = 'white';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = 'black';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Resultados GDS', canvas.width/2, 50);
-                
-                canvas.toBlob(function(blob) {
-                    var file = new File([blob], 'resultados-gds.png', { type: 'image/png' });
-                    navigator.share({
-                        files: [file],
-                        title: 'Resultados GDS'
-                    });
-                });
-            } else {
-                alert('Función de captura disponible en dispositivos compatibles');
-            }
+            var memoryAlerts = checkMemoryResponses();
+            var memHTML = (memoryAlerts.length > 0 && score > getMinScoreForDifferential())
+                ? '<div style="background:#fffbeb;border:1px solid #fbd38d;border-radius:8px;padding:12px;margin:12px 0;"><strong>🧠 Síntomas Cognitivos:</strong> ' + memoryAlerts.join(', ') + '</div>'
+                : '';
+            var diffHTML = interpretation.differentialDx
+                ? '<div style="background:#fffaf0;border:1px solid #fbd38d;border-radius:8px;padding:12px;margin:12px 0;"><strong>🔍 Diagnóstico Diferencial:</strong><br>' + interpretation.differentialDx + '</div>'
+                : '';
+            var threshold = Math.ceil(totalQuestions * 0.66);
+            var alertHTML = (score >= threshold)
+                ? '<div style="background:#fff5f5;border:1px solid #feb2b2;border-radius:8px;padding:12px;margin:12px 0;"><strong>⚠️ Alerta Clínica:</strong> Puntuación elevada (' + score + '/' + totalQuestions + '). Evaluar estado mental y riesgo suicida.</div>'
+                : '';
+
+            var colorMap = { normal: '#48bb78', mild: '#f6ad55', severe: '#f56565' };
+            var color = colorMap[interpretation.colorKey] || '#29A98C';
+
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<!DOCTYPE html><html><head><meta charset="utf-8">' +
+                '<title>GDS ' + selectedVersion + ' ítems — ' + fecha + '</title>' +
+                '<style>body{font-family:Arial,sans-serif;margin:30px;color:#333;line-height:1.5;}' +
+                'h1{color:#29A98C;}' +
+                '.score-box{background:linear-gradient(135deg,' + color + ',#112F33);color:#fff;border-radius:12px;padding:20px;text-align:center;margin:16px 0;}' +
+                '.score-box .num{font-size:48px;font-weight:900;}' +
+                '.score-box .lbl{font-size:18px;font-weight:700;margin-top:4px;}' +
+                '.interp{background:#f7fafc;border-left:4px solid #29A98C;padding:12px 14px;margin:12px 0;border-radius:0 8px 8px 0;}' +
+                '@media print{body{margin:15px;}}' +
+                '</style></head><body>' +
+                '<h1>Escala de Depresión Geriátrica (GDS)</h1>' +
+                '<p>Versión de ' + selectedVersion + ' ítems &nbsp;|&nbsp; Fecha: ' + fecha + ' &nbsp;|&nbsp; Hora: ' + hora + '</p>' +
+                '<div class="score-box"><div class="num">' + score + '/' + totalQuestions + '</div><div class="lbl">' + interpretation.level + '</div></div>' +
+                '<div class="interp"><strong>' + interpretation.description + '</strong><br>' + interpretation.recommendations + '</div>' +
+                diffHTML + memHTML + alertHTML +
+                '</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
         }
 
         function newEvaluation() {
@@ -698,18 +632,18 @@
             responses = {};
             totalQuestions = 0;
             selectedVersion = 0;
-            
+            questions = [];
             document.getElementById('question-cards').innerHTML = '';
-            
+            // Reset result sections
+            ['interpretation-section','differential-section','cognitive-section','alerts-section'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
             showCard(0);
-            updateProgress();
         }
 
-        // Inicializar la aplicación
-        window.onload = function() {
-            updateBackButton();
-            updateProgress();
-        };
+        // Legacy stubs (called in various places, no longer needed with inline elements)
+        function updateBackButton() {}
+        function updateProgress() {}
     </script>
 </body>
 </html>
