@@ -483,39 +483,45 @@
 
         <!-- Card Resultados -->
         <div class="card" id="card-results">
-            <h1>Resultados de la Evaluación TDAH</h1>
-            
-            <div class="results-grid">
-                <div class="result-card">
-                    <div class="result-title">TDAH Total</div>
-                    <div class="score" id="total-score">0/54</div>
-                    <div class="interpretation" id="total-interpretation"></div>
+            <!-- Score box: gradient updated dynamically by showResults() -->
+            <div id="tdah-score-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px; color: #fff;">
+                <div style="font-size: 56px; font-weight: 900; line-height: 1;" id="total-score">--</div>
+                <div style="font-size: 15px; opacity: 0.85; margin-top: 4px;">Puntuación Total / 54</div>
+                <div style="font-size: 20px; font-weight: 700; margin-top: 8px;" id="total-severity">--</div>
+            </div>
+
+            <!-- Interpretation text -->
+            <div id="total-interpretation" style="font-size: 14px; color: #555; margin-bottom: 16px; line-height: 1.5;"></div>
+
+            <!-- Subscales grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Inatención</div>
+                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="inattention-score">--</div>
+                    <div style="font-size: 11px; color: #888;">/ 27</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="inattention-interpretation"></div>
                 </div>
-                
-                <div class="result-card">
-                    <div class="result-title">Inatención</div>
-                    <div class="score" id="inattention-score">0/27</div>
-                    <div class="interpretation" id="inattention-interpretation"></div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-title">Hiperactividad/Impulsividad</div>
-                    <div class="score" id="hyperactivity-score">0/27</div>
-                    <div class="interpretation" id="hyperactivity-interpretation"></div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Hiperactividad / Impulsividad</div>
+                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="hyperactivity-score">--</div>
+                    <div style="font-size: 11px; color: #888;">/ 27</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="hyperactivity-interpretation"></div>
                 </div>
             </div>
 
-            <div class="clinical-notes">
-                <h3>Notas Clínicas</h3>
-                <ul id="clinical-recommendations"></ul>
+            <!-- Clinical recommendations -->
+            <div id="clinical-notes-section" style="background: #f7fafc; border-left: 4px solid #29A98C; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 16px; display: none;">
+                <div style="font-size: 13px; font-weight: 700; color: #112F33; margin-bottom: 8px;">Interpretación Clínica</div>
+                <ul id="clinical-recommendations" style="margin: 0; padding-left: 18px; font-size: 13px; color: #444; line-height: 1.7;"></ul>
             </div>
 
-            <div id="alert-section" class="alert-section" style="display: none;">
-                <h3>⚠️ Ítems de Atención Prioritaria</h3>
-                <div id="high-score-items"></div>
+            <!-- Alert items -->
+            <div id="alert-section" style="display: none; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #c53030; margin-bottom: 8px;">⚠️ Ítems de Atención Prioritaria</div>
+                <ul id="high-score-items" style="margin: 0; padding-left: 18px; font-size: 13px; color: #444; line-height: 1.7;"></ul>
             </div>
 
-            <div class="action-buttons">
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" onclick="exportResults()">Exportar PDF</button>
                 <button class="btn btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
             </div>
@@ -636,76 +642,62 @@
         function showResults() {
             document.getElementById('card-final').classList.remove('active');
             currentCard = 'results';
-            
+
             const scores = calculateScore();
-            
-            // Mostrar puntuaciones
-            document.getElementById('total-score').textContent = `${scores.total}/54`;
-            document.getElementById('inattention-score').textContent = `${scores.inattention}/27`;
-            document.getElementById('hyperactivity-score').textContent = `${scores.hyperactivity}/27`;
-            
-            // Interpretaciones
+
             const totalInterp = getInterpretation(scores.total, 54);
             const inattentionInterp = getInterpretation(scores.inattention, 27);
             const hyperactivityInterp = getInterpretation(scores.hyperactivity, 27);
-            
-            document.getElementById('total-score').className = `score ${totalInterp.level}`;
+
+            // Color por severidad
+            const colorMap = { low: '#48bb78', moderate: '#f6ad55', high: '#f56565' };
+            const labelMap = { low: 'Mínima / Ausente', moderate: 'Moderada', high: 'Significativa' };
+            const scoreBox = document.getElementById('tdah-score-box');
+            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${colorMap[totalInterp.level] || '#29A98C'}, #112F33)`;
+
+            // Puntuación total
+            document.getElementById('total-score').textContent = scores.total;
+            document.getElementById('total-severity').textContent = labelMap[totalInterp.level] || '';
             document.getElementById('total-interpretation').textContent = totalInterp.text;
-            
-            document.getElementById('inattention-score').className = `score ${inattentionInterp.level}`;
-            document.getElementById('inattention-interpretation').textContent = inattentionInterp.text;
-            
-            document.getElementById('hyperactivity-score').className = `score ${hyperactivityInterp.level}`;
-            document.getElementById('hyperactivity-interpretation').textContent = hyperactivityInterp.text;
-            
-            // Recomendaciones clínicas
+
+            // Subescalas
+            document.getElementById('inattention-score').textContent = scores.inattention;
+            document.getElementById('inattention-interpretation').textContent = inattentionInterp.text.split('.')[0];
+            document.getElementById('hyperactivity-score').textContent = scores.hyperactivity;
+            document.getElementById('hyperactivity-interpretation').textContent = hyperactivityInterp.text.split('.')[0];
+
+            // Interpretación clínica
             generateClinicalRecommendations(scores, totalInterp, inattentionInterp, hyperactivityInterp);
-            
-            // Alertas de ítems altos
+
+            // Alertas
             checkHighScoreItems();
-            
+
             document.getElementById('card-results').classList.add('active');
             updateBackButton();
         }
 
         function generateClinicalRecommendations(scores, totalInterp, inattentionInterp, hyperactivityInterp) {
-            const recommendations = document.getElementById('clinical-recommendations');
-            recommendations.innerHTML = '';
-            
             const recs = [];
-            
-            if (scores.inattention >= 12) {
-                recs.push('Síntomas de inatención clínicamente significativos. Evaluar impacto en funcionamiento académico/laboral.');
-            }
-            
-            if (scores.hyperactivity >= 12) {
-                recs.push('Síntomas de hiperactividad/impulsividad clínicamente significativos. Considerar impacto en relaciones interpersonales.');
-            }
-            
-            if (scores.total >= 24) {
-                recs.push('Puntuación total sugiere probable TDAH. Recomendable evaluación neuropsicológica complementaria.');
-            }
-            
+
+            if (scores.inattention >= 12) recs.push('Síntomas de inatención clínicamente significativos. Evaluar impacto en funcionamiento académico/laboral.');
+            if (scores.hyperactivity >= 12) recs.push('Síntomas de hiperactividad/impulsividad clínicamente significativos. Considerar impacto en relaciones interpersonales.');
+            if (scores.total >= 24) recs.push('Puntuación total sugiere probable TDAH. Recomendable evaluación neuropsicológica complementaria.');
             if (scores.inattention > scores.hyperactivity + 6) {
-                recs.push('Patrón predominantemente inatento. Evaluar específicamente déficits atencionales y funciones ejecutivas.');
+                recs.push('Patrón predominantemente inatento. Evaluar déficits atencionales y funciones ejecutivas.');
             } else if (scores.hyperactivity > scores.inattention + 6) {
                 recs.push('Patrón predominantemente hiperactivo-impulsivo. Evaluar control inhibitorio y regulación emocional.');
             } else if (scores.inattention >= 12 && scores.hyperactivity >= 12) {
                 recs.push('Patrón combinado. Evaluación integral de ambos dominios sintomáticos.');
             }
-            
             recs.push('Considerar historia de desarrollo, funcionamiento actual y posibles diagnósticos diferenciales.');
             recs.push('Validar hallazgos con informantes adicionales y observación clínica directa.');
-            
-            recs.forEach(rec => {
-                const li = document.createElement('li');
-                li.textContent = rec;
-                recommendations.appendChild(li);
-            });
+
+            const ul = document.getElementById('clinical-recommendations');
+            ul.innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+            document.getElementById('clinical-notes-section').style.display = 'block';
         }
 
         function checkHighScoreItems() {
-            const highItems = [];
             const itemTexts = [
                 'Errores por falta de atención en detalles',
                 'Movimiento de manos/pies o inquietud',
@@ -726,17 +718,17 @@
                 'Olvidos en actividades diarias',
                 'Interrumpe o es entrometido'
             ];
-            
+
+            const highItems = [];
             for (let i = 1; i <= 18; i++) {
-                if (responses[i] >= 2) { // 66% del máximo (2/3)
-                    highItems.push(`Ítem ${i}: ${itemTexts[i-1]} (Puntuación: ${responses[i]})`);
+                if (responses[i] >= 2) {
+                    highItems.push(`<li><strong>${itemTexts[i-1]}</strong> (Ítem ${i}): ${responses[i]}/3</li>`);
                 }
             }
-            
+
             if (highItems.length > 0) {
                 document.getElementById('alert-section').style.display = 'block';
-                const alertDiv = document.getElementById('high-score-items');
-                alertDiv.innerHTML = '<ul>' + highItems.map(item => `<li>${item}</li>`).join('') + '</ul>';
+                document.getElementById('high-score-items').innerHTML = highItems.join('');
             }
         }
 
