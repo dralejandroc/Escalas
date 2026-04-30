@@ -53,10 +53,13 @@
             display: none;
             animation: fadeIn 0.5s ease-in;
             min-height: 400px;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
         }
         .card.active { display: block; }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             color: #29A98C;
             font-size: 1em;
@@ -73,6 +76,7 @@
         }
 
         .section-title, .section-header, .question-header, .card-header {
+            color: white !important;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
             padding: 15px 20px;
@@ -90,7 +94,7 @@
         }
 
         .option {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border: 2px solid rgba(41, 169, 140, 0.2);
             border-radius: 20px;
             padding: 18px 24px;
@@ -180,7 +184,7 @@
         .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
 
         .interpretation, .result-section {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             padding: 20px;
             border-radius: 20px;
             margin: 15px 0;
@@ -210,7 +214,7 @@
         }
 
         .medical-access {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border: 2px solid #29A98C;
             border-radius: 24px;
             padding: 30px;
@@ -234,7 +238,8 @@
             .header h1 { font-size: 1.6em; }
             .question-text, .question { font-size: 1.1em; }
             .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .section-title, .section-header, .question-header, .card-header {
+            color: white !important; margin: -25px -25px 20px -25px; }
             .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
             .navigation { flex-direction: column; gap: 10px; }
         }
@@ -881,7 +886,23 @@
             <div class="progress-bar" id="progressBar"></div>
         </div>
                     ${results.innerHTML.replace(/onclick="[^"]*"/g, '')}
-                </body>
+                    <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
+    </script>
+</body>
                 </html>
             `);
             

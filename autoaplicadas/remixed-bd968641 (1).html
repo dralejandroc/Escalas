@@ -22,7 +22,7 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(17, 47, 51, 0.2);
             overflow: hidden;
@@ -105,6 +105,9 @@
             margin-bottom: 40px;
         }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             background: #29A98C;
             color: white;
@@ -1365,6 +1368,22 @@
         function clearAutoSave() {
             // En un entorno de producción, aquí se limpiarían los datos guardados
         }
+    </script>
+    <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
     </script>
 </body>
 </html>

@@ -28,7 +28,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
@@ -86,6 +86,9 @@
             margin-bottom: 20px;
         }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
@@ -183,7 +186,7 @@
         }
 
         .subscale-result {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border-radius: 15px;
             padding: 20px;
             text-align: center;
@@ -236,7 +239,7 @@
         }
 
         .clinical-interpretation {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border-radius: 15px;
             padding: 25px;
             margin: 20px 0;
@@ -299,7 +302,7 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             color: #112F33;
             border: 2px solid #29A98C;
         }
@@ -929,7 +932,23 @@
                         <p><strong>Nota:</strong> Esta es una herramienta de cribado. Los resultados deben interpretarse en el contexto clínico completo del paciente.</p>
                         <p><strong>Generado:</strong> ${new Date().toLocaleString('es-ES')}</p>
                     </div>
-                </body>
+                    <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
+    </script>
+</body>
                 </html>
             `;
 

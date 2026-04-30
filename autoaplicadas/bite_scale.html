@@ -26,7 +26,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
@@ -61,6 +61,9 @@
             font-weight: 600;
         }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
@@ -112,7 +115,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -1095,7 +1098,23 @@
                         <p><strong>Nota importante:</strong> El BITE es una herramienta de screening. Los resultados deben interpretarse en el contexto clínico completo y no constituyen un diagnóstico por sí mismos.</p>
                         <p>Test desarrollado por Henderson & Freeman (1987). Validación en múltiples poblaciones disponible en literatura científica.</p>
                     </div>
-                </body>
+                    <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
+    </script>
+</body>
                 </html>
             `;
 

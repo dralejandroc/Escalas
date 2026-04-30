@@ -26,7 +26,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
@@ -80,6 +80,9 @@
             font-weight: 600;
         }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
@@ -1957,7 +1960,23 @@
                     <p><strong>Nota Profesional:</strong> Este reporte debe ser interpretado exclusivamente por un profesional de salud mental calificado. El RAADS-R es una herramienta de apoyo diagnóstico que debe utilizarse como parte de una evaluación clínica integral.</p>
                     <p><strong>Referencia:</strong> Ritvo, R.A., et al. (2011). The Ritvo Autism Asperger Diagnostic Scale-Revised (RAADS-R): A scale to assist the diagnosis of Autism Spectrum Disorder in adults. Journal of Autism and Developmental Disorders, 41(8), 1076-1089.</p>
                 </div>
-            </body>
+                <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
+    </script>
+</body>
             </html>`;
             
             const printWindow = window.open('', '_blank');

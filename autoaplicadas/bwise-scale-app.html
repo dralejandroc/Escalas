@@ -29,7 +29,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
@@ -81,6 +81,9 @@
             color: #112F33;
         }
 
+        .question-header .question-number,
+        .question-header .question-text,
+        .question-header * { color: white !important; }
         .question-number {
             display: inline-block;
             width: 35px;
@@ -161,7 +164,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             color: #29A98C;
             border: 2px solid #29A98C;
             padding: 12px 20px;
@@ -1031,7 +1034,23 @@
                         Desarrollada por Awad & Voruganti (2004)<br>
                         Este informe es para uso clínico profesional exclusivamente</p>
                     </div>
-                </body>
+                    <script>
+    // Inject navigation back buttons into question cards
+    (function() {
+        var backFn = typeof previousCard !== "undefined" ? "previousCard()" :
+                     typeof goBack !== "undefined" ? "goBack()" : "history.back()";
+        document.querySelectorAll(".card").forEach(function(card) {
+            var id = card.id || "";
+            if (id.includes("welcome") || id.includes("final") || id.includes("results") || id === "card-0") return;
+            if (card.querySelector(".navigation")) return;
+            var nav = document.createElement("div");
+            nav.className = "navigation";
+            nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
+            card.appendChild(nav);
+        });
+    })();
+    </script>
+</body>
                 </html>
             `;
 
