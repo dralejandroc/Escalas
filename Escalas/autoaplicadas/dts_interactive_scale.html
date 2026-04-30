@@ -5,503 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escala de Trauma de Davidson (DTS)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
+            margin: 0;
             padding: 20px;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
             display: none;
-            animation: slideIn 0.5s ease-out;
+            animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
         }
-
-        .card.active {
-            display: block;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card h1 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2.2em;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .card h2 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.8em;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .instructions {
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #29A98C;
-        }
-
-        .instructions p {
-            color: #112F33;
-            line-height: 1.6;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-        }
-
-        .scale-legend {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .legend-section {
-            background: rgba(41, 169, 140, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(41, 169, 140, 0.2);
-        }
-
-        .legend-section h4 {
-            color: #29A98C;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .legend-section p {
-            color: #112F33;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .question-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
+        .card.active { display: block; }
 
         .question-number {
-            font-size: 1.2em;
+            color: #29A98C;
+            font-size: 1em;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
 
-        .question-text {
+        .question-text, .question {
             font-size: 1.3em;
-            line-height: 1.4;
+            font-weight: 400;
             color: #112F33;
             margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
             text-align: center;
+            font-size: 1.2em;
             font-weight: 500;
-        }
-
-        .response-section {
-            margin-bottom: 25px;
-        }
-
-        .response-label {
-            color: #29A98C;
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            text-align: center;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
         }
 
         .options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .option {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
-            font-weight: 500;
+            font-size: 1.05em;
             color: #112F33;
-            font-size: 0.9em;
+            text-align: left;
         }
-
         .option:hover {
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            background: rgba(41, 169, 140, 0.1);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
         }
-
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
             border-color: #29A98C;
-            box-shadow: 0 4px 15px rgba(41, 169, 140, 0.3);
+            transform: translateY(-1px);
         }
 
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 25px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(41, 169, 140, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
         }
 
-        .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(41, 169, 140, 0.4);
-        }
-
-        .back-button.hidden {
-            display: none;
-        }
-
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 6px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.5s ease;
-            z-index: 1000;
-            border-radius: 0 3px 0 0;
-        }
-
-        .completion-message {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .completion-message h2 {
+        .btn-back {
+            background: transparent;
             color: #29A98C;
-            font-size: 2em;
-            margin-bottom: 15px;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
         }
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
 
-        .completion-message p {
-            color: #112F33;
-            font-size: 1.2em;
-            line-height: 1.6;
-        }
-
-        .final-button {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
             border: none;
-            border-radius: 15px;
-            padding: 20px 40px;
-            font-size: 1.2em;
-            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
             transition: all 0.3s ease;
         }
-
-        .final-button:hover {
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(41, 169, 140, 0.3);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
 
-        .results-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .test-info {
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
+        .instructions {
+            background: rgba(41, 169, 140, 0.1);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 25px;
-            text-align: center;
-            border: 1px solid rgba(41, 169, 140, 0.2);
-        }
-
-        .test-info h3 {
-            color: #29A98C;
-            margin-bottom: 10px;
-        }
-
-        .score-summary {
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-        }
-
-        .total-score-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid #29A98C;
-            margin-bottom: 20px;
-        }
-
-        .total-score-label {
-            color: #29A98C;
-            font-weight: 700;
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-
-        .total-score-value {
-            font-size: 3em;
-            font-weight: 700;
-            color: #112F33;
-        }
-
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .score-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(41, 169, 140, 0.2);
-        }
-
-        .score-label {
-            color: #29A98C;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .score-value {
-            font-size: 2em;
-            font-weight: 700;
-            color: #112F33;
-        }
-
-        .subscales-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            border-left: 5px solid #29A98C;
-        }
-
-        .subscales-section h3 {
-            color: #29A98C;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-        }
-
-        .subscale-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .subscale-item {
-            background: rgba(41, 169, 140, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(41, 169, 140, 0.2);
-        }
-
-        .subscale-name {
-            color: #29A98C;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .subscale-items {
-            color: #112F33;
-            font-size: 0.9em;
-        }
-
-        .interpretation {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            border-left: 5px solid #29A98C;
-        }
-
-        .interpretation h3 {
-            color: #29A98C;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-
-        .interpretation p {
-            color: #112F33;
+            border-left: 4px solid #29A98C;
+            font-size: 1.05em;
             line-height: 1.6;
-            margin-bottom: 15px;
+            color: #112F33;
         }
 
-        .severity-level {
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
-            font-weight: 600;
+        .welcome-text {
             text-align: center;
-        }
-
-        .severity-minimal {
-            background: rgba(72, 187, 120, 0.2);
-            color: #276749;
-            border: 2px solid #48bb78;
-        }
-
-        .severity-mild {
-            background: rgba(246, 173, 85, 0.2);
-            color: #744210;
-            border: 2px solid #f6ad55;
-        }
-
-        .severity-moderate {
-            background: rgba(237, 137, 54, 0.2);
-            color: #7c2d12;
-            border: 2px solid #ed8936;
-        }
-
-        .severity-severe {
-            background: rgba(245, 101, 101, 0.2);
-            color: #742a2a;
-            border: 2px solid #f56565;
-        }
-
-        .alerts-section {
-            background: rgba(245, 101, 101, 0.1);
-            border: 2px solid #f56565;
-            border-radius: 15px;
-            padding: 25px;
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: #112F33;
             margin-bottom: 30px;
         }
 
-        .alerts-section h3 {
-            color: #742a2a;
-            margin-bottom: 15px;
+        .score-display {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .alert-item {
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
+
+        .interpretation, .result-section {
             background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid #f56565;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
         }
 
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
+            color: #112F33;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+
+        .export-buttons, .action-buttons {
+            display: flex;
             gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
             margin-top: 30px;
         }
 
-        .action-button {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 15px 25px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(41, 169, 140, 0.3);
-        }
-
-        .action-button.secondary {
-            background: linear-gradient(135deg, #112F33, #29A98C);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .card {
-                padding: 25px;
-            }
-            
-            .card h1 {
-                font-size: 1.8em;
-            }
-            
-            .options {
-                grid-template-columns: 1fr;
-            }
-            
-            .scale-legend {
-                grid-template-columns: 1fr;
-            }
-
-            .total-score-value {
-                font-size: 2.5em;
-            }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Escala de Trauma de Davidson (DTS)</h1>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
         <!-- Card 0: Bienvenida e Instrucciones -->
         <div class="card active" id="card-0">
-            <h1>Escala de Trauma de Davidson (DTS)</h1>
             <div class="instructions">
                 <p><strong>Instrucciones para el paciente:</strong></p>
                 <p>Cada una de las siguientes preguntas se refiere a un síntoma específico. Considere, para cada pregunta, cuántas veces le ha molestado el síntoma y con cuánta intensidad, durante la <strong>última semana</strong>.</p>
@@ -1110,8 +858,6 @@
         </div>
     </div>
 
-    <button class="back-button" id="back-button" onclick="goBack()">← Regresar</button>
-    <div class="progress-bar" id="progress-bar"></div>
 
     <script>
         // Variables globales

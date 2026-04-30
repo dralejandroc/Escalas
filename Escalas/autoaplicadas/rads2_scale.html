@@ -5,82 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RADS-2 - Escala de Depresión para Adolescentes</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
+            margin: 0;
             padding: 20px;
-            color: #333;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .card.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            padding: 30px;
             text-align: center;
         }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
 
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
         }
 
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
+        .card {
+            padding: 50px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
         }
+        .card.active { display: block; }
 
         .question-number {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
+            color: #29A98C;
+            font-size: 1em;
             font-weight: 600;
             margin-bottom: 15px;
-            display: inline-block;
         }
 
-        .question-text {
-            font-size: 18px;
+        .question-text, .question {
+            font-size: 1.3em;
+            font-weight: 400;
             color: #112F33;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.2em;
             font-weight: 500;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
         }
 
         .options {
@@ -90,223 +90,171 @@
         }
 
         .option {
-            background: rgba(41, 169, 140, 0.1);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 16px;
+            font-size: 1.05em;
             color: #112F33;
-            font-weight: 500;
+            text-align: left;
         }
-
         .option:hover {
-            background: rgba(41, 169, 140, 0.2);
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
         }
-
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
             border-color: #29A98C;
+            transform: translateY(-1px);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #29A98C;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
+
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
 
         .instructions {
             background: rgba(41, 169, 140, 0.1);
-            border-left: 4px solid #29A98C;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
             margin-bottom: 25px;
-            font-size: 16px;
+            border-left: 4px solid #29A98C;
+            font-size: 1.05em;
             line-height: 1.6;
             color: #112F33;
         }
 
-        .back-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.3s ease;
-            z-index: 1000;
-        }
-
-        .complete-btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .complete-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .results-container {
-            margin-top: 20px;
-        }
-
-        .result-section {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #29A98C;
-        }
-
-        .result-title {
-            font-size: 18px;
-            font-weight: 600;
+        .welcome-text {
+            text-align: center;
+            font-size: 1.15em;
+            line-height: 1.6;
             color: #112F33;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
         .score-display {
-            font-size: 24px;
-            font-weight: 700;
-            color: #29A98C;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .interpretation {
-            font-size: 16px;
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
+
+        .interpretation, .result-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
+        }
+
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
             color: #112F33;
-            line-height: 1.5;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
         }
 
-        .alert-high {
-            background: #f56565;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-weight: 600;
-        }
-
-        .alert-medium {
-            background: #f6ad55;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-weight: 600;
-        }
-
-        .alert-low {
-            background: #48bb78;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-weight: 600;
-        }
-
-        .button-group {
+        .export-buttons, .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
             flex-wrap: wrap;
         }
 
-        .action-btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            flex: 1;
-            min-width: 120px;
-            transition: all 0.3s ease;
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
         }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .question-text {
-                font-size: 16px;
-            }
-
-            .option {
-                font-size: 14px;
-                padding: 14px 16px;
-            }
-
-            .back-btn {
-                bottom: 15px;
-                right: 15px;
-                padding: 12px 16px;
-                font-size: 14px;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                min-width: 100%;
-            }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Card 0: Bienvenida -->
-        <div class="card active" id="card-0">
-            <div class="header">
-                <h1>RADS-2</h1>
-                <p>Escala de Depresión para Adolescentes - Segunda Edición</p>
-            </div>
+
+        <div class="header">
+        <h1>RADS-2</h1>
+        <p>Escala de Depresión para Adolescentes - Segunda Edición</p>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+<div class="card active" id="card-0">
+            
+        
+        </div>
             <div class="instructions">
                 <p><strong>Instrucciones:</strong></p>
                 <p>A continuación encontrarás una serie de frases que describen cómo te puedes sentir. Lee cada frase cuidadosamente y selecciona la opción que mejor describe cómo te has sentido <strong>en las últimas dos semanas</strong>.</p>
@@ -728,8 +676,6 @@
         </div>
     </div>
 
-    <button class="back-btn" id="back-btn" onclick="previousCard()">← Regresar</button>
-    <div class="progress-bar" id="progress-bar"></div>
 
     <script>
         let currentCard = 0;
@@ -1034,7 +980,7 @@
                         .level-leve { background: #f6ad55; }
                         .level-moderado { background: #ed8936; }
                         .level-severo { background: #f56565; }
-                        .recommendations { background: #FFF8EE; padding: 15px; border-radius: 8px; margin: 20px 0; }
+                        .recommendations { background: #FFFFFF; padding: 15px; border-radius: 8px; margin: 20px 0; }
                         .recommendations h4 { color: #112F33; margin-bottom: 10px; }
                         .recommendations ul { margin: 10px 0; padding-left: 20px; }
                         .recommendations li { margin: 5px 0; }

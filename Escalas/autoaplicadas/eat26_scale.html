@@ -5,311 +5,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EAT-26 - Test de Actitudes hacia la Alimentación</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
-            color: #112F33;
+            margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 20px 0;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
             display: none;
-            animation: fadeInUp 0.5s ease-out;
+            animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
         }
+        .card.active { display: block; }
 
-        .card.active {
-            display: block;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card h1 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .card h2 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.4em;
+        .question-number {
+            color: #29A98C;
+            font-size: 1em;
+            font-weight: 600;
             margin-bottom: 15px;
-            font-weight: 600;
         }
 
-        .question-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .question-text {
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 25px;
+        .question-text, .question {
+            font-size: 1.3em;
+            font-weight: 400;
             color: #112F33;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
         }
 
         .options {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
 
         .option {
-            background: rgba(41, 169, 140, 0.1);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1em;
-            text-align: center;
-            font-weight: 500;
+            font-size: 1.05em;
+            color: #112F33;
+            text-align: left;
         }
-
         .option:hover {
-            background: rgba(41, 169, 140, 0.2);
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
+        }
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border-color: #29A98C;
+            transform: translateY(-1px);
         }
 
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #29A98C;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
+
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
-            border-color: #112F33;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
 
         .instructions {
             background: rgba(41, 169, 140, 0.1);
-            border: 1px solid #29A98C;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            margin: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(41, 169, 140, 0.3);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .back-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 20px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(41, 169, 140, 0.3);
-        }
-
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.3s ease;
-            z-index: 1000;
-        }
-
-        .results-section {
-            margin: 20px 0;
-        }
-
-        .score-box {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
             padding: 20px;
             border-radius: 15px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .score-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .interpretation {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 0;
-            border-left: 5px solid #29A98C;
-        }
-
-        .interpretation.high-risk {
-            border-left-color: #f56565;
-            background: rgba(245, 101, 101, 0.1);
-        }
-
-        .interpretation.moderate-risk {
-            border-left-color: #f6ad55;
-            background: rgba(246, 173, 85, 0.1);
-        }
-
-        .interpretation.low-risk {
-            border-left-color: #48bb78;
-            background: rgba(72, 187, 120, 0.1);
-        }
-
-        .subscale-scores {
-            display: grid;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .subscale {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
+            margin-bottom: 25px;
             border-left: 4px solid #29A98C;
-        }
-
-        .subscale-name {
-            font-weight: 600;
+            font-size: 1.05em;
+            line-height: 1.6;
             color: #112F33;
-            margin-bottom: 5px;
         }
 
-        .subscale-score {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #29A98C;
-        }
-
-        .alert-items {
-            background: rgba(245, 101, 101, 0.1);
-            border: 1px solid #f56565;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            color: #f56565;
-        }
-
-        .alert-items h2 {
-            color: #742a2a !important;
-            background: none !important;
-            -webkit-text-fill-color: #742a2a !important;
-        }
-
-        .alert-item {
-            margin: 10px 0; 
-            padding: 10px; 
-            background: rgba(245, 101, 101, 0.1); 
-            border-radius: 5px;
-            color: #f56565;
-        }
-
-        .export-section {
+        .welcome-text {
             text-align: center;
-            margin: 30px 0;
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 30px;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                margin: 10px;
-                max-width: none;
-            }
-            
-            .card {
-                padding: 25px;
-                margin: 10px 0;
-            }
-            
-            .card h1 {
-                font-size: 1.8em;
-            }
-            
-            .back-btn {
-                bottom: 10px;
-                right: 10px;
-                padding: 12px 16px;
-                font-size: 0.9em;
-            }
+        .score-display {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
+
+        .interpretation, .result-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
+        }
+
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
+            color: #112F33;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+
+        .export-buttons, .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Test de Actitudes hacia la Alimentación (EAT-26)</h1>
+            <p>Evaluación de Conductas Alimentarias</p>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
         <!-- Card 0: Bienvenida -->
         <div class="card active" id="card-0">
-            <h1>Test de Actitudes hacia la Alimentación (EAT-26)</h1>
             
             <div class="instructions">
-                <h2>Instrucciones para el paciente</h2>
                 <p><strong>Por favor, complete este cuestionario de forma completamente honesta y precisa.</strong></p>
                 <br>
                 <p>Este test evalúa sus actitudes, sentimientos y comportamientos relacionados con la alimentación. Consta de 26 preguntas sobre hábitos alimentarios.</p>
@@ -706,8 +649,6 @@
         </div>
     </div>
 
-    <button class="back-btn" id="back-btn" onclick="previousCard()">← Regresar</button>
-    <div class="progress-bar" id="progress-bar"></div>
 
     <script>
         let currentCard = 0;

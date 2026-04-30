@@ -5,402 +5,252 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario de Fobia Social (SPIN)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            margin: 0;
+            padding: 20px;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: #333;
         }
-        
+
         .container {
-            max-width: 600px;
-            width: 100%;
-            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
         }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .card.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        h1 {
-            color: #29A98C;
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-align: center;
-        }
-        
-        h2 {
-            color: #112F33;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-        
-        .instructions {
-            background-color: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        
-        .instructions h3 {
-            color: #29A98C;
-            margin-bottom: 10px;
-        }
-        
-        .instructions p {
-            margin-bottom: 10px;
-        }
-        
-        .instructions ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-        
-        .instructions li {
-            margin-bottom: 5px;
-        }
-        
-        .question-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+
+        .header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
-            padding: 15px;
-            margin: -30px -30px 20px;
-            border-radius: 20px 20px 0 0;
-            font-size: 16px;
+            padding: 30px;
             text-align: center;
         }
-        
-        .question-text {
-            font-size: 18px;
-            margin-bottom: 20px;
-            line-height: 1.4;
-            color: #333;
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
         }
-        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
+        }
+
+        .card {
+            padding: 50px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .card.active { display: block; }
+
+        .question-number {
+            color: #29A98C;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .question-text, .question {
+            font-size: 1.3em;
+            font-weight: 400;
+            color: #112F33;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
+        }
+
         .options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
-        
+
         .option {
-            background: #f5f5f5;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
-            font-size: 16px;
+            font-size: 1.05em;
+            color: #112F33;
+            text-align: left;
         }
-        
         .option:hover {
-            background: #e8f5f2;
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(41, 169, 140, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
         }
-        
-        .option:active {
-            transform: translateY(0);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 15px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 20px auto 0;
+            border-color: #29A98C;
+            transform: translateY(-1px);
         }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(41, 169, 140, 0.4);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .back-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #29A98C;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
+
+        .navigation {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #29A98C;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0.7;
         }
-        
-        .back-btn:hover {
-            background: #112F33;
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
+
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
-        
-        .back-btn.hidden {
-            display: none;
-        }
-        
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            z-index: 10;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-        
-        .results {
+
+        .instructions {
+            background: rgba(41, 169, 140, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #29A98C;
+            font-size: 1.05em;
             line-height: 1.6;
-        }
-        
-        .score-section {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .score-section h3 {
-            color: #29A98C;
-            margin-bottom: 10px;
-        }
-        
-        .score-total {
-            font-size: 36px;
             color: #112F33;
-            font-weight: bold;
+        }
+
+        .welcome-text {
             text-align: center;
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
             margin: 20px 0;
-        }
-        
-        .severity-level {
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .severity-none {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .severity-mild {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .severity-moderate {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .severity-severe {
-            background: #f5c6cb;
-            color: #721c24;
-        }
-        
-        .severity-very-severe {
-            background: #742a2a;
-            color: white;
-        }
-        
-        .subscale-scores {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .subscale-item {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
             text-align: center;
         }
-        
-        .subscale-item h4 {
-            color: #29A98C;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        
-        .subscale-item .score {
-            font-size: 24px;
-            font-weight: bold;
-            color: #112F33;
-        }
-        
-        .alert-items {
-            background: #f56565;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-items h4 {
-            margin-bottom: 10px;
-        }
-        
-        .alert-items ul {
-            margin-left: 20px;
-        }
-        
-        .alert-items li {
-            margin-bottom: 5px;
-        }
-        
-        .interpretation {
-            background: #e8f5f2;
+
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
+
+        .interpretation, .result-section {
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
         }
-        
-        .interpretation h3 {
-            color: #29A98C;
-            margin-bottom: 10px;
+
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
         }
-        
-        .action-buttons {
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
+            color: #112F33;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+
+        .export-buttons, .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
             flex-wrap: wrap;
         }
-        
-        .action-buttons button {
-            flex: 1;
-            min-width: 150px;
+
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
         }
-        
-        @media (max-width: 600px) {
-            .card {
-                padding: 20px;
-            }
-            
-            .question-header {
-                margin: -20px -20px 20px;
-                padding: 10px;
-                font-size: 14px;
-            }
-            
-            .question-text {
-                font-size: 16px;
-            }
-            
-            .option {
-                padding: 12px;
-                font-size: 14px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .action-buttons button {
-                width: 100%;
-            }
+
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        @media print {
-            body {
-                background: white;
-                min-height: auto;
-                padding: 0;
-            }
-            
-            .container {
-                max-width: 100%;
-            }
-            
-            .card {
-                background: white;
-                box-shadow: none;
-                break-inside: avoid;
-                padding: 20px;
-            }
-            
-            .back-btn, .progress-bar, .action-buttons {
-                display: none !important;
-            }
-            
-            .question-header {
-                background: none;
-                color: #29A98C;
-                border-bottom: 2px solid #29A98C;
-                margin: 0 0 20px 0;
-            }
-            
-            .score-section, .interpretation {
-                background: #f7f7f7 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Inventario de Fobia Social (SPIN)</h1>
+            <p>Social Phobia Inventory</p>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         <!-- Card 0: Bienvenida e instrucciones -->
         <div class="card active" id="card-0">
-            <h1>Inventario de Fobia Social (SPIN)</h1>
             <div class="instructions">
                 <h3>Instrucciones:</h3>
                 <p>Por favor lea cuidadosamente cada afirmación y responda qué tanto le ha molestado cada uno de los siguientes problemas durante las <strong>últimas semanas</strong>.</p>
@@ -653,7 +503,6 @@
     </div>
     
     <!-- Botón de regresar -->
-    <button class="back-btn" id="back-btn" onclick="previousCard()">←</button>
     
     <!-- Barra de progreso -->
     <div class="progress-bar">

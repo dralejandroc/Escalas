@@ -5,83 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EsADFUN - Escala de Síntomas Cognitivos en Depresión</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
+            margin: 0;
             padding: 20px;
-            color: #333;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 50px;
             display: none;
             animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
         }
-
-        .card.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card h1 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .card h2 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
+        .card.active { display: block; }
 
         .question-number {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            color: #29A98C;
+            font-size: 1em;
+            font-weight: 600;
             margin-bottom: 15px;
         }
 
-        .question-text {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
+        .question-text, .question {
+            font-size: 1.3em;
+            font-weight: 400;
             color: #112F33;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
         }
 
         .options {
@@ -91,217 +90,167 @@
         }
 
         .option {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.05em;
+            color: #112F33;
+            text-align: left;
         }
-
         .option:hover {
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            background: rgba(41, 169, 140, 0.1);
-            transform: translateX(5px);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
         }
-
-        .option.selected {
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
             border-color: #29A98C;
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
-            transform: translateX(5px);
+            transform: translateY(-1px);
         }
 
-        .option-circle {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #29A98C;
-            border-radius: 50%;
-            flex-shrink: 0;
-            position: relative;
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
         }
 
-        .option.selected .option-circle::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            background: #29A98C;
-            border-radius: 50%;
+        .btn-back {
+            background: transparent;
+            color: #29A98C;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
+
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
 
         .instructions {
             background: rgba(41, 169, 140, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
             border-left: 4px solid #29A98C;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-style: italic;
+            font-size: 1.05em;
+            line-height: 1.6;
             color: #112F33;
         }
 
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .back-button.hidden {
-            display: none;
-        }
-
-        .complete-button {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-top: 20px;
-            width: 100%;
-            transition: transform 0.3s ease;
-        }
-
-        .complete-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .results-container {
-            margin-top: 20px;
+        .welcome-text {
+            text-align: center;
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 30px;
         }
 
         .score-display {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 30px;
+            border-radius: 24px;
+            margin: 20px 0;
             text-align: center;
-            margin-bottom: 20px;
         }
 
-        .score-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
 
-        .interpretation {
+        .interpretation, .result-section {
             background: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
         }
 
-        .interpretation h3 {
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
             color: #112F33;
-            margin-bottom: 10px;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
         }
 
-        .level-normal { border-left: 4px solid #48bb78; }
-        .level-mild { border-left: 4px solid #f6ad55; }
-        .level-moderate { border-left: 4px solid #ed8936; }
-        .level-severe { border-left: 4px solid #f56565; }
-
-        .alert-item {
-            background: rgba(245, 101, 101, 0.1);
-            border: 1px solid #f56565;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .action-buttons {
+        .export-buttons, .action-buttons {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
-        .action-button {
-            flex: 1;
-            min-width: 140px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.3s ease;
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
         }
 
-        .action-button:hover {
-            transform: translateY(-2px);
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .technical-info {
-            background: rgba(17, 47, 51, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #112F33;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .card h1 {
-                font-size: 1.5rem;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .action-button {
-                min-width: auto;
-            }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>EsADFUN</h1>
+            <p>Escala de Autoevaluación para Depresión y Funcionalidad</p>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         <!-- Card 0: Bienvenida -->
         <div class="card active" id="card-0">
-            <h1>EsADFUN</h1>
-            <h2>Escala de Autoevaluación para Depresión y Funcionalidad</h2>
             
             <div class="instructions">
                 <strong>Instrucciones:</strong><br>
@@ -632,8 +581,6 @@
         </div>
     </div>
 
-    <div class="progress-bar" id="progressBar"></div>
-    <button class="back-button" id="backButton" onclick="previousCard()">← Regresar</button>
 
     <script>
         let currentCard = 0;

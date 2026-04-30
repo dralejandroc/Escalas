@@ -5,287 +5,252 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test AUDIT - Identificación de Trastornos por Consumo de Alcohol</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
-            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
+
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 30px 0 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+            width: 0%;
         }
 
         .card {
-            background: rgba(255, 248, 238, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(17, 47, 51, 0.37);
-            border: 1px solid rgba(41, 169, 140, 0.18);
+            padding: 50px;
             display: none;
             animation: fadeIn 0.5s ease-in;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.95);
         }
-
-        .card.active {
-            display: block;
-        }
-
-        .card h1 {
-            color: #29A98C;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(17, 47, 51, 0.3);
-        }
-
-        .card h2 {
-            color: #29A98C;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(17, 47, 51, 0.3);
-        }
-
-        .card h3 {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.4em;
-            margin-bottom: 25px;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        .card p, .card li {
-            color: #112F33;
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card ul {
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-
-        .ube-info {
-            background: rgba(41, 169, 140, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid #29A98C;
-        }
+        .card.active { display: block; }
 
         .question-number {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: #FFF8EE;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            color: #29A98C;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .question-text, .question {
+            font-size: 1.3em;
+            font-weight: 400;
+            color: #112F33;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .section-title, .section-header, .question-header, .card-header {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
             font-size: 1.2em;
-            margin-bottom: 20px;
+            font-weight: 500;
+            margin: -50px -50px 30px -50px;
+            border-radius: 0;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 12px;
         }
 
         .option {
-            background: rgba(255, 248, 238, 0.3);
-            border: 2px solid rgba(41, 169, 140, 0.3);
-            border-radius: 15px;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            border-radius: 20px;
+            padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 1.05em;
             color: #112F33;
-            font-size: 1.1em;
-            line-height: 1.5;
+            text-align: left;
         }
-
         .option:hover {
-            background: rgba(41, 169, 140, 0.15);
-            border-color: rgba(41, 169, 140, 0.6);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(41, 169, 140, 0.2);
-        }
-
-        .option.selected {
-            background: linear-gradient(45deg, #29A98C, #112F33);
+            background: rgba(255, 255, 255, 1);
             border-color: #29A98C;
-            color: #FFF8EE;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(41, 169, 140, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
+        }
+        .option.selected, .option.active {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border-color: #29A98C;
+            transform: translateY(-1px);
         }
 
-        .btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            border: none;
-            border-radius: 25px;
-            padding: 15px 30px;
-            color: #FFF8EE;
-            font-size: 1.1em;
-            font-weight: 600;
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #29A98C;
+            border: 1px solid rgba(41, 169, 140, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 10px;
-            box-shadow: 0 4px 15px rgba(17, 47, 51, 0.2);
+            opacity: 0.7;
         }
+        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
 
-        .btn:hover {
+        .btn, .start-btn, .results-btn, .action-btn, .action-button {
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(17, 47, 51, 0.3);
+            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
         }
 
-        .btn-secondary {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 248, 238, 0.2);
-            border-radius: 4px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .results-section {
-            background: rgba(255, 248, 238, 0.1);
+        .instructions {
+            background: rgba(41, 169, 140, 0.1);
+            padding: 20px;
             border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
+            margin-bottom: 25px;
+            border-left: 4px solid #29A98C;
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #112F33;
+        }
+
+        .welcome-text {
+            text-align: center;
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: #112F33;
+            margin-bottom: 30px;
         }
 
         .score-display {
-            text-align: center;
-            font-size: 3em;
-            font-weight: bold;
-            color: #29A98C;
-            text-shadow: 2px 2px 4px rgba(17, 47, 51, 0.5);
-            margin-bottom: 15px;
-        }
-
-        .interpretation {
-            text-align: center;
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .low-risk {
-            background: rgba(41, 169, 140, 0.3);
-            color: #29A98C;
-            border: 2px solid #29A98C;
-        }
-
-        .medium-risk {
-            background: rgba(41, 169, 140, 0.2);
-            color: #112F33;
-            border: 2px solid #29A98C;
-        }
-
-        .high-risk {
-            background: rgba(236, 115, 103, 0.3);
-            color: #EC7367;
-            border: 2px solid #EC7367;
-        }
-
-        .subscale-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
             margin: 20px 0;
-        }
-
-        .subscale {
-            background: rgba(255, 248, 238, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 4px solid #29A98C;
-        }
-
-        .alert-item {
-            background: rgba(236, 115, 103, 0.2);
-            border: 1px solid #EC7367;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            color: #EC7367;
-        }
-
-        .center {
             text-align: center;
         }
+
+        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
+
+        .interpretation, .result-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(41, 169, 140, 0.2);
+            text-align: left;
+        }
+
+        .alert-info, .alert { 
+            background: rgba(41, 169, 140, 0.1); 
+            border-left: 4px solid #29A98C; 
+            color: #112F33; 
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+        .alert-warning { 
+            background: rgba(236, 115, 103, 0.1); 
+            border-left: 4px solid #EC7367; 
+            color: #112F33;
+            padding: 20px; border-radius: 20px; margin: 15px 0;
+        }
+
+        .export-buttons, .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .medical-access {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #29A98C;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        h1, h2 { color: #29A98C; }
+        h3 { color: #112F33; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 600px) {
-            .container {
-                max-width: 100%;
-                padding: 10px;
-            }
-            
-            .card {
-                padding: 25px;
-                border-radius: 15px;
-            }
-            
-            .card h1 {
-                font-size: 1.8em;
-            }
-            
-            .card h2 {
-                font-size: 1.5em;
-            }
-            
-            .option {
-                padding: 15px;
-                font-size: 1em;
-            }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 5px; border-radius: 24px; }
+            .card { padding: 25px; min-height: 300px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6em; }
+            .question-text, .question { font-size: 1.1em; }
+            .option { padding: 14px 18px; }
+            .section-title, .section-header, .question-header, .card-header { margin: -25px -25px 20px -25px; }
+            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
+            .navigation { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Test AUDIT</h1>
+            <p>Identificación de Trastornos por Consumo de Alcohol</p>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         <!-- Card 0: Bienvenida -->
         <div class="card active" id="card-0">
-            <h1>Test AUDIT</h1>
-            <h2>Identificación de Trastornos por Consumo de Alcohol</h2>
             
             <p>El Test AUDIT es un cuestionario desarrollado por la Organización Mundial de la Salud para identificar el consumo de riesgo, consumo perjudicial y dependencia del alcohol.</p>
             
