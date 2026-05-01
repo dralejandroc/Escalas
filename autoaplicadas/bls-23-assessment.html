@@ -127,23 +127,21 @@
         }
         /* Slider */
         .slider-display {
-            border-radius: 16px;
-            padding: 22px;
             text-align: center;
-            margin-bottom: 16px;
-            transition: background 0.3s ease;
+            margin-bottom: 4px;
         }
-        .slider-value { font-size: 64px; font-weight: 900; line-height: 1; color: white; }
-        .slider-desc { font-size: 15px; color: white; opacity: 0.9; margin-top: 8px; font-weight: 500; }
+        .slider-value { font-size: 52px; font-weight: 900; line-height: 1; color: #ed8936; transition: color 0.25s ease; }
+        .slider-desc { font-size: 14px; color: #718096; margin-top: 6px; font-weight: 500; }
         .slider-instruction {
             text-align: center;
             color: #29A98C;
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-bottom: 12px;
-            background: rgba(41,169,140,0.08);
-            border-radius: 8px;
-            padding: 8px;
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 14px;
+            border: 2px solid #29A98C;
+            border-radius: 10px;
+            padding: 10px 14px;
+            background: rgba(41,169,140,0.06);
         }
         input[type="range"] {
             width: 100%;
@@ -158,19 +156,19 @@
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #29A98C, #112F33);
             border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            cursor: grab;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         input[type="range"]::-moz-range-thumb {
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #29A98C, #112F33);
             border-radius: 50%;
-            cursor: pointer;
+            cursor: grab;
             border: none;
         }
         .slider-extremes { display: flex; justify-content: space-between; font-size: 0.82em; color: #718096; margin-bottom: 20px; }
@@ -1104,11 +1102,11 @@
     </div>
     <div class="card-body">
         <p style="color:#112F33; font-size:1.1em; font-weight:500; margin-bottom:18px;">Califica tu <strong>estado general</strong> durante las últimas dos semanas:</p>
-        <div class="slider-display" id="slider-display" style="background: linear-gradient(135deg, #ed8936, #112F33);">
-            <div class="slider-value" id="slider-value-display">50%</div>
+        <div class="slider-display">
+            <div class="slider-value" id="slider-value-display" style="color:#ed8936;">50%</div>
             <div class="slider-desc" id="slider-desc-display">Regular</div>
         </div>
-        <div class="slider-instruction">👆 Arrastra el control deslizante para indicar tu porcentaje</div>
+        <div class="slider-instruction">☝️ Toca y arrastra el círculo verde para seleccionar tu porcentaje</div>
         <input type="range" min="0" max="100" value="50" id="percentage-slider" oninput="updateSliderDisplay(this.value)">
         <div class="slider-extremes">
             <span>😞 Extremadamente mal (0%)</span>
@@ -1305,14 +1303,14 @@
     function updateSliderDisplay(val) {
         val = parseInt(val);
         document.getElementById('slider-value-display').textContent = val + '%';
-        let desc, bg;
-        if (val <= 20)      { desc = 'Extremadamente mal'; bg = 'linear-gradient(135deg, #c53030, #112F33)'; }
-        else if (val <= 40) { desc = 'Mal'; bg = 'linear-gradient(135deg, #f56565, #112F33)'; }
-        else if (val <= 60) { desc = 'Regular'; bg = 'linear-gradient(135deg, #ed8936, #112F33)'; }
-        else if (val <= 80) { desc = 'Bien'; bg = 'linear-gradient(135deg, #48bb78, #112F33)'; }
-        else                { desc = 'Excelente'; bg = 'linear-gradient(135deg, #29A98C, #112F33)'; }
+        let desc, color;
+        if (val <= 20)      { desc = 'Extremadamente mal'; color = '#c53030'; }
+        else if (val <= 40) { desc = 'Mal'; color = '#f56565'; }
+        else if (val <= 60) { desc = 'Regular'; color = '#ed8936'; }
+        else if (val <= 80) { desc = 'Bien'; color = '#48bb78'; }
+        else                { desc = 'Excelente'; color = '#29A98C'; }
+        document.getElementById('slider-value-display').style.color = color;
         document.getElementById('slider-desc-display').textContent = desc;
-        document.getElementById('slider-display').style.background = bg;
     }
 
     function setSliderValue(val) {
