@@ -6,785 +6,1005 @@
     <title>Escala de Autoevaluación del TDAH en Adultos</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            padding: 24px 16px;
         }
-
-        .container {
+        .card-wrap {
             max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
-
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
-        }
-
-        .card {
-            padding: 50px;
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
+            margin: 0 auto 24px;
+            background: #fff;
             border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
-            color: #112F33;
-            text-align: left;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
-
-        .navigation {
+        .card-wrap.active { display: block; }
+        .card-header {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            padding: 18px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 40px;
         }
+        .card-header .scale-name { font-size: 15px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 13px; opacity: .8; }
+        .card-body { padding: 28px 32px 24px; }
 
-        .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
-
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
-
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #112F33; margin-bottom: 16px; }
+        .instructions-box {
+            background: #f0faf7;
             border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            margin-bottom: 24px;
             color: #112F33;
+            font-size: 14px;
+            line-height: 1.75;
         }
-
-        .welcome-text {
+        .instructions-box p { margin-bottom: 6px; }
+        .instructions-box p:last-child { margin-bottom: 0; }
+        .scale-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 0 0 28px;
+        }
+        .preview-opt {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 6px;
             text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
+            font-size: 12px;
+            font-weight: 600;
             color: #112F33;
-            margin-bottom: 30px;
         }
+        .preview-opt span { display: block; font-size: 10px; font-weight: 400; color: #a0aec0; margin-top: 3px; }
+        .start-wrap { text-align: center; }
 
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
-        }
-
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
+        /* Question */
+        .question-text {
+            font-size: 22px;
+            font-weight: 500;
             color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
+            line-height: 1.5;
+            margin-bottom: 28px;
         }
-
-        .export-buttons, .action-buttons {
+        .options {
             display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            width: 100%;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #112F33;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s;
+        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
+
+        /* Progress bar */
+        .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+        .progress-bar-wrap {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px;
+            transition: width .3s;
+        }
+
+        /* Bottom nav: back left, item number right */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-back {
+            background: none;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            color: #718096;
+            padding: 7px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
+        .item-number-badge {
+            font-size: 11px;
+            color: #cbd5e0;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #2d3748);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 13px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .btn-secondary:hover { opacity: .9; }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
         }
 
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
+        /* Final card */
+        .final-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
+        .final-title { font-size: 22px; font-weight: 700; color: #112F33; text-align: center; margin-bottom: 10px; }
+        .final-msg { font-size: 15px; color: #4a5568; text-align: center; margin-bottom: 20px; line-height: 1.6; }
+        .handoff-box {
+            background: #f0faf7;
+            border-radius: 12px;
+            padding: 16px;
             text-align: center;
-            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #276749;
+            font-size: 14px;
         }
 
-        h1, h2 { color: #29A98C; }
-        h3 { color: #112F33; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ── Results ── */
+        /* Score area: no gradient box — number itself is colored */
+        .score-area {
+            text-align: center;
+            padding: 24px 20px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .score-num {
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1;
+            /* color set dynamically */
+        }
+        .score-range {
+            font-size: 14px;
+            color: #a0aec0;
+            margin-top: 2px;
+        }
+        .score-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            /* color + background set dynamically */
         }
 
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
+        .subscales-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .subscale-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        .subscale-title { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 6px; }
+        .subscale-num { font-size: 32px; font-weight: 700; line-height: 1; }
+        .subscale-max { font-size: 11px; color: #a0aec0; margin-top: 2px; }
+        .subscale-interp { font-size: 11px; color: #718096; margin-top: 5px; line-height: 1.4; }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+        .interp-box {
+            background: #f7fafc;
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+        .interp-box ul { margin: 6px 0 0 16px; }
+        .alerts-box {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #742a2a;
+        }
+        .alerts-box ul { margin: 6px 0 0 16px; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .scale-preview { grid-template-columns: 1fr 1fr; }
+            .subscales-grid { grid-template-columns: 1fr; }
+            .question-text { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Escala TDAH en Adultos</h1>
-            <p>ADHD Rating Scale - Autoevaluación</p>
+
+<!-- card-0: Bienvenida -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Bienvenida</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Escala de Autoevaluación del TDAH en Adultos</div>
+        <div class="instructions-box">
+            <p>Esta escala evalúa la presencia de síntomas de Trastorno por Déficit de Atención e Hiperactividad (TDAH) en adultos.</p>
+            <p><strong>Considere su comportamiento durante los últimos 6 meses</strong> y seleccione la frecuencia que mejor describa cada comportamiento:</p>
+            <p>• <strong>NUNCA o CASI NUNCA</strong> — No me pasa</p>
+            <p>• <strong>ALGUNAS VECES</strong> — Me pasa más de una vez cada 15 días</p>
+            <p>• <strong>FRECUENTEMENTE</strong> — Me pasa más de una vez por semana</p>
+            <p>• <strong>MUY FRECUENTEMENTE</strong> — Me pasa casi todos o todos los días</p>
+            <p>Responda de manera honesta. No hay respuestas correctas o incorrectas. Son 18 preguntas, aprox. 5–10 minutos.</p>
         </div>
-        <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="scale-preview">
+            <div class="preview-opt">NUNCA<span>o casi nunca</span></div>
+            <div class="preview-opt">ALGUNAS<span>veces</span></div>
+            <div class="preview-opt">FRECUENTE<span>mente</span></div>
+            <div class="preview-opt">MUY FREC.<span>casi siempre</span></div>
         </div>
-        <!-- Card 0: Bienvenida -->
-        <div class="card active" id="card-0">
-            
-            <div class="instructions">
-                <p><strong>Instrucciones importantes:</strong></p>
-                <p>Esta escala evalúa la presencia de síntomas de Trastorno por Déficit de Atención e Hiperactividad (TDAH) en adultos.</p>
-                <p><strong>Por favor, considere su comportamiento durante los últimos 6 meses</strong> y seleccione la opción que mejor describa la frecuencia de cada comportamiento:</p>
-                <p>• <strong>"NUNCA o CASI NUNCA"</strong> = No me pasa</p>
-                <p>• <strong>"ALGUNAS VECES"</strong> = Me pasa más de una vez cada 15 días</p>
-                <p>• <strong>"FRECUENTEMENTE"</strong> = Me pasa más de una vez por semana</p>
-                <p>• <strong>"MUY FRECUENTEMENTE"</strong> = Me pasa casi todos los días o todos los días</p>
-                <p><strong>Responda de manera honesta y reflexiva.</strong> No hay respuestas correctas o incorrectas. La evaluación consta de 18 preguntas y tomará aproximadamente 5-10 minutos.</p>
-            </div>
-            
-            <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
-        </div>
-
-        <!-- Cards 1-18: Preguntas -->
-        <div class="card" id="card-1">
-            <h2>Pregunta 1 de 18</h2>
-            <div class="question-text">Al hacer mi trabajo no logro fijar mi atención en los detalles o cometo errores por no tener cuidado</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(1, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(1, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(1, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(1, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-2">
-            <h2>Pregunta 2 de 18</h2>
-            <div class="question-text">Meneo las manos o los pies o me muevo constantemente en mi asiento</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(2, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(2, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(2, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(2, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-3">
-            <h2>Pregunta 3 de 18</h2>
-            <div class="question-text">Tengo dificultad para sostener mi atención en las tareas o en las actividades de diversión</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(3, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(3, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(3, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(3, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-4">
-            <h2>Pregunta 4 de 18</h2>
-            <div class="question-text">Me levanto del asiento en situaciones en donde se espera que permanezca sentado</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(4, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(4, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(4, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(4, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-5">
-            <h2>Pregunta 5 de 18</h2>
-            <div class="question-text">No presto atención cuando se me habla directamente</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(5, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(5, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(5, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(5, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-6">
-            <h2>Pregunta 6 de 18</h2>
-            <div class="question-text">Me siento inquieto</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(6, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(6, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(6, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(6, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-7">
-            <h2>Pregunta 7 de 18</h2>
-            <div class="question-text">No sigo instrucciones de principio a fin y no termino el trabajo asignado</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(7, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(7, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(7, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(7, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-8">
-            <h2>Pregunta 8 de 18</h2>
-            <div class="question-text">Tengo dificultad para llevar a cabo actividades en mi tiempo libre de manera calmada o para hacer cosas divertidas tranquilamente</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(8, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(8, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(8, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(8, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-9">
-            <h2>Pregunta 9 de 18</h2>
-            <div class="question-text">Tengo dificultad para organizar las tareas y actividades</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(9, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(9, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(9, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(9, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-10">
-            <h2>Pregunta 10 de 18</h2>
-            <div class="question-text">Me siento como si tuviera que "moverme continuamente" o "como si me empujara un motor"</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(10, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(10, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(10, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(10, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-11">
-            <h2>Pregunta 11 de 18</h2>
-            <div class="question-text">Me disgusta, evito o estoy reticente a llevar a cabo trabajo que requiera esfuerzo mental sostenido</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(11, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(11, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(11, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(11, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-12">
-            <h2>Pregunta 12 de 18</h2>
-            <div class="question-text">Hablo en exceso</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(12, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(12, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(12, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(12, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-13">
-            <h2>Pregunta 13 de 18</h2>
-            <div class="question-text">Pierdo cosas que son necesarias para llevar a cabo tareas o actividades</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(13, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(13, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(13, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(13, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-14">
-            <h2>Pregunta 14 de 18</h2>
-            <div class="question-text">Contesto abruptamente antes de que otros terminen de hacerme la pregunta</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(14, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(14, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(14, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(14, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-15">
-            <h2>Pregunta 15 de 18</h2>
-            <div class="question-text">Me distraigo fácilmente</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(15, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(15, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(15, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(15, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-16">
-            <h2>Pregunta 16 de 18</h2>
-            <div class="question-text">Tengo dificultad para esperar mi turno</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(16, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(16, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(16, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(16, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-17">
-            <h2>Pregunta 17 de 18</h2>
-            <div class="question-text">Soy olvidadizo en las actividades diarias</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(17, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(17, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(17, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(17, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <div class="card" id="card-18">
-            <h2>Pregunta 18 de 18</h2>
-            <div class="question-text">Interrumpo a los demás o soy entrometido</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(18, 0)">NUNCA o CASI NUNCA</div>
-                <div class="option" onclick="selectOption(18, 1)">ALGUNAS VECES</div>
-                <div class="option" onclick="selectOption(18, 2)">FRECUENTEMENTE</div>
-                <div class="option" onclick="selectOption(18, 3)">MUY FRECUENTEMENTE</div>
-            </div>
-        </div>
-
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <h1>Escala Completada</h1>
-            <div class="instructions">
-                <p><strong>¡Gracias por completar la evaluación!</strong></p>
-                <p>Ha terminado de responder todas las preguntas de la Escala de Autoevaluación del TDAH en Adultos.</p>
-                <p><strong>Por favor, pase el dispositivo a su médico o profesional de la salud mental para la revisión de los resultados.</strong></p>
-            </div>
-            <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
-        </div>
-
-        <!-- Card Resultados -->
-        <div class="card" id="card-results">
-            <!-- Score box: gradient updated dynamically by showResults() -->
-            <div id="tdah-score-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px; color: #fff;">
-                <div style="font-size: 56px; font-weight: 900; line-height: 1;" id="total-score">--</div>
-                <div style="font-size: 15px; opacity: 0.85; margin-top: 4px;">Puntuación Total / 54</div>
-                <div style="font-size: 20px; font-weight: 700; margin-top: 8px;" id="total-severity">--</div>
-            </div>
-
-            <!-- Interpretation text -->
-            <div id="total-interpretation" style="font-size: 14px; color: #555; margin-bottom: 16px; line-height: 1.5;"></div>
-
-            <!-- Subscales grid -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Inatención</div>
-                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="inattention-score">--</div>
-                    <div style="font-size: 11px; color: #888;">/ 27</div>
-                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="inattention-interpretation"></div>
-                </div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Hiperactividad / Impulsividad</div>
-                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="hyperactivity-score">--</div>
-                    <div style="font-size: 11px; color: #888;">/ 27</div>
-                    <div style="font-size: 11px; color: #666; margin-top: 4px;" id="hyperactivity-interpretation"></div>
-                </div>
-            </div>
-
-            <!-- Clinical recommendations -->
-            <div id="clinical-notes-section" style="background: #f7fafc; border-left: 4px solid #29A98C; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 16px; display: none;">
-                <div style="font-size: 13px; font-weight: 700; color: #112F33; margin-bottom: 8px;">Interpretación Clínica</div>
-                <ul id="clinical-recommendations" style="margin: 0; padding-left: 18px; font-size: 13px; color: #444; line-height: 1.7;"></ul>
-            </div>
-
-            <!-- Alert items -->
-            <div id="alert-section" style="display: none; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
-                <div style="font-size: 13px; font-weight: 700; color: #c53030; margin-bottom: 8px;">⚠️ Ítems de Atención Prioritaria</div>
-                <ul id="high-score-items" style="margin: 0; padding-left: 18px; font-size: 13px; color: #444; line-height: 1.7;"></ul>
-            </div>
-
-            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn" onclick="exportResults()">Exportar PDF</button>
-                <button class="btn btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
-            </div>
+        <div class="start-wrap">
+            <button class="btn-primary" onclick="showCard(1)">Comenzar Evaluación</button>
         </div>
     </div>
+</div>
 
+<!-- card-1 -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Al hacer mi trabajo no logro fijar mi atención en los detalles o cometo errores por no tener cuidado</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(1,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(1,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(1,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(1,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 1 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:6%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 1 / 18</span>
+        </div>
+    </div>
+</div>
 
-    <script>
-        let currentCard = 0;
-        let responses = {};
-        const totalQuestions = 18;
+<!-- card-2 -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Meneo las manos o los pies o me muevo constantemente en mi asiento</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(2,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(2,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(2,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(2,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 2 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:11%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 2 / 18</span>
+        </div>
+    </div>
+</div>
 
-        function selectOption(question, value) {
-            responses[question] = value;
-            
-            // Visual feedback
-            const options = document.querySelector(`#card-${question} .options`).children;
-            for (let option of options) {
-                option.classList.remove('selected');
-            }
-            options[value].classList.add('selected');
-            
-            // Auto-advance after selection
-            setTimeout(() => {
-                nextCard();
-            }, 150);
+<!-- card-3 -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Tengo dificultad para sostener mi atención en las tareas o en las actividades de diversión</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(3,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(3,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(3,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(3,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 3 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:17%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 3 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-4 -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Me levanto del asiento en situaciones en donde se espera que permanezca sentado</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(4,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(4,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(4,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(4,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 4 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:22%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 4 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-5 -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">No presto atención cuando se me habla directamente</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(5,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(5,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(5,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(5,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 5 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:28%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 5 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-6 -->
+<div class="card-wrap" id="card-6">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Me siento inquieto</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(6,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(6,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(6,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(6,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 6 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 6 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-7 -->
+<div class="card-wrap" id="card-7">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">No sigo instrucciones de principio a fin y no termino el trabajo asignado</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(7,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(7,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(7,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(7,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 7 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:39%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 7 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-8 -->
+<div class="card-wrap" id="card-8">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Tengo dificultad para llevar a cabo actividades en mi tiempo libre de manera calmada o para hacer cosas divertidas tranquilamente</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(8,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(8,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(8,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(8,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 8 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:44%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 8 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-9 -->
+<div class="card-wrap" id="card-9">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Tengo dificultad para organizar las tareas y actividades</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(9,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(9,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(9,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(9,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 9 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 9 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-10 -->
+<div class="card-wrap" id="card-10">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Me siento como si tuviera que "moverme continuamente" o "como si me empujara un motor"</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(10,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(10,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(10,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(10,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 10 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:56%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 10 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-11 -->
+<div class="card-wrap" id="card-11">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Me disgusta, evito o estoy reticente a llevar a cabo trabajo que requiera esfuerzo mental sostenido</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(11,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(11,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(11,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(11,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 11 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:61%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 11 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-12 -->
+<div class="card-wrap" id="card-12">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Hiperactividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Hablo en exceso</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(12,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(12,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(12,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(12,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 12 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:67%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 12 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-13 -->
+<div class="card-wrap" id="card-13">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Pierdo cosas que son necesarias para llevar a cabo tareas o actividades</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(13,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(13,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(13,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(13,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 13 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:72%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 13 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-14 -->
+<div class="card-wrap" id="card-14">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Impulsividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Contesto abruptamente antes de que otros terminen de hacerme la pregunta</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(14,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(14,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(14,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(14,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 14 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:78%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 14 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-15 -->
+<div class="card-wrap" id="card-15">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Me distraigo fácilmente</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(15,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(15,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(15,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(15,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 15 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:83%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 15 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-16 -->
+<div class="card-wrap" id="card-16">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Impulsividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Tengo dificultad para esperar mi turno</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(16,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(16,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(16,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(16,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 16 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:89%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 16 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-17 -->
+<div class="card-wrap" id="card-17">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Inatención</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Soy olvidadizo en las actividades diarias</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(17,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(17,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(17,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(17,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 17 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:94%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 17 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-18 -->
+<div class="card-wrap" id="card-18">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Impulsividad</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Interrumpo a los demás o soy entrometido</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(18,0,this)">NUNCA o CASI NUNCA</button>
+            <button class="option" onclick="selectOption(18,1,this)">ALGUNAS VECES</button>
+            <button class="option" onclick="selectOption(18,2,this)">FRECUENTEMENTE</button>
+            <button class="option" onclick="selectOption(18,3,this)">MUY FRECUENTEMENTE</button>
+        </div>
+        <div class="q-progress-label">Pregunta 18 de 18</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 18 / 18</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-final -->
+<div class="card-wrap" id="card-final">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Completado</span>
+    </div>
+    <div class="card-body">
+        <div class="final-icon">✅</div>
+        <div class="final-title">Evaluación Completada</div>
+        <div class="final-msg">¡Gracias por completar la Escala de Autoevaluación del TDAH en Adultos!</div>
+        <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de la salud mental para la revisión de los resultados.</div>
+        <div style="text-align:center;">
+            <button class="btn-primary" onclick="showResults()">Revisar Resultados (Médico)</button>
+        </div>
+    </div>
+</div>
+
+<!-- card-results -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">TDAH en Adultos — Autoevaluación</span>
+        <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+
+        <!-- Score: colored NUMBER, no gradient box -->
+        <div class="score-area">
+            <div class="score-num" id="total-score">—</div>
+            <div class="score-range">/ 54 puntos totales</div>
+            <div class="score-badge" id="total-severity-badge">—</div>
+        </div>
+
+        <!-- Subscales -->
+        <div class="section-label">Subescalas</div>
+        <div class="subscales-grid">
+            <div class="subscale-box">
+                <div class="subscale-title">Inatención</div>
+                <div class="subscale-num" id="inattention-score">—</div>
+                <div class="subscale-max">/ 27 pts</div>
+                <div class="subscale-interp" id="inattention-interp"></div>
+            </div>
+            <div class="subscale-box">
+                <div class="subscale-title">Hiperactividad / Impulsividad</div>
+                <div class="subscale-num" id="hyperactivity-score">—</div>
+                <div class="subscale-max">/ 27 pts</div>
+                <div class="subscale-interp" id="hyperactivity-interp"></div>
+            </div>
+        </div>
+
+        <!-- Clinical interpretation -->
+        <div class="section-label">Interpretación Clínica</div>
+        <div class="interp-box" id="clinical-box" style="display:none;">
+            <ul id="clinical-recommendations"></ul>
+        </div>
+
+        <!-- High-score items -->
+        <div class="alerts-box" id="alert-section" style="display:none;">
+            <strong>⚠ Ítems de Atención Prioritaria</strong>
+            <ul id="high-score-items"></ul>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="exportToPDF()">Generar PDF</button>
+            <button class="btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const totalQuestions = 18;
+    let currentCardId = 'card-0';
+    let responses = {};
+
+    const inattentionItems   = [1,3,5,7,9,11,13,15,17];
+    const hyperactivityItems = [2,4,6,8,10,12,14,16,18];
+
+    const itemTexts = [
+        '', // placeholder index 0
+        'Errores por falta de atención en detalles',
+        'Movimiento de manos/pies o inquietud en asiento',
+        'Dificultad para sostener atención',
+        'Se levanta cuando debe permanecer sentado',
+        'No presta atención cuando le hablan',
+        'Se siente inquieto',
+        'No sigue instrucciones hasta el final',
+        'Dificultad para actividades calmadas en tiempo libre',
+        'Dificultad para organizar tareas',
+        'Sensación de motor interno / moverse continuamente',
+        'Evita tareas de esfuerzo mental sostenido',
+        'Habla en exceso',
+        'Pierde cosas necesarias',
+        'Responde antes de terminar la pregunta',
+        'Se distrae fácilmente',
+        'Dificultad para esperar turno',
+        'Olvidos en actividades diarias',
+        'Interrumpe o es entrometido'
+    ];
+
+    function showCard(id) {
+        document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+        const key = (typeof id === 'number') ? 'card-' + id : id;
+        document.getElementById(key).classList.add('active');
+        currentCardId = key;
+        window.scrollTo(0, 0);
+        if (typeof id === 'number' && id >= 1 && id <= totalQuestions) restoreSelections(id);
+    }
+
+    function restoreSelections(n) {
+        if (responses[n] === undefined) return;
+        const card = document.getElementById('card-' + n);
+        if (!card) return;
+        card.querySelectorAll('.option').forEach((btn, idx) => {
+            btn.classList.toggle('selected', idx === responses[n]);
+        });
+    }
+
+    function selectOption(qNum, value, btn) {
+        btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        responses[qNum] = value;
+        setTimeout(() => {
+            if (qNum < totalQuestions) showCard(qNum + 1);
+            else showCard('card-final');
+        }, 150);
+    }
+
+    function previousCard() {
+        const match = currentCardId.match(/card-(\d+)/);
+        if (!match) return;
+        const n = parseInt(match[1]);
+        if (n <= 1) showCard(0);
+        else showCard(n - 1);
+    }
+
+    function calculateScore() {
+        let inattention = 0, hyperactivity = 0;
+        inattentionItems.forEach(i => { inattention += responses[i] || 0; });
+        hyperactivityItems.forEach(i => { hyperactivity += responses[i] || 0; });
+        return { total: inattention + hyperactivity, inattention, hyperactivity };
+    }
+
+    function getLevel(score, max) {
+        const pct = (score / max) * 100;
+        if (pct < 44) return { key: 'low',      label: 'Mínima / Ausente', color: '#48bb78', bgColor: 'rgba(72,187,120,0.12)' };
+        if (pct < 67) return { key: 'moderate', label: 'Moderada',         color: '#f6ad55', bgColor: 'rgba(246,173,85,0.12)'  };
+        return             { key: 'high',     label: 'Significativa',    color: '#f56565', bgColor: 'rgba(245,101,101,0.12)' };
+    }
+
+    function showResults() {
+        const s = calculateScore();
+        const totalLv  = getLevel(s.total, 54);
+        const inattLv  = getLevel(s.inattention, 27);
+        const hyperLv  = getLevel(s.hyperactivity, 27);
+
+        // Colored number, no box
+        const numEl = document.getElementById('total-score');
+        numEl.textContent = s.total;
+        numEl.style.color = totalLv.color;
+
+        const badge = document.getElementById('total-severity-badge');
+        badge.textContent = totalLv.label;
+        badge.style.color = totalLv.color;
+        badge.style.background = totalLv.bgColor;
+        badge.style.border = `1.5px solid ${totalLv.color}`;
+
+        // Subscales
+        const inEl = document.getElementById('inattention-score');
+        inEl.textContent = s.inattention;
+        inEl.style.color = inattLv.color;
+        document.getElementById('inattention-interp').textContent = inattLv.label;
+
+        const hyEl = document.getElementById('hyperactivity-score');
+        hyEl.textContent = s.hyperactivity;
+        hyEl.style.color = hyperLv.color;
+        document.getElementById('hyperactivity-interp').textContent = hyperLv.label;
+
+        // Clinical recommendations
+        const recs = [];
+        if (s.inattention >= 12) recs.push('Síntomas de inatención clínicamente significativos. Evaluar impacto en funcionamiento académico/laboral.');
+        if (s.hyperactivity >= 12) recs.push('Síntomas de hiperactividad/impulsividad clínicamente significativos. Considerar impacto en relaciones interpersonales.');
+        if (s.total >= 24) recs.push('Puntuación total sugiere probable TDAH. Recomendable evaluación neuropsicológica complementaria.');
+        if (s.inattention > s.hyperactivity + 6) recs.push('Patrón predominantemente inatento. Evaluar déficits atencionales y funciones ejecutivas.');
+        else if (s.hyperactivity > s.inattention + 6) recs.push('Patrón predominantemente hiperactivo-impulsivo. Evaluar control inhibitorio y regulación emocional.');
+        else if (s.inattention >= 12 && s.hyperactivity >= 12) recs.push('Patrón combinado. Evaluación integral de ambos dominios sintomáticos.');
+        recs.push('Considerar historia de desarrollo, funcionamiento actual y posibles diagnósticos diferenciales.');
+        recs.push('Validar hallazgos con informantes adicionales y observación clínica directa.');
+
+        document.getElementById('clinical-recommendations').innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+        document.getElementById('clinical-box').style.display = 'block';
+
+        // High-score items
+        const highItems = [];
+        for (let i = 1; i <= totalQuestions; i++) {
+            if ((responses[i] || 0) >= 2) highItems.push(`<li><strong>${itemTexts[i]}</strong> (Ítem ${i}): ${responses[i]}/3</li>`);
+        }
+        if (highItems.length) {
+            document.getElementById('high-score-items').innerHTML = highItems.join('');
+            document.getElementById('alert-section').style.display = 'block';
         }
 
-        function nextCard() {
-            document.getElementById(`card-${currentCard}`).classList.remove('active');
-            currentCard++;
-            
-            if (currentCard <= totalQuestions) {
-                document.getElementById(`card-${currentCard}`).classList.add('active');
-                updateProgress();
-                updateBackButton();
-            } else {
-                showFinalCard();
-            }
-        }
+        showCard('card-results');
+    }
 
-        function previousCard() {
-            if (currentCard > 0) {
-                document.getElementById(`card-${currentCard}`).classList.remove('active');
-                currentCard--;
-                document.getElementById(`card-${currentCard}`).classList.add('active');
-                updateProgress();
-                updateBackButton();
-            }
-        }
+    function exportToPDF() {
+        const s = calculateScore();
+        const totalLv = getLevel(s.total, 54);
+        const inattLv = getLevel(s.inattention, 27);
+        const hyperLv = getLevel(s.hyperactivity, 27);
+        const fecha = new Date().toLocaleDateString('es-ES');
 
-        function showFinalCard() {
-            document.getElementById('card-final').classList.add('active');
-            updateBackButton();
-        }
-
-        function updateProgress() {
-            const progress = (currentCard / (totalQuestions + 1)) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        function updateBackButton() {
-            const backBtn = document.getElementById('backBtn');
-            if (currentCard > 0 && currentCard !== 'final' && currentCard !== 'results') {
-                backBtn.classList.add('show');
-            } else {
-                backBtn.classList.remove('show');
-            }
-        }
-
-        function calculateScore() {
-            // Inatención: ítems impares (1,3,5,7,9,11,13,15,17)
-            const inattentionItems = [1, 3, 5, 7, 9, 11, 13, 15, 17];
-            // Hiperactividad/Impulsividad: ítems pares (2,4,6,8,10,12,14,16,18)
-            const hyperactivityItems = [2, 4, 6, 8, 10, 12, 14, 16, 18];
-            
-            let inattentionScore = 0;
-            let hyperactivityScore = 0;
-            
-            inattentionItems.forEach(item => {
-                inattentionScore += responses[item] || 0;
-            });
-            
-            hyperactivityItems.forEach(item => {
-                hyperactivityScore += responses[item] || 0;
-            });
-            
-            const totalScore = inattentionScore + hyperactivityScore;
-            
-            return {
-                total: totalScore,
-                inattention: inattentionScore,
-                hyperactivity: hyperactivityScore
-            };
-        }
-
-        function getInterpretation(score, maxScore) {
-            const percentage = (score / maxScore) * 100;
-            
-            if (percentage < 44) {
-                return {
-                    level: 'low',
-                    text: 'Sintomatología mínima o ausente. Los síntomas reportados no sugieren presencia significativa de TDAH.'
-                };
-            } else if (percentage < 67) {
-                return {
-                    level: 'moderate',
-                    text: 'Sintomatología moderada. Se observan algunos síntomas que pueden requerir evaluación adicional.'
-                };
-            } else {
-                return {
-                    level: 'high',
-                    text: 'Sintomatología significativa. Los síntomas reportados sugieren probable presencia de TDAH y requieren evaluación clínica detallada.'
-                };
-            }
-        }
-
-        function showResults() {
-            document.getElementById('card-final').classList.remove('active');
-            currentCard = 'results';
-
-            const scores = calculateScore();
-
-            const totalInterp = getInterpretation(scores.total, 54);
-            const inattentionInterp = getInterpretation(scores.inattention, 27);
-            const hyperactivityInterp = getInterpretation(scores.hyperactivity, 27);
-
-            // Color por severidad
-            const colorMap = { low: '#48bb78', moderate: '#f6ad55', high: '#f56565' };
-            const labelMap = { low: 'Mínima / Ausente', moderate: 'Moderada', high: 'Significativa' };
-            const scoreBox = document.getElementById('tdah-score-box');
-            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${colorMap[totalInterp.level] || '#29A98C'}, #112F33)`;
-
-            // Puntuación total
-            document.getElementById('total-score').textContent = scores.total;
-            document.getElementById('total-severity').textContent = labelMap[totalInterp.level] || '';
-            document.getElementById('total-interpretation').textContent = totalInterp.text;
-
-            // Subescalas
-            document.getElementById('inattention-score').textContent = scores.inattention;
-            document.getElementById('inattention-interpretation').textContent = inattentionInterp.text.split('.')[0];
-            document.getElementById('hyperactivity-score').textContent = scores.hyperactivity;
-            document.getElementById('hyperactivity-interpretation').textContent = hyperactivityInterp.text.split('.')[0];
-
-            // Interpretación clínica
-            generateClinicalRecommendations(scores, totalInterp, inattentionInterp, hyperactivityInterp);
-
-            // Alertas
-            checkHighScoreItems();
-
-            document.getElementById('card-results').classList.add('active');
-            updateBackButton();
-        }
-
-        function generateClinicalRecommendations(scores, totalInterp, inattentionInterp, hyperactivityInterp) {
-            const recs = [];
-
-            if (scores.inattention >= 12) recs.push('Síntomas de inatención clínicamente significativos. Evaluar impacto en funcionamiento académico/laboral.');
-            if (scores.hyperactivity >= 12) recs.push('Síntomas de hiperactividad/impulsividad clínicamente significativos. Considerar impacto en relaciones interpersonales.');
-            if (scores.total >= 24) recs.push('Puntuación total sugiere probable TDAH. Recomendable evaluación neuropsicológica complementaria.');
-            if (scores.inattention > scores.hyperactivity + 6) {
-                recs.push('Patrón predominantemente inatento. Evaluar déficits atencionales y funciones ejecutivas.');
-            } else if (scores.hyperactivity > scores.inattention + 6) {
-                recs.push('Patrón predominantemente hiperactivo-impulsivo. Evaluar control inhibitorio y regulación emocional.');
-            } else if (scores.inattention >= 12 && scores.hyperactivity >= 12) {
-                recs.push('Patrón combinado. Evaluación integral de ambos dominios sintomáticos.');
-            }
-            recs.push('Considerar historia de desarrollo, funcionamiento actual y posibles diagnósticos diferenciales.');
-            recs.push('Validar hallazgos con informantes adicionales y observación clínica directa.');
-
-            const ul = document.getElementById('clinical-recommendations');
-            ul.innerHTML = recs.map(r => `<li>${r}</li>`).join('');
-            document.getElementById('clinical-notes-section').style.display = 'block';
-        }
-
-        function checkHighScoreItems() {
-            const itemTexts = [
-                'Errores por falta de atención en detalles',
-                'Movimiento de manos/pies o inquietud',
-                'Dificultad para sostener atención',
-                'Se levanta cuando debe permanecer sentado',
-                'No presta atención cuando le hablan',
-                'Se siente inquieto',
-                'No sigue instrucciones hasta el final',
-                'Dificultad para actividades calmadas',
-                'Dificultad para organizar tareas',
-                'Sensación de motor interno',
-                'Evita tareas de esfuerzo mental',
-                'Habla en exceso',
-                'Pierde cosas necesarias',
-                'Responde antes de terminar pregunta',
-                'Se distrae fácilmente',
-                'Dificultad para esperar turno',
-                'Olvidos en actividades diarias',
-                'Interrumpe o es entrometido'
-            ];
-
-            const highItems = [];
-            for (let i = 1; i <= 18; i++) {
-                if (responses[i] >= 2) {
-                    highItems.push(`<li><strong>${itemTexts[i-1]}</strong> (Ítem ${i}): ${responses[i]}/3</li>`);
+        const highItemsHTML = (() => {
+            const items = [];
+            for (let i = 1; i <= totalQuestions; i++) {
+                if ((responses[i] || 0) >= 2) {
+                    const freqs = ['Nunca/Casi nunca','Algunas veces','Frecuentemente','Muy frecuentemente'];
+                    items.push(`<li><strong>${itemTexts[i]}</strong> (Ítem ${i}): ${freqs[responses[i]]}</li>`);
                 }
             }
+            return items.length ? `<h2>Ítems de Atención Prioritaria</h2><ul style="margin:6px 0 0 18px;line-height:1.8;">${items.join('')}</ul>` : '';
+        })();
 
-            if (highItems.length > 0) {
-                document.getElementById('alert-section').style.display = 'block';
-                document.getElementById('high-score-items').innerHTML = highItems.join('');
-            }
-        }
+        const recs = [];
+        if (s.inattention >= 12) recs.push('Síntomas de inatención clínicamente significativos.');
+        if (s.hyperactivity >= 12) recs.push('Síntomas de hiperactividad/impulsividad clínicamente significativos.');
+        if (s.total >= 24) recs.push('Puntuación total sugiere probable TDAH. Recomendable evaluación neuropsicológica complementaria.');
+        if (s.inattention > s.hyperactivity + 6) recs.push('Patrón predominantemente inatento.');
+        else if (s.hyperactivity > s.inattention + 6) recs.push('Patrón predominantemente hiperactivo-impulsivo.');
+        else if (s.inattention >= 12 && s.hyperactivity >= 12) recs.push('Patrón combinado.');
+        recs.push('Considerar historia de desarrollo y posibles diagnósticos diferenciales.');
+        recs.push('Validar con informantes adicionales y observación clínica.');
 
-        function exportResults() {
-            window.print();
-        }
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>TDAH Resultados</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; color: #112F33; }
+  h1 { color: #29A98C; margin-bottom: 4px; }
+  h2 { color: #29A98C; font-size: 15px; margin: 22px 0 8px; }
+  .score-area { text-align: center; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; }
+  .score-num { font-size: 72px; font-weight: 900; line-height: 1; color: ${totalLv.color}; }
+  .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
+  .score-badge { display: inline-block; margin-top: 10px; padding: 4px 16px; border-radius: 20px; font-size: 14px; font-weight: 700; color: ${totalLv.color}; background: ${totalLv.bgColor}; border: 1.5px solid ${totalLv.color}; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0 16px; }
+  .sub { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center; }
+  .sub-title { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 4px; }
+  .sub-num { font-size: 32px; font-weight: 700; }
+  .sub-max { font-size: 11px; color: #a0aec0; }
+  .sub-lv { font-size: 11px; margin-top: 4px; font-weight: 600; }
+  .interp { background: #f7fafc; border-left: 4px solid #29A98C; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 8px 0 16px; font-size: 13px; line-height: 1.7; }
+  .alerts { background: #fff5f5; border: 1px solid #feb2b2; border-radius: 8px; padding: 12px 16px; margin: 8px 0 16px; font-size: 13px; color: #742a2a; }
+  ul { margin: 6px 0 0 18px; line-height: 1.8; }
+  footer { margin-top: 40px; font-size: 11px; color: #999; text-align: center; }
+</style></head><body>
+<h1>Escala TDAH en Adultos — Autoevaluación</h1>
+<p style="color:#718096;">Fecha: ${fecha}</p>
+<div class="score-area">
+  <div class="score-num">${s.total}</div>
+  <div class="score-range">/ 54 puntos totales</div>
+  <div class="score-badge">${totalLv.label}</div>
+</div>
+<h2>Subescalas</h2>
+<div class="grid">
+  <div class="sub">
+    <div class="sub-title">Inatención</div>
+    <div class="sub-num" style="color:${inattLv.color}">${s.inattention}</div>
+    <div class="sub-max">/ 27 pts</div>
+    <div class="sub-lv" style="color:${inattLv.color}">${inattLv.label}</div>
+  </div>
+  <div class="sub">
+    <div class="sub-title">Hiperactividad / Impulsividad</div>
+    <div class="sub-num" style="color:${hyperLv.color}">${s.hyperactivity}</div>
+    <div class="sub-max">/ 27 pts</div>
+    <div class="sub-lv" style="color:${hyperLv.color}">${hyperLv.label}</div>
+  </div>
+</div>
+<h2>Interpretación Clínica</h2>
+<div class="interp"><ul>${recs.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+${highItemsHTML ? `<h2>Ítems de Atención Prioritaria</h2><div class="alerts">${highItemsHTML}</div>` : ''}
+<footer>TDAH en Adultos — ADHD Rating Scale · Generado el ${fecha}</footer>
+</body></html>`;
 
-        function newEvaluation() {
-            currentCard = 0;
-            responses = {};
-            
-            // Reset all cards
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
-            
-            // Reset selected options
-            document.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Show welcome card
-            document.getElementById('card-0').classList.add('active');
-            
-            // Reset progress
-            document.getElementById('progressBar').style.width = '0%';
-            updateBackButton();
-        }
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        w.print();
+    }
 
-        // Initialize
-        updateProgress();
-        updateBackButton();
-    </script>
-    <script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
-        }
-    });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
+    function newEvaluation() {
+        responses = {};
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('alert-section').style.display = 'none';
+        document.getElementById('clinical-box').style.display = 'none';
+        showCard(0);
+    }
 </script>
 </body>
 </html>
