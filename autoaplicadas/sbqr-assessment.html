@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBQ-R — Cuestionario de Conductas Suicidas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
+            color: white;
+            padding: 22px 28px 18px;
+        }
+        .scale-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        .card-header h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
+        .card-header .subtitle { font-size: 12px; opacity: 0.72; }
+        .card-body { padding: 28px 32px 24px; }
+        .progress-bar-wrap {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 24px;
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #c53030, #63171b);
+            transition: width 0.4s ease;
+        }
+        .question-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #c53030;
+            margin-bottom: 8px;
+        }
+        .question-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a202c;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
+        .opt-btn {
+            width: 100%;
+            padding: 14px 18px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2d3748;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .opt-btn:hover { border-color: #c53030; background: #fff5f5; }
+        .opt-btn.selected {
+            border-color: #c53030;
+            background: rgba(197,48,48,0.08);
+            color: #63171b;
+            font-weight: 600;
+        }
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 6px 0;
+            font-family: inherit;
+            transition: color 0.15s;
+        }
+        .back-btn:hover { color: #c53030; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 600; }
+
+        /* Welcome */
+        .welcome-desc {
+            font-size: 15px;
+            color: #4a5568;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+        .confidential-note {
+            background: #fff5f5;
+            border-left: 3px solid #c53030;
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #742a2a;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #c53030, #63171b);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+        .start-btn:hover { opacity: 0.9; }
+
+        /* Results */
+        .result-center { text-align: center; margin-bottom: 24px; }
+        .result-score-label { font-size: 13px; color: #718096; margin-bottom: 4px; }
+        .result-score-num {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .result-score-max { font-size: 14px; color: #a0aec0; margin-bottom: 16px; }
+        .severity-badge {
+            display: inline-block;
+            padding: 7px 22px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 2px solid;
+        }
+        .result-section { margin-bottom: 20px; }
+        .result-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        .interp-box {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        .cutoff-table { width: 100%; border-collapse: collapse; }
+        .cutoff-table td {
+            padding: 9px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        .cutoff-table tr:last-child td { border-bottom: none; }
+        .cutoff-table .dot { font-size: 18px; font-weight: 700; }
+        .answer-row {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .answer-row:last-child { border-bottom: none; }
+        .answer-q { font-size: 12px; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+        .answer-v { font-size: 14px; color: #2d3748; }
+        .action-btn {
+            width: 100%;
+            padding: 13px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #4a5568;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 10px;
+            transition: border-color 0.2s;
+        }
+        .action-btn:hover { border-color: #c53030; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="card-wrap">
+
+    <!-- BIENVENIDA -->
+    <div id="card-0">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Autoaplicada · Riesgo Suicida</div>
+            <h2>Cuestionario de Conductas Suicidas</h2>
+            <div class="subtitle">Suicidal Behaviors Questionnaire — Revised (Osman et al., 2001)</div>
+        </div>
+        <div class="card-body">
+            <p class="welcome-desc">Este cuestionario tiene <strong>4 preguntas</strong> sobre pensamientos relacionados con el suicidio. Por favor responda con sinceridad. Sus respuestas son confidenciales y ayudan a brindarle una mejor atención.</p>
+            <div class="confidential-note">No hay respuestas correctas ni incorrectas. Solo elija la opción que mejor describe su experiencia.</div>
+            <button class="start-btn" onclick="showCard('card-1')">Comenzar cuestionario</button>
+        </div>
+    </div>
+
+    <!-- PREGUNTA 1 -->
+    <div id="card-1" class="hidden">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Pregunta 1 de 4</div>
+            <h2>A lo largo de su vida</h2>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:25%"></div></div>
+            <div class="question-label">Pregunta 1</div>
+            <div class="question-text">¿Ha pensado alguna vez en suicidarse o ha intentado suicidarse?</div>
+            <div class="options-list" id="opts-1"></div>
+            <div class="nav-row">
+                <button class="back-btn" onclick="showCard('card-0')">← Anterior</button>
+                <span class="item-badge">1 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREGUNTA 2 -->
+    <div id="card-2" class="hidden">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Pregunta 2 de 4</div>
+            <h2>En el último año</h2>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:50%"></div></div>
+            <div class="question-label">Pregunta 2</div>
+            <div class="question-text">¿Con qué frecuencia ha pensado en suicidarse durante el último año?</div>
+            <div class="options-list" id="opts-2"></div>
+            <div class="nav-row">
+                <button class="back-btn" onclick="goBack('card-2')">← Anterior</button>
+                <span class="item-badge">2 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREGUNTA 3 -->
+    <div id="card-3" class="hidden">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Pregunta 3 de 4</div>
+            <h2>Comunicación de intención</h2>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:75%"></div></div>
+            <div class="question-label">Pregunta 3</div>
+            <div class="question-text">¿Alguna vez le ha dicho a alguien que quería suicidarse, o que podría hacerlo?</div>
+            <div class="options-list" id="opts-3"></div>
+            <div class="nav-row">
+                <button class="back-btn" onclick="goBack('card-3')">← Anterior</button>
+                <span class="item-badge">3 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREGUNTA 4 -->
+    <div id="card-4" class="hidden">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Pregunta 4 de 4</div>
+            <h2>Perspectiva futura</h2>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+            <div class="question-label">Pregunta 4</div>
+            <div class="question-text">¿Qué tan probable es que intente suicidarse en algún momento en el futuro?</div>
+            <div class="options-list" id="opts-4"></div>
+            <div class="nav-row">
+                <button class="back-btn" onclick="goBack('card-4')">← Anterior</button>
+                <span class="item-badge">4 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div id="card-results" class="hidden">
+        <div class="card-header">
+            <div class="scale-label">SBQ-R · Resultado</div>
+            <h2>Cuestionario de Conductas Suicidas</h2>
+            <div class="subtitle">Suicidal Behaviors Questionnaire — Revised</div>
+        </div>
+        <div class="card-body">
+            <div class="result-center">
+                <div class="result-score-label">Puntuación total</div>
+                <div class="result-score-num" id="res-score">—</div>
+                <div class="result-score-max">de 18 puntos posibles</div>
+                <span class="severity-badge" id="res-badge">—</span>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Interpretación clínica</div>
+                <div class="interp-box" id="res-interp"></div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Puntos de corte (referencia)</div>
+                <table class="cutoff-table">
+                    <tr>
+                        <td><strong>3 – 6</strong></td>
+                        <td>Sin indicadores de riesgo significativos</td>
+                        <td class="dot" style="color:#48bb78;">●</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7 – 8</strong></td>
+                        <td>Riesgo moderado — evaluar más a fondo</td>
+                        <td class="dot" style="color:#f6ad55;">●</td>
+                    </tr>
+                    <tr>
+                        <td><strong>≥ 9</strong></td>
+                        <td>Riesgo elevado — intervención indicada</td>
+                        <td class="dot" style="color:#f56565;">●</td>
+                    </tr>
+                </table>
+                <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Osman et al. (2001) · Corte ≥7 población general; ≥8 muestra clínica/psiquiátrica.</p>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Respuestas registradas</div>
+                <div class="interp-box" id="res-answers"></div>
+            </div>
+
+            <button class="action-btn" onclick="exportPDF()" style="margin-top:16px;">Exportar como PDF</button>
+            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
+        </div>
+    </div>
+
+</div>
+<script>
+const cardOrder = ['card-0','card-1','card-2','card-3','card-4','card-results'];
+const responses = {};
+
+const items = {
+    1: [
+        { text: "Nunca he pensado en suicidarme", score: 1 },
+        { text: "Fue solo un pensamiento pasajero", score: 2 },
+        { text: "He pensado en ello ocasionalmente, pero nunca lo haría", score: 3 },
+        { text: "He pensado seriamente en suicidarme al menos una vez", score: 4 },
+        { text: "He intentado suicidarme", score: 5 }
+    ],
+    2: [
+        { text: "Nunca", score: 1 },
+        { text: "Rara vez (1 vez)", score: 2 },
+        { text: "Algunas veces (2 veces)", score: 3 },
+        { text: "Con frecuencia (3–4 veces)", score: 4 },
+        { text: "Muy seguido (5 veces o más)", score: 5 }
+    ],
+    3: [
+        { text: "No", score: 1 },
+        { text: "Sí, una vez, pero no lo quería hacer realmente", score: 2 },
+        { text: "Sí, una vez, y realmente lo quería hacer", score: 3 },
+        { text: "Sí, más de una vez, pero sin intención real", score: 4 },
+        { text: "Sí, más de una vez, y realmente lo quería hacer", score: 5 }
+    ],
+    4: [
+        { text: "Ninguna posibilidad", score: 0 },
+        { text: "Poco probable", score: 1 },
+        { text: "Probable", score: 2 },
+        { text: "Muy probable", score: 3 }
+    ]
+};
+
+const qLabels = [
+    "Ideación / conducta (toda la vida)",
+    "Frecuencia último año",
+    "Comunicó intención suicida",
+    "Probabilidad futura"
+];
+
+function buildOptions(n) {
+    const el = document.getElementById(`opts-${n}`);
+    if (!el) return;
+    el.innerHTML = '';
+    items[n].forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn' + (responses[n] === idx ? ' selected' : '');
+        btn.textContent = opt.text;
+        btn.onclick = () => select(n, idx, opt.score);
+        el.appendChild(btn);
+    });
+}
+
+function select(n, idx, score) {
+    responses[n] = idx;
+    responses[`s${n}`] = score;
+    document.querySelectorAll(`#opts-${n} .opt-btn`).forEach((b, i) => {
+        b.classList.toggle('selected', i === idx);
+    });
+    setTimeout(() => {
+        const cur = `card-${n}`;
+        const pos = cardOrder.indexOf(cur);
+        if (pos < cardOrder.length - 1) showCard(cardOrder[pos + 1]);
+    }, 160);
+}
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap > div').forEach(d => d.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    const m = id.match(/card-(\d+)/);
+    if (m && +m[1] >= 1 && +m[1] <= 4) buildOptions(+m[1]);
+    if (id === 'card-results') buildResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goBack(currentId) {
+    const idx = cardOrder.indexOf(currentId);
+    if (idx > 0) showCard(cardOrder[idx - 1]);
+}
+
+function buildResults() {
+    const total = (responses.s1 || 1) + (responses.s2 || 1) + (responses.s3 || 1) + (responses.s4 || 0);
+    document.getElementById('res-score').textContent = total;
+
+    let color, label, interp;
+    if (total <= 6) {
+        color = '#48bb78'; label = 'Bajo riesgo';
+        interp = 'Sin indicadores de riesgo suicida significativos. Continuar evaluación clínica de rutina y monitorear en consultas posteriores.';
+    } else if (total <= 8) {
+        color = '#f6ad55'; label = 'Riesgo moderado';
+        interp = 'Se detectan indicadores que ameritan evaluación adicional. Se recomienda entrevista directa sobre ideación suicida actual, factores protectores y red de apoyo.';
+    } else {
+        color = '#f56565'; label = 'Riesgo elevado';
+        interp = 'Puntuación indicativa de riesgo elevado. Requiere evaluación clínica inmediata, elaborar plan de seguridad e intervención oportuna. Considerar C-SSRS para mayor detalle.';
+    }
+
+    const scoreEl = document.getElementById('res-score');
+    scoreEl.style.color = color;
+    const badge = document.getElementById('res-badge');
+    badge.textContent = label;
+    badge.style.color = color;
+    badge.style.borderColor = color;
+    badge.style.background = color + '15';
+
+    document.getElementById('res-interp').textContent = interp;
+
+    let html = '';
+    [1, 2, 3, 4].forEach(n => {
+        const idx = responses[n];
+        const ansText = idx !== undefined ? items[n][idx].text : '—';
+        const score = responses[`s${n}`] !== undefined ? responses[`s${n}`] : '—';
+        html += `<div class="answer-row">
+            <span class="answer-q">${qLabels[n - 1]}</span>
+            <span class="answer-v">${ansText} <span style="color:#a0aec0;font-size:12px;">(${score} pts)</span></span>
+        </div>`;
+    });
+    document.getElementById('res-answers').innerHTML = html;
+}
+
+function exportPDF() {
+    const total = (responses.s1 || 1) + (responses.s2 || 1) + (responses.s3 || 1) + (responses.s4 || 0);
+    const risk = total <= 6 ? 'Bajo riesgo' : total <= 8 ? 'Riesgo moderado' : 'Riesgo elevado';
+    const riskColor = total <= 6 ? '#48bb78' : total <= 8 ? '#f6ad55' : '#f56565';
+
+    let rows = '';
+    [1, 2, 3, 4].forEach(n => {
+        const idx = responses[n];
+        const ans = idx !== undefined ? items[n][idx].text : '—';
+        const sc = responses[`s${n}`] !== undefined ? responses[`s${n}`] : '—';
+        rows += `<tr><td>${qLabels[n - 1]}</td><td>${ans}</td><td style="text-align:center">${sc}</td></tr>`;
+    });
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SBQ-R</title>
+<style>
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
+h1{color:#63171b;font-size:22px;margin-bottom:4px}
+.meta{font-size:13px;color:#718096;margin-bottom:24px}
+.score-box{margin:20px 0;padding:20px;background:#f7fafc;border-radius:10px;text-align:center}
+.score-num{font-size:56px;font-weight:800;color:${riskColor};line-height:1}
+.score-label{font-size:16px;font-weight:700;color:${riskColor};margin-top:6px}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th{background:#f7fafc;padding:10px 12px;text-align:left;font-size:12px;color:#718096;text-transform:uppercase;letter-spacing:0.5px}
+td{padding:10px 12px;border-bottom:1px solid #e2e8f0;font-size:13px}
+.footer{margin-top:32px;font-size:11px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:12px}
+</style></head><body>
+<h1>SBQ-R — Cuestionario de Conductas Suicidas</h1>
+<div class="meta">Suicidal Behaviors Questionnaire-Revised · Fecha: ${new Date().toLocaleDateString('es-MX', {day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="score-box">
+    <div class="score-num">${total}<span style="font-size:24px;color:#a0aec0"> / 18</span></div>
+    <div class="score-label">${risk}</div>
+</div>
+<table>
+<tr><th>Área evaluada</th><th>Respuesta</th><th>Puntos</th></tr>
+${rows}
+</table>
+<p style="margin-top:16px;font-size:13px;color:#4a5568">
+<strong>Interpretación:</strong> Corte ≥7 población general; ≥8 muestra clínica/psiquiátrica (Osman et al., 2001).
+</p>
+<div class="footer">SBQ-R · Osman A, et al. (2001). Psychol Assess, 13(3), 463-467.</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 600);
+}
+
+function restart() {
+    Object.keys(responses).forEach(k => delete responses[k]);
+    showCard('card-0');
+}
+
+showCard('card-0');
+</script>
+</body>
+</html>
