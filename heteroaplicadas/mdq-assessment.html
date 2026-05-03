@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDQ — Cuestionario de Trastornos del Afecto (Clínico)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
+        }
+        .card-wrap.active { display: block; }
+
+        .card-header {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label   { font-size: 12px; opacity: .8; text-align: right; }
+        .clinico-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .card-body { padding: 28px 32px 24px; }
+
+        /* Clinician guide box */
+        .guide-box {
+            background: #f0faf7;
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+        .guide-box p + p { margin-top: 6px; }
+        .guide-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #29A98C; margin-bottom: 6px; }
+
+        .score-criteria-box {
+            background: #fffaf0;
+            border: 1.5px solid #f6ad55;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #744210;
+        }
+        .score-criteria-box .criteria-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #c05621; margin-bottom: 8px;
+        }
+        .criteria-item {
+            display: flex; align-items: flex-start; gap: 8px; margin-bottom: 5px;
+        }
+        .criteria-and {
+            text-align: center; font-size: 11px; font-weight: 700;
+            color: #c05621; margin: 2px 0; padding-left: 4px;
+        }
+        .cr-num {
+            flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+            background: #f6ad55; color: #fff; font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .welcome-title { font-size: 22px; font-weight: 700; color: #112F33; margin-bottom: 16px; }
+        .scale-badge {
+            display: inline-block;
+            background: rgba(41,169,140,0.12);
+            border: 1.5px solid #29A98C;
+            color: #29A98C;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .start-wrap { text-align: center; }
+
+        /* ── Síntomas Q1 ── */
+        .stem-box {
+            background: #f7fafc;
+            border-left: 4px solid #718096;
+            border-radius: 0 10px 10px 0;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .counter-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .counter-badge {
+            background: #112F33; color: #fff;
+            border-radius: 20px; padding: 4px 14px;
+            font-size: 13px; font-weight: 700;
+        }
+        .counter-badge span { color: #29A98C; }
+        .counter-hint { font-size: 11px; color: #a0aec0; font-style: italic; }
+
+        .sym-list { display: flex; flex-direction: column; gap: 0; margin-bottom: 18px; }
+        .sym-row {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f4f8;
+            transition: background .15s;
+        }
+        .sym-row:last-child { border-bottom: none; }
+        .sym-row.answered-yes  { background: rgba(41,169,140,0.05); border-radius: 8px; padding: 10px 8px; }
+        .sym-row.answered-no   { opacity: .65; }
+
+        .sym-num {
+            flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+            background: #e2e8f0; color: #718096; font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px;
+        }
+        .sym-row.answered-yes .sym-num { background: #29A98C; color: #fff; }
+
+        .sym-details { flex: 1; }
+        .sym-text {
+            font-size: 14px; color: #2d3748; line-height: 1.45; margin-bottom: 3px;
+        }
+        .sym-probe {
+            font-size: 12px; color: #718096; line-height: 1.5; font-style: italic;
+        }
+        .sym-probe::before { content: "Pregunte: "; font-style: normal; font-weight: 600; color: #a0aec0; }
+
+        .sym-toggle { flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
+        .toggle-btn {
+            border-radius: 8px; padding: 5px 12px;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            border: 1.5px solid; transition: all .15s; min-width: 44px; text-align: center;
+        }
+        .toggle-si { border-color: #48bb78; color: #48bb78; background: #fff; }
+        .toggle-si:hover   { background: rgba(72,187,120,0.1); }
+        .toggle-si.active  { background: #48bb78; color: #fff; }
+        .toggle-no { border-color: #fc8181; color: #fc8181; background: #fff; }
+        .toggle-no:hover   { background: rgba(252,129,129,0.1); }
+        .toggle-no.active  { background: #fc8181; color: #fff; }
+
+        /* Standard options for Q2, Q3, Q4, Q5 */
+        .question-text {
+            font-size: 19px; font-weight: 600; color: #112F33;
+            line-height: 1.5; margin-bottom: 8px;
+        }
+        .question-context {
+            font-size: 13px; color: #718096; line-height: 1.5;
+            margin-bottom: 18px; font-style: italic;
+        }
+        .options {
+            display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px;
+        }
+        .option {
+            width: 100%; background: #fff; border: 2px solid #e2e8f0;
+            border-radius: 12px; padding: 13px 18px; font-size: 14px;
+            color: #112F33; cursor: pointer; text-align: left;
+            transition: all .2s; line-height: 1.4;
+        }
+        .option:hover    { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; }
+
+        /* Progress */
+        .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+        .progress-bar-wrap {
+            height: 6px; background: #e2e8f0; border-radius: 3px;
+            overflow: hidden; margin-bottom: 14px;
+        }
+        .progress-bar-fill {
+            height: 100%; background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px; transition: width .3s;
+        }
+
+        /* Bottom nav */
+        .bottom-nav { display: flex; justify-content: space-between; align-items: center; }
+        .btn-back {
+            background: none; border: 1px solid #cbd5e0; border-radius: 8px;
+            color: #718096; padding: 7px 16px; font-size: 13px;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
+        .btn-next {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff; border: none; border-radius: 10px;
+            padding: 10px 24px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-next:hover { opacity: .9; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 15px 40px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #2d3748);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 13px 28px; font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+        /* Final */
+        .final-title { font-size: 22px; font-weight: 700; color: #112F33; text-align: center; margin-bottom: 10px; }
+        .final-msg   { font-size: 15px; color: #4a5568; text-align: center; margin-bottom: 20px; line-height: 1.6; }
+
+        /* Results */
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin: 16px 0 8px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        /* Screening result banner */
+        .result-banner {
+            border-radius: 14px; padding: 18px 22px; text-align: center;
+            margin-bottom: 16px;
+        }
+        .result-banner.positive { background: rgba(245,101,101,0.1); border: 2px solid #f56565; }
+        .result-banner.negative { background: rgba(72,187,120,0.1); border: 2px solid #48bb78; }
+        .result-banner.partial  { background: rgba(246,173,85,0.1); border: 2px solid #f6ad55; }
+        .result-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+        .result-label.positive { color: #f56565; }
+        .result-label.negative { color: #48bb78; }
+        .result-label.partial  { color: #c05621; }
+        .result-title { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+        .result-title.positive { color: #f56565; }
+        .result-title.negative { color: #48bb78; }
+        .result-title.partial  { color: #ed8936; }
+        .result-sub { font-size: 13px; color: #718096; }
+
+        /* Criteria met/not met grid */
+        .criteria-results-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px; margin-bottom: 14px;
+        }
+        .cr-pill {
+            border-radius: 10px; padding: 10px 8px; text-align: center;
+            border: 1.5px solid #e2e8f0;
+        }
+        .cr-pill .cp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #718096; }
+        .cr-pill .cp-icon  { font-size: 20px; margin: 4px 0; }
+        .cr-pill .cp-val   { font-size: 12px; color: #718096; line-height: 1.3; }
+        .cr-pill.met     { border-color: #48bb78; background: rgba(72,187,120,0.08); }
+        .cr-pill.not-met { border-color: #fc8181; background: rgba(252,129,129,0.08); }
+        .cr-pill.met .cp-label     { color: #276749; }
+        .cr-pill.not-met .cp-label { color: #9b2c2c; }
+
+        /* Supplementary info */
+        .supp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+        .supp-box {
+            border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px;
+            font-size: 13px;
+        }
+        .supp-box .supp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing:.04em; color: #a0aec0; margin-bottom: 4px; }
+        .supp-box .supp-val   { font-size: 14px; font-weight: 700; color: #2d3748; }
+        .supp-box .supp-val.yes { color: #c05621; }
+        .supp-box .supp-val.no  { color: #718096; }
+
+        .interp-box {
+            background: #f7fafc; border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0; padding: 14px 16px;
+            margin-bottom: 12px; font-size: 13px; color: #2d3748; line-height: 1.7;
+        }
+        .interp-box ul { margin: 6px 0 0 16px; }
+        .alerts-box {
+            background: #fff5f5; border: 1px solid #feb2b2;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+            font-size: 13px; color: #742a2a;
+        }
+        .alerts-box ul { margin: 6px 0 0 16px; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .sym-probe { display: none; }
+            .criteria-results-grid { grid-template-columns: 1fr; }
+            .supp-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARD 0: GUÍA DEL CLÍNICO -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">MDQ — Cuestionario de Trastornos del Afecto <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Guía de aplicación</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Cuestionario de Trastornos del Afecto (MDQ)</div>
+        <div class="scale-badge">Heteroaplicado · ~5 minutos · Tamizaje de espectro bipolar</div>
+
+        <div class="guide-box">
+            <div class="guide-title">Cómo introducir la entrevista</div>
+            <p>Encuadre la conversación de forma natural, sin que suene a un interrogatorio. Por ejemplo:</p>
+            <p style="margin-top:8px; padding: 8px 12px; background: #e6f7f2; border-radius: 8px; font-style:italic;">"Le voy a preguntar sobre algunas experiencias que a veces tienen las personas. Me interesa saber si en algún momento de su vida — no necesariamente ahora — ha habido períodos en que se sentía muy diferente a su yo habitual: con más energía, más activo, más irritable, o muy diferente de cuando se ha sentido deprimido."</p>
+            <p style="margin-top:8px;">Si el paciente ya conoce estos síntomas, puede abreviarse: <em>"Ya hablamos antes de la depresión, ahora quiero preguntarle sobre el lado contrario."</em></p>
+        </div>
+
+        <div class="score-criteria-box">
+            <div class="criteria-title">Criterio de tamizaje positivo (los 3 deben cumplirse)</div>
+            <div class="criteria-item">
+                <div class="cr-num">1</div>
+                <div>7 o más síntomas afirmativos en la pregunta 1 (de 13)</div>
+            </div>
+            <div class="criteria-and">Y</div>
+            <div class="criteria-item">
+                <div class="cr-num">2</div>
+                <div>Varios síntomas ocurrieron al mismo tiempo (concurrencia)</div>
+            </div>
+            <div class="criteria-and">Y</div>
+            <div class="criteria-item">
+                <div class="cr-num">3</div>
+                <div>Causaron problema moderado o grave en el funcionamiento</div>
+            </div>
+        </div>
+
+        <div class="guide-box">
+            <div class="guide-title">Consideraciones clínicas</div>
+            <p>El MDQ tiene mayor sensibilidad para <strong>Bipolar I</strong> (73%) que para Bipolar II (menor), por lo que un resultado negativo no descarta TB tipo II. Especificidad ~90% en muestras clínicas.</p>
+            <p>Las preguntas 4 y 5 (antecedentes familiares y diagnóstico previo) son información clínica suplementaria y no forman parte del criterio de tamizaje.</p>
+        </div>
+
+        <div class="start-wrap">
+            <button class="btn-primary" onclick="showCard('card-1')">Iniciar Evaluación</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 1: LOS 13 SÍNTOMAS -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">MDQ · Síntomas de Manía / Hipomanía <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Sección 1 de 5</span>
+    </div>
+    <div class="card-body">
+        <div class="stem-box">
+            Pregunte: "¿Ha habido alguna vez un período de tiempo en el que <strong>no se sentía como su yo habitual</strong> y..."
+        </div>
+        <div class="counter-row">
+            <div class="counter-badge">Síntomas afirmativos: <span id="sym-counter">0</span> / 13</div>
+            <div class="counter-hint">Marque SÍ / NO conforme el paciente responde</div>
+        </div>
+
+        <div class="sym-list">
+
+            <div class="sym-row" id="row-1">
+                <div class="sym-num">1</div>
+                <div class="sym-details">
+                    <div class="sym-text">Se sentía tan bien o tan hiperactivo que otros pensaban que no era usted mismo, o se metió en problemas por ello</div>
+                    <div class="sym-probe">"¿Ha habido épocas en que estaba tan animado o activo que la gente le decía que se veía diferente, o que se metió en algún apuro?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(1,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(1,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-2">
+                <div class="sym-num">2</div>
+                <div class="sym-details">
+                    <div class="sym-text">Estaba tan irritable que gritó a las personas, inició peleas o discusiones</div>
+                    <div class="sym-probe">"¿Recuerda períodos en que se sentía muy irritable, que cualquier cosa le molestaba mucho y terminaba discutiendo o enojándose con facilidad?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(2,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(2,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-3">
+                <div class="sym-num">3</div>
+                <div class="sym-details">
+                    <div class="sym-text">Se sentía mucho más seguro de sí mismo de lo habitual</div>
+                    <div class="sym-probe">"¿Hubo épocas en que se sentía con mucha confianza, como que podía con todo, casi invencible?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(3,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(3,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-4">
+                <div class="sym-num">4</div>
+                <div class="sym-details">
+                    <div class="sym-text">Durmió mucho menos de lo habitual y descubrió que no lo echaba de menos</div>
+                    <div class="sym-probe">"¿Le ha pasado que dormía muy poco — 3 o 4 horas — y al día siguiente no se sentía cansado, como si no lo necesitara?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(4,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(4,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-5">
+                <div class="sym-num">5</div>
+                <div class="sym-details">
+                    <div class="sym-text">Hablaba mucho más o más rápido de lo habitual</div>
+                    <div class="sym-probe">"¿La gente le ha comentado que en ciertos momentos habla mucho o muy rápido, que les cuesta seguirle?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(5,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(5,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-6">
+                <div class="sym-num">6</div>
+                <div class="sym-details">
+                    <div class="sym-text">Tenía pensamientos acelerados en su cabeza o no podía frenar su mente</div>
+                    <div class="sym-probe">"¿Recuerda épocas en que su mente iba muy rápido, los pensamientos venían uno tras otro sin parar, como que no podía apagarla?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(6,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(6,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-7">
+                <div class="sym-num">7</div>
+                <div class="sym-details">
+                    <div class="sym-text">Se distraía fácilmente y tenía problemas para concentrarse o mantenerse enfocado</div>
+                    <div class="sym-probe">"¿Hubo épocas en que le costaba quedarse con una sola cosa, que cualquier detalle alrededor le distraía?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(7,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(7,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-8">
+                <div class="sym-num">8</div>
+                <div class="sym-details">
+                    <div class="sym-text">Tenía mucha más energía de lo habitual</div>
+                    <div class="sym-probe">"¿Ha habido períodos en que sentía una energía especial, fuera de lo normal en usted, con muchas ganas de hacer cosas?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(8,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(8,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-9">
+                <div class="sym-num">9</div>
+                <div class="sym-details">
+                    <div class="sym-text">Era mucho más activo o hacía muchas más cosas de lo habitual</div>
+                    <div class="sym-probe">"¿Recuerda épocas en que iniciaba muchos proyectos a la vez, estaba ocupadísimo, más de lo que es habitual en usted?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(9,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(9,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-10">
+                <div class="sym-num">10</div>
+                <div class="sym-details">
+                    <div class="sym-text">Era mucho más sociable o extrovertido de lo habitual</div>
+                    <div class="sym-probe">"¿Ha habido períodos en que quería estar con gente todo el tiempo, llamaba a todos, salía constantemente, más de lo que es típico en usted?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(10,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(10,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-11">
+                <div class="sym-num">11</div>
+                <div class="sym-details">
+                    <div class="sym-text">Tenía mucho más interés en el sexo de lo habitual</div>
+                    <div class="sym-probe">"Como parte de esta evaluación también pregunto sobre cambios en el interés sexual. ¿Ha habido épocas en que este interés era notablemente mayor de lo habitual para usted?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(11,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(11,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-12">
+                <div class="sym-num">12</div>
+                <div class="sym-details">
+                    <div class="sym-text">Hacía cosas inusuales para usted, o que otros podrían haber considerado excesivas, tontas o arriesgadas</div>
+                    <div class="sym-probe">"¿Ha tomado decisiones o hecho cosas durante esas épocas que después le parecieron impulsivas o arriesgadas, que no eran típicas de usted?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(12,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(12,false,this)">NO</button>
+                </div>
+            </div>
+
+            <div class="sym-row" id="row-13">
+                <div class="sym-num">13</div>
+                <div class="sym-details">
+                    <div class="sym-text">Gastar dinero le causaba problemas a usted o a su familia</div>
+                    <div class="sym-probe">"¿Ha habido períodos en que gastó dinero de manera excesiva o impulsiva, que después generó problemas económicos o familiares?"</div>
+                </div>
+                <div class="sym-toggle">
+                    <button class="toggle-btn toggle-si" onclick="toggleSym(13,true,this)">SÍ</button>
+                    <button class="toggle-btn toggle-no" onclick="toggleSym(13,false,this)">NO</button>
+                </div>
+            </div>
+
+        </div><!-- end sym-list -->
+
+        <div class="q-progress-label">Sección 1 de 5</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="showCard('card-0')">← Regresar</button>
+            <button class="btn-next" onclick="showCard('card-2')">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 2: CONCURRENCIA -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">MDQ · Concurrencia <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Sección 2 de 5</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Alguna vez varias de estas cosas ocurrieron durante el mismo período de tiempo?</div>
+        <div class="question-context">Solo aplicar si el paciente confirmó más de un síntoma. Pregunte: "De todo lo que me comentó, ¿esas cosas le pasaban todas juntas, en la misma época?"</div>
+        <div class="options">
+            <button class="option" id="q2-si"  onclick="selectQ2(true,this)">Sí — varios síntomas ocurrieron al mismo tiempo</button>
+            <button class="option" id="q2-no"  onclick="selectQ2(false,this)">No — ocurrieron en momentos distintos o solo fue un síntoma</button>
+        </div>
+        <div class="q-progress-label">Sección 2 de 5</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="showCard('card-1')">← Regresar</button>
+            <button class="btn-next" onclick="showCard('card-3')">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 3: DETERIORO FUNCIONAL -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">MDQ · Deterioro Funcional <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Sección 3 de 5</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánto problema causaron estas situaciones en su vida?</div>
+        <div class="question-context">Pregunte: "¿Todo esto que me describe le generó dificultades reales — en el trabajo, con la familia, económicas, legales, o en sus relaciones?"</div>
+        <div class="options">
+            <button class="option" id="q3-0" onclick="selectQ3(0,this)">Ningún problema</button>
+            <button class="option" id="q3-1" onclick="selectQ3(1,this)">Problema menor — algo de malestar pero sin consecuencias importantes</button>
+            <button class="option" id="q3-2" onclick="selectQ3(2,this)">Problema moderado — afectó algunas áreas de su vida de forma notable</button>
+            <button class="option" id="q3-3" onclick="selectQ3(3,this)">Problema grave — consecuencias serias en trabajo, familia, economía o relaciones</button>
+        </div>
+        <div class="q-progress-label">Sección 3 de 5</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="showCard('card-2')">← Regresar</button>
+            <button class="btn-next" onclick="showCard('card-4')">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 4: ANTECEDENTES FAMILIARES -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">MDQ · Antecedentes <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Sección 4 de 5</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Algún familiar de sangre ha tenido trastorno bipolar o enfermedad maníaco-depresiva?</div>
+        <div class="question-context">Padres, hermanos, hijos, abuelos o tíos. Pregunte también por familiares que hayan recibido tratamiento por "cambios de humor extremos", aunque no se les haya dado ese nombre exacto.</div>
+        <div class="options">
+            <button class="option" id="q4-si" onclick="selectQ4(true,this)">Sí — hay antecedentes familiares conocidos</button>
+            <button class="option" id="q4-no" onclick="selectQ4(false,this)">No / No lo sabe</button>
+        </div>
+        <div class="q-progress-label">Sección 4 de 5</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="showCard('card-3')">← Regresar</button>
+            <button class="btn-next" onclick="showCard('card-5')">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 5: DIAGNÓSTICO PREVIO -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">MDQ · Diagnóstico Previo <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Sección 5 de 5</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Algún profesional de salud le ha dicho alguna vez que tiene trastorno bipolar o enfermedad maníaco-depresiva?</div>
+        <div class="question-context">Incluye cualquier diagnóstico previo, aunque no sea el diagnóstico actual o no esté recibiendo tratamiento para ello.</div>
+        <div class="options">
+            <button class="option" id="q5-si" onclick="selectQ5(true,this)">Sí — ha recibido ese diagnóstico anteriormente</button>
+            <button class="option" id="q5-no" onclick="selectQ5(false,this)">No</button>
+        </div>
+        <div class="q-progress-label">Sección 5 de 5</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="showCard('card-4')">← Regresar</button>
+            <button class="btn-next" onclick="showCard('card-final')">Ver Resultados →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD FINAL -->
+<div class="card-wrap" id="card-final">
+    <div class="card-header">
+        <span class="scale-name">MDQ — Cuestionario de Trastornos del Afecto <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+        <div class="final-title">Evaluación Completada</div>
+        <div class="final-msg">Todas las secciones han sido registradas.</div>
+        <div style="text-align:center;">
+            <button class="btn-primary" onclick="showResults()">Calcular Resultado</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD RESULTADOS -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">MDQ — Cuestionario de Trastornos del Afecto <span class="clinico-badge">CLÍNICO</span></span>
+        <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+
+        <div class="section-label">Resultado del Tamizaje</div>
+        <div class="result-banner" id="result-banner">
+            <div class="result-label" id="result-label">—</div>
+            <div class="result-title" id="result-title">—</div>
+            <div class="result-sub"  id="result-sub">—</div>
+        </div>
+
+        <div class="section-label">Criterios de Tamizaje (los 3 deben cumplirse)</div>
+        <div class="criteria-results-grid">
+            <div class="cr-pill" id="cr1">
+                <div class="cp-label">Criterio 1</div>
+                <div class="cp-icon" id="cr1-icon">—</div>
+                <div class="cp-val"><span id="cr1-val">—</span> / 13 síntomas<br><small>Umbral: ≥ 7</small></div>
+            </div>
+            <div class="cr-pill" id="cr2">
+                <div class="cp-label">Criterio 2</div>
+                <div class="cp-icon" id="cr2-icon">—</div>
+                <div class="cp-val" id="cr2-val">Concurrencia<br><small>—</small></div>
+            </div>
+            <div class="cr-pill" id="cr3">
+                <div class="cp-label">Criterio 3</div>
+                <div class="cp-icon" id="cr3-icon">—</div>
+                <div class="cp-val" id="cr3-val">Deterioro<br><small>—</small></div>
+            </div>
+        </div>
+
+        <div class="section-label">Información Suplementaria</div>
+        <div class="supp-grid">
+            <div class="supp-box">
+                <div class="supp-label">Antecedentes Familiares de TB</div>
+                <div class="supp-val" id="supp-q4">—</div>
+            </div>
+            <div class="supp-box">
+                <div class="supp-label">Diagnóstico Previo de TB</div>
+                <div class="supp-val" id="supp-q5">—</div>
+            </div>
+        </div>
+
+        <div class="section-label">Síntomas Confirmados (Q1)</div>
+        <div class="interp-box" id="sym-detail-box"></div>
+
+        <div class="section-label">Interpretación Clínica</div>
+        <div class="interp-box" id="interp-box"><ul id="interp-list"></ul></div>
+
+        <div class="alerts-box" id="alerts-box" style="display:none;">
+            <strong>Consideraciones Prioritarias</strong>
+            <ul id="alerts-list"></ul>
+        </div>
+
+        <div style="font-size: 11px; color: #a0aec0; margin: 12px 0 16px; line-height: 1.5;">
+            <strong style="color:#718096;">Referencia:</strong> Hirschfeld RMA et al. (2000). Development and validation of a screening instrument for bipolar spectrum disorder: the MDQ. <em>Am J Psychiatry</em>, 157:1873-1875. Sensibilidad: 73% (TB-I), Especificidad: ~90% (muestras clínicas). Hirschfeld RMA et al. (2003). <em>Am J Psychiatry</em>, 160:178-180.
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="exportToPDF()">Generar PDF</button>
+            <button class="btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── State ──
+    let q1 = {}; // {1: true|false, ...13}
+    let q2 = null;
+    let q3 = null; // 0=ninguno, 1=menor, 2=moderado, 3=grave
+    let q4 = null;
+    let q5 = null;
+
+    const symLabels = [
+        '', // placeholder for 1-indexed
+        'Euforia/hiperactividad notada por otros',
+        'Irritabilidad con peleas o discusiones',
+        'Autoestima elevada o grandiosidad',
+        'Sueño reducido sin cansancio',
+        'Habla rápida o aumentada',
+        'Pensamiento acelerado / mente sin freno',
+        'Distractibilidad aumentada',
+        'Energía aumentada',
+        'Actividad o productividad muy aumentada',
+        'Sociabilidad o extroversión excesiva',
+        'Hipersexualidad',
+        'Conductas impulsivas o arriesgadas',
+        'Gastos excesivos con consecuencias'
+    ];
+
+    const q3Labels = ['Ningún problema', 'Problema menor', 'Problema moderado', 'Problema grave'];
+
+    function showCard(id) {
+        document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function updateCounter() {
+        const count = Object.values(q1).filter(v => v === true).length;
+        const el = document.getElementById('sym-counter');
+        if (el) {
+            el.textContent = count;
+            el.style.color = count >= 7 ? '#48bb78' : '#a0aec0';
+        }
+    }
+
+    function toggleSym(num, val, btn) {
+        q1[num] = val;
+        // Update row visual
+        const row = document.getElementById('row-' + num);
+        row.classList.remove('answered-yes','answered-no');
+        row.classList.add(val ? 'answered-yes' : 'answered-no');
+        // Update button states
+        const toggles = row.querySelectorAll('.toggle-btn');
+        toggles[0].classList.toggle('active', val === true);
+        toggles[1].classList.toggle('active', val === false);
+        updateCounter();
+    }
+
+    function selectQ2(val, btn) {
+        q2 = val;
+        document.querySelectorAll('#card-2 .option').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function selectQ3(val, btn) {
+        q3 = val;
+        document.querySelectorAll('#card-3 .option').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function selectQ4(val, btn) {
+        q4 = val;
+        document.querySelectorAll('#card-4 .option').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function selectQ5(val, btn) {
+        q5 = val;
+        document.querySelectorAll('#card-5 .option').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function calculateScore() {
+        const q1Count  = Object.values(q1).filter(v => v === true).length;
+        const crit1    = q1Count >= 7;
+        const crit2    = q2 === true;
+        const crit3    = q3 !== null && q3 >= 2;
+        const positive = crit1 && crit2 && crit3;
+        // Partial: ≥7 but not all criteria
+        const partial  = crit1 && !(crit2 && crit3);
+        return { q1Count, crit1, crit2, crit3, positive, partial };
+    }
+
+    function setCrPill(pillId, iconId, valId, met, valText) {
+        const pill = document.getElementById(pillId);
+        const icon = document.getElementById(iconId);
+        pill.classList.remove('met','not-met');
+        pill.classList.add(met ? 'met' : 'not-met');
+        icon.textContent = met ? '✓' : '✗';
+        if (valId) document.getElementById(valId).innerHTML = valText;
+    }
+
+    function showResults() {
+        const s = calculateScore();
+
+        // Result banner
+        const banner = document.getElementById('result-banner');
+        const rlabel = document.getElementById('result-label');
+        const rtitle = document.getElementById('result-title');
+        const rsub   = document.getElementById('result-sub');
+
+        if (s.positive) {
+            banner.className = 'result-banner positive';
+            rlabel.className = 'result-label positive';
+            rlabel.textContent = 'TAMIZAJE POSITIVO';
+            rtitle.className = 'result-title positive';
+            rtitle.textContent = 'Alta probabilidad de Espectro Bipolar';
+            rsub.textContent  = 'Requiere evaluación diagnóstica completa';
+        } else if (s.partial) {
+            banner.className = 'result-banner partial';
+            rlabel.className = 'result-label partial';
+            rlabel.textContent = 'RESULTADO PARCIAL';
+            rtitle.className = 'result-title partial';
+            rtitle.textContent = 'Criterios no completamente cumplidos';
+            rsub.textContent  = 'Evaluar clínicamente Bipolar II o hipomanía subclínica';
+        } else {
+            banner.className = 'result-banner negative';
+            rlabel.className = 'result-label negative';
+            rlabel.textContent = 'TAMIZAJE NEGATIVO';
+            rtitle.className = 'result-title negative';
+            rtitle.textContent = 'No cumple criterios de espectro bipolar';
+            rsub.textContent  = 'La sensibilidad para TB-II es menor; un resultado negativo no descarta completamente el diagnóstico';
+        }
+
+        // Criteria pills
+        setCrPill('cr1','cr1-icon','cr1-val', s.crit1,
+            `<span style="font-size:18px;font-weight:900;color:${s.crit1?'#48bb78':'#f56565'}">${s.q1Count}</span> / 13 síntomas<br><small>Umbral: ≥ 7</small>`);
+        setCrPill('cr2','cr2-icon','cr2-val', s.crit2,
+            `Concurrencia<br><small>${q2===null?'No registrado':q2?'Sí':'No'}</small>`);
+        setCrPill('cr3','cr3-icon','cr3-val', s.crit3,
+            `${q3===null?'No registrado':q3Labels[q3]}<br><small>Umbral: moderado/grave</small>`);
+
+        // Supplementary
+        const sq4 = document.getElementById('supp-q4');
+        sq4.textContent = q4===null?'No registrado':q4?'Sí':'No';
+        sq4.className = 'supp-val' + (q4?'  yes':'');
+
+        const sq5 = document.getElementById('supp-q5');
+        sq5.textContent = q5===null?'No registrado':q5?'Sí':'No';
+        sq5.className = 'supp-val' + (q5?' yes':'');
+
+        // Symptoms detail
+        const yesSyms = Object.entries(q1).filter(([,v]) => v===true).map(([k]) => parseInt(k));
+        const noSyms  = Object.entries(q1).filter(([,v]) => v===false).map(([k]) => parseInt(k));
+        let symHtml = `<strong style="color:#29A98C;">${yesSyms.length} síntomas afirmativos:</strong>`;
+        if (yesSyms.length > 0) {
+            symHtml += '<ul style="margin:6px 0 0 16px;">' + yesSyms.sort((a,b)=>a-b).map(n => `<li>${n}. ${symLabels[n]}</li>`).join('') + '</ul>';
+        } else {
+            symHtml += ' <em style="color:#a0aec0;">Ninguno</em>';
+        }
+        const unanswered = [];
+        for (let i=1;i<=13;i++) { if (q1[i]===undefined) unanswered.push(i); }
+        if (unanswered.length > 0) {
+            symHtml += `<p style="margin-top:8px;font-size:12px;color:#fc8181;">Sin registrar: ítems ${unanswered.join(', ')}</p>`;
+        }
+        document.getElementById('sym-detail-box').innerHTML = symHtml;
+
+        // Interpretation
+        const recs = [];
+        if (s.positive) {
+            recs.push('El MDQ es positivo en los tres criterios. Se recomienda evaluación diagnóstica estructurada para confirmar trastorno bipolar tipo I o II.');
+            recs.push('Considerar: entrevista diagnóstica estructurada (MINI, SCID), historia longitudinal del estado de ánimo, respuesta previa a tratamientos.');
+            recs.push('Explorar: edad de inicio, número de episodios, presencia de ciclos mixtos, episodios depresivos previos, respuesta a antidepresivos (especialmente viraje).');
+        } else if (s.crit1 && s.crit2 && !s.crit3) {
+            recs.push('Síntomas y concurrencia presentes pero sin deterioro funcional significativo. Puede corresponder a Bipolar II con hipomanía, temperamento hipertímico o síntomas subclínicos.');
+            recs.push('Considerar evaluación longitudinal y monitorización, especialmente si hay antecedentes familiares o episodios depresivos recurrentes.');
+        } else if (s.crit1 && !s.crit2) {
+            recs.push('Síntomas presentes pero sin concurrencia confirmada. No cumple el patrón de síndrome maníaco/hipomaníaco. Los síntomas pueden corresponder a otras condiciones (TDAH, ansiedad, personalidad).');
+        } else if (!s.crit1) {
+            recs.push(`Solo ${s.q1Count} de 13 síntomas confirmados (umbral ≥ 7). El MDQ no sugiere espectro bipolar, pero recuerde que la sensibilidad para Bipolar II es menor (~30-50%).`);
+            recs.push('Si la sospecha clínica persiste, considerar entrevista longitudinal detallada del estado de ánimo.');
+        }
+        if (q4===true) recs.push('Antecedentes familiares de TB positivos: el riesgo hereditario aumenta significativamente la probabilidad pre-test.');
+        if (q5===true) recs.push('Diagnóstico previo de TB reportado por el paciente: verificar la base diagnóstica y tratamientos previos recibidos.');
+        recs.push('El MDQ es una herramienta de tamizaje. No sustituye la evaluación clínica completa ni puede establecer un diagnóstico por sí solo.');
+
+        document.getElementById('interp-list').innerHTML = recs.map(r=>`<li>${r}</li>`).join('');
+
+        // Alerts
+        const alerts = [];
+        if (s.positive && q4===true)  alerts.push('Tamizaje positivo con antecedentes familiares: riesgo elevado — priorizar evaluación diagnóstica completa.');
+        if (s.positive && q5===true)  alerts.push('Tamizaje positivo con diagnóstico previo de TB: revisar historial clínico, evolución y adherencia a tratamiento.');
+        if (s.q1Count >= 10) alerts.push('Alta carga sintomática maníaca/hipomaníaca (≥10/13): explorar episodios mixtos y ciclación rápida.');
+        if (q1[2]===true && q1[12]===true) alerts.push('Irritabilidad + conductas impulsivas: evaluar riesgo de heteroagresión y conductas de riesgo.');
+        if (alerts.length) {
+            document.getElementById('alerts-list').innerHTML = alerts.map(a=>`<li>${a}</li>`).join('');
+            document.getElementById('alerts-box').style.display = 'block';
+        }
+
+        showCard('card-results');
+    }
+
+    function exportToPDF() {
+        const s = calculateScore();
+        const fecha = new Date().toLocaleDateString('es-ES');
+
+        const yesSyms = Object.entries(q1).filter(([,v]) => v===true).map(([k]) => parseInt(k)).sort((a,b)=>a-b);
+
+        const crColor = met => met ? '#48bb78' : '#f56565';
+        const crLabel = met => met ? 'Cumplido' : 'No cumplido';
+
+        const resultColor = s.positive ? '#f56565' : s.partial ? '#ed8936' : '#48bb78';
+        const resultText  = s.positive ? 'TAMIZAJE POSITIVO — Alta probabilidad de Espectro Bipolar'
+                          : s.partial  ? 'RESULTADO PARCIAL — Criterios incompletos'
+                          : 'TAMIZAJE NEGATIVO — No cumple criterios de espectro bipolar';
+
+        const symRows = yesSyms.map(n => `<tr><td style="padding:5px 10px;">${n}</td><td style="padding:5px 10px;">${symLabels[n]}</td><td style="padding:5px 10px;color:#48bb78;font-weight:700;">SÍ</td></tr>`).join('');
+        const noSyms  = [];
+        for(let i=1;i<=13;i++) if(q1[i]===false) noSyms.push(i);
+        const noRows  = noSyms.map(n => `<tr style="opacity:.6;"><td style="padding:5px 10px;">${n}</td><td style="padding:5px 10px;">${symLabels[n]}</td><td style="padding:5px 10px;color:#fc8181;">NO</td></tr>`).join('');
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>MDQ — Resultados</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#112F33;}
+  h1{color:#29A98C;margin-bottom:4px;}
+  h2{color:#29A98C;font-size:15px;margin:22px 0 8px;}
+  .result-box{border-radius:10px;padding:14px 18px;margin:12px 0 20px;text-align:center;background:${resultColor}1a;border:2px solid ${resultColor};}
+  .result-main{font-size:16px;font-weight:900;color:${resultColor};}
+  table{width:100%;border-collapse:collapse;margin:8px 0 20px;}
+  thead th{background:#f7fafc;color:#718096;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;text-align:left;border-bottom:1px solid #e2e8f0;}
+  tbody tr{border-bottom:1px solid #f0f4f8;}
+  .interp{background:#f7fafc;border-left:4px solid #29A98C;border-radius:0 8px 8px 0;padding:12px 16px;margin:8px 0 16px;font-size:13px;line-height:1.7;}
+  .interp ul{margin:4px 0 0 16px;}
+  .alerts{background:#fff5f5;border:1px solid #feb2b2;border-radius:8px;padding:12px 16px;margin:8px 0 16px;font-size:13px;color:#742a2a;}
+  .alerts ul{margin:4px 0 0 16px;}
+  .ref{font-size:11px;color:#a0aec0;margin-top:20px;line-height:1.5;}
+  footer{margin-top:36px;font-size:11px;color:#999;text-align:center;}
+  .cr-row{display:flex;gap:10px;margin-bottom:16px;}
+  .cr-box{flex:1;border:1.5px solid;border-radius:8px;padding:10px;text-align:center;font-size:12px;}
+</style></head><body>
+<h1>MDQ — Cuestionario de Trastornos del Afecto</h1>
+<p style="color:#718096;">Fecha de evaluación: ${fecha} &nbsp;·&nbsp; <strong>Heteroaplicado — Registro del clínico</strong></p>
+<div class="result-box"><div class="result-main">${resultText}</div></div>
+<h2>Criterios de Tamizaje</h2>
+<div class="cr-row">
+  <div class="cr-box" style="border-color:${crColor(s.crit1)};color:${crColor(s.crit1)}">
+    <div style="font-weight:700;font-size:14px;">Criterio 1</div>
+    <div style="font-size:24px;font-weight:900;">${s.q1Count}/13</div>
+    <div>${crLabel(s.crit1)} (umbral ≥ 7)</div>
+  </div>
+  <div class="cr-box" style="border-color:${crColor(s.crit2)};color:${crColor(s.crit2)}">
+    <div style="font-weight:700;font-size:14px;">Criterio 2</div>
+    <div style="font-size:18px;font-weight:900;margin:4px 0;">${q2===null?'—':q2?'SÍ':'NO'}</div>
+    <div>${crLabel(s.crit2)}<br>Concurrencia</div>
+  </div>
+  <div class="cr-box" style="border-color:${crColor(s.crit3)};color:${crColor(s.crit3)}">
+    <div style="font-weight:700;font-size:14px;">Criterio 3</div>
+    <div style="font-size:14px;font-weight:700;margin:6px 0;">${q3===null?'—':q3Labels[q3]}</div>
+    <div>${crLabel(s.crit3)}<br>Deterioro funcional</div>
+  </div>
+</div>
+<p style="font-size:12px;color:#718096;margin-bottom:16px;">
+  Antecedentes familiares de TB: <strong>${q4===null?'No registrado':q4?'Sí':'No'}</strong> &nbsp;·&nbsp;
+  Diagnóstico previo de TB: <strong>${q5===null?'No registrado':q5?'Sí':'No'}</strong>
+</p>
+<h2>Síntomas Registrados (Q1)</h2>
+<table>
+  <thead><tr><th>#</th><th>Síntoma</th><th>Respuesta</th></tr></thead>
+  <tbody>${symRows}${noRows}</tbody>
+</table>
+<h2>Interpretación Clínica</h2>
+<div class="interp"><ul>${
+  (() => {
+    const r = [];
+    if (s.positive) {
+      r.push('MDQ positivo en los tres criterios. Se recomienda evaluación diagnóstica estructurada (MINI, SCID).');
+      r.push('Explorar historia longitudinal del estado de ánimo, respuesta previa a tratamientos y virajes con antidepresivos.');
+    } else if (s.partial) {
+      r.push('Criterios incompletos. Posible Bipolar II, hipomanía o síntomas subclínicos. Evaluación longitudinal recomendada.');
+    } else {
+      r.push(`${s.q1Count}/13 síntomas. No cumple criterios MDQ. Considerar que la sensibilidad para TB-II es menor.`);
+    }
+    if (q4===true) r.push('Antecedentes familiares positivos: aumenta la probabilidad pre-test.');
+    if (q5===true) r.push('Diagnóstico previo de TB: revisar historial y tratamientos previos.');
+    r.push('Herramienta de tamizaje. No sustituye la evaluación clínica completa.');
+    return r.map(x=>`<li>${x}</li>`).join('');
+  })()
+}</ul></div>
+<div class="ref">
+  <strong>Referencia:</strong> Hirschfeld RMA et al. (2000). Development and validation of a screening instrument for bipolar spectrum disorder: the Mood Disorder Questionnaire. <em>Am J Psychiatry</em>, 157:1873-1875.
+  Sensibilidad 73% (TB-I), Especificidad ~90% (muestras clínicas).
+</div>
+<footer>MDQ — Cuestionario de Trastornos del Afecto · Generado el ${fecha}</footer>
+</body></html>`;
+
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        w.print();
+    }
+
+    function newEvaluation() {
+        q1 = {}; q2 = null; q3 = null; q4 = null; q5 = null;
+        // Reset sym rows
+        for (let i=1; i<=13; i++) {
+            const row = document.getElementById('row-'+i);
+            if (row) {
+                row.classList.remove('answered-yes','answered-no');
+                row.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            }
+        }
+        // Reset options
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('alerts-box').style.display = 'none';
+        updateCounter();
+        showCard('card-0');
+    }
+</script>
+</body>
+</html>
