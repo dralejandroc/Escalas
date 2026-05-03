@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCL-5 — Lista de Verificación del TEPT para el DSM-5</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
+        }
+        .card-wrap.active { display: block; }
+
+        .card-header {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label   { font-size: 12px; opacity: .8; text-align: right; }
+
+        .card-body { padding: 28px 32px 24px; }
+
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #112F33; margin-bottom: 16px; }
+        .instructions-box {
+            background: #f0faf7;
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            color: #112F33;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+        .instructions-box p + p { margin-top: 6px; }
+        .scale-badge {
+            display: inline-block;
+            background: rgba(41,169,140,0.12);
+            border: 1.5px solid #29A98C;
+            color: #29A98C;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .start-wrap { text-align: center; }
+
+        /* Likert anchor bar */
+        .anchor-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .anchor-item {
+            text-align: center;
+            font-size: 11px;
+            color: #718096;
+            padding: 4px 2px;
+            border-radius: 6px;
+            background: #f7fafc;
+            line-height: 1.3;
+        }
+        .anchor-item span {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #29A98C;
+            margin-bottom: 2px;
+        }
+
+        /* Question */
+        .question-text {
+            font-size: 20px;
+            font-weight: 500;
+            color: #112F33;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+        .option {
+            width: 100%;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 13px 18px;
+            font-size: 14px;
+            color: #112F33;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s;
+            line-height: 1.4;
+        }
+        .option:hover   { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
+
+        /* Progress */
+        .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+        .progress-bar-wrap {
+            height: 6px; background: #e2e8f0; border-radius: 3px;
+            overflow: hidden; margin-bottom: 14px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px; transition: width .3s;
+        }
+
+        /* Bottom nav */
+        .bottom-nav { display: flex; justify-content: space-between; align-items: center; }
+        .btn-back {
+            background: none; border: 1px solid #cbd5e0; border-radius: 8px;
+            color: #718096; padding: 7px 16px; font-size: 13px;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 15px 40px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #2d3748);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 13px 28px; font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+        /* Final */
+        .final-title { font-size: 22px; font-weight: 700; color: #112F33; text-align: center; margin-bottom: 10px; }
+        .final-msg   { font-size: 15px; color: #4a5568; text-align: center; margin-bottom: 20px; line-height: 1.6; }
+        .handoff-box { background: #f0faf7; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 20px; color: #276749; font-size: 14px; }
+
+        /* Results */
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin: 16px 0 8px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .score-area {
+            text-align: center; padding: 22px 20px 18px;
+            border-radius: 16px; border: 2px solid #e2e8f0; margin-bottom: 4px;
+        }
+        .score-num   { font-size: 72px; font-weight: 900; line-height: 1; }
+        .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
+        .score-badge {
+            display: inline-block; margin-top: 10px;
+            padding: 5px 18px; border-radius: 20px; font-size: 14px; font-weight: 700;
+        }
+
+        /* 4 clusters: 2x2 */
+        .subscales-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-bottom: 14px;
+        }
+        .subscale-box {
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 12px 10px; text-align: center;
+        }
+        .sub-title { font-size: 10px; color: #718096; font-weight: 600; margin-bottom: 4px; line-height: 1.3; text-transform: uppercase; letter-spacing:.03em; }
+        .sub-criterion { font-size: 9px; color: #a0aec0; margin-bottom: 5px; }
+        .sub-num   { font-size: 28px; font-weight: 900; line-height: 1; }
+        .sub-max   { font-size: 11px; color: #a0aec0; margin-top: 2px; }
+        .sub-badge {
+            display: inline-block; margin-top: 5px;
+            padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;
+        }
+        .sub-bar-wrap { height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+        .sub-bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+
+        /* DSM-5 criteria met grid */
+        .criteria-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px; margin-bottom: 14px;
+        }
+        .criterion-pill {
+            text-align: center; border-radius: 10px; padding: 8px 4px;
+            border: 1.5px solid #e2e8f0;
+        }
+        .criterion-pill .cr-label { font-size: 10px; font-weight: 700; color: #718096; text-transform: uppercase; }
+        .criterion-pill .cr-name  { font-size: 9px; color: #a0aec0; margin-top: 1px; line-height: 1.2; }
+        .criterion-pill .cr-icon  { font-size: 18px; margin: 4px 0 2px; }
+        .criterion-pill .cr-req   { font-size: 9px; color: #a0aec0; }
+        .criterion-pill.met    { border-color: #48bb78; background: rgba(72,187,120,0.08); }
+        .criterion-pill.not-met { border-color: #fc8181; background: rgba(252,129,129,0.08); }
+        .criterion-pill.met .cr-label    { color: #276749; }
+        .criterion-pill.not-met .cr-label { color: #9b2c2c; }
+
+        .provisional-banner {
+            border-radius: 10px; padding: 10px 14px;
+            text-align: center; margin-bottom: 12px;
+            font-size: 13px; font-weight: 600;
+        }
+        .provisional-banner.met     { background: rgba(252,129,129,0.12); border: 1.5px solid #fc8181; color: #742a2a; }
+        .provisional-banner.not-met { background: rgba(72,187,120,0.12); border: 1.5px solid #48bb78; color: #276749; }
+
+        .interp-box {
+            background: #f7fafc; border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0; padding: 14px 16px;
+            margin-bottom: 12px; font-size: 13px; color: #2d3748; line-height: 1.7;
+        }
+        .interp-box ul { margin: 6px 0 0 16px; }
+        .alerts-box {
+            background: #fff5f5; border: 1px solid #feb2b2;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+            font-size: 13px; color: #742a2a;
+        }
+        .alerts-box ul { margin: 6px 0 0 16px; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .subscales-grid { grid-template-columns: 1fr; }
+            .criteria-grid  { grid-template-columns: 1fr 1fr; }
+            .question-text  { font-size: 17px; }
+            .anchor-bar { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+            .anchor-item { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARD 0: BIENVENIDA -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 — Lista de Verificación del TEPT (DSM-5)</span>
+        <span class="q-label">Instrucciones</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Lista de Verificación del TEPT para el DSM-5 (PCL-5)</div>
+        <div class="scale-badge">20 preguntas · Aprox. 5 minutos · Pasado mes</div>
+        <div class="instructions-box">
+            <p>A continuación hay una lista de problemas que a veces tienen las personas en respuesta a una <strong>experiencia muy estresante</strong>. Lea cada problema cuidadosamente e indique <strong>cuánta molestia le causó durante el pasado mes</strong>.</p>
+            <p style="margin-top:8px;">Responda pensando en la experiencia estresante que el profesional le haya indicado, o en la que más le haya afectado.</p>
+        </div>
+        <div class="anchor-bar">
+            <div class="anchor-item"><span>0</span>Nada</div>
+            <div class="anchor-item"><span>1</span>Un poco</div>
+            <div class="anchor-item"><span>2</span>Moderada-mente</div>
+            <div class="anchor-item"><span>3</span>Bastante</div>
+            <div class="anchor-item"><span>4</span>Extrema-damente</div>
+        </div>
+        <div class="start-wrap">
+            <button class="btn-primary" onclick="showCard(1)">Comenzar Evaluación</button>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 1 -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Reexperimentación</span>
+        <span class="q-label">Ítem 1 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causaron recuerdos repetidos, perturbadores e indeseados sobre la experiencia estresante?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(1,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(1,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(1,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(1,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(1,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 1 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 1 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 2 -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Reexperimentación</span>
+        <span class="q-label">Ítem 2 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causaron sueños repetidos y perturbadores sobre la experiencia estresante?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(2,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(2,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(2,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(2,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(2,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 2 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 2 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 3 -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Reexperimentación</span>
+        <span class="q-label">Ítem 3 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó sentir o actuar repentinamente como si la experiencia estresante estuviera sucediendo nuevamente (como si estuviera reviviéndola)?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(3,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(3,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(3,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(3,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(3,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 3 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 3 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 4 -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Reexperimentación</span>
+        <span class="q-label">Ítem 4 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia sintió cuando algo le hizo recordar la experiencia estresante y se sintió muy angustiado?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(4,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(4,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(4,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(4,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(4,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 4 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 4 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 5 -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Reexperimentación</span>
+        <span class="q-label">Ítem 5 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causaron reacciones físicas intensas cuando algo le hizo recordar la experiencia estresante (por ejemplo, latidos muy fuertes, problemas para respirar, sudoración)?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(5,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(5,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(5,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(5,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(5,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 5 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 5 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 6 -->
+<div class="card-wrap" id="card-6">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Evitación</span>
+        <span class="q-label">Ítem 6 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó evitar recuerdos, pensamientos o sentimientos relacionados con la experiencia estresante?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(6,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(6,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(6,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(6,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(6,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 6 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 6 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 7 -->
+<div class="card-wrap" id="card-7">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Evitación</span>
+        <span class="q-label">Ítem 7 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó evitar claves o recordatorios externos de la experiencia estresante (por ejemplo, personas, lugares, conversaciones, actividades, objetos o situaciones)?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(7,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(7,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(7,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(7,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(7,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 7 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:35%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 7 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 8 -->
+<div class="card-wrap" id="card-8">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 8 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tener dificultad para recordar partes importantes de la experiencia estresante?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(8,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(8,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(8,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(8,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(8,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 8 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 8 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 9 -->
+<div class="card-wrap" id="card-9">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 9 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tener creencias negativas fuertes acerca de sí mismo, de otras personas o del mundo (por ejemplo: "soy malo", "no se puede confiar en nadie", "el mundo es completamente peligroso")?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(9,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(9,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(9,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(9,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(9,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 9 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 9 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 10 -->
+<div class="card-wrap" id="card-10">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 10 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó culparse a sí mismo o a otros por la experiencia estresante, o por lo que sucedió después de ésta?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(10,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(10,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(10,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(10,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(10,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 10 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 10 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 11 -->
+<div class="card-wrap" id="card-11">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 11 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tener sentimientos negativos intensos, como miedo, terror, ira, culpa o vergüenza?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(11,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(11,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(11,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(11,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(11,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 11 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:55%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 11 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 12 -->
+<div class="card-wrap" id="card-12">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 12 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó la pérdida de interés en actividades que antes disfrutaba?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(12,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(12,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(12,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(12,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(12,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 12 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 12 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 13 -->
+<div class="card-wrap" id="card-13">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 13 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó sentirse distante o enajenado de otras personas?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(13,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(13,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(13,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(13,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(13,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 13 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:65%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 13 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 14 -->
+<div class="card-wrap" id="card-14">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Cognición y Estado de Ánimo</span>
+        <span class="q-label">Ítem 14 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó la dificultad para sentir emociones positivas (por ejemplo, ser incapaz de sentir alegría o sentimientos de amor por las personas cercanas)?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(14,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(14,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(14,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(14,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(14,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 14 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 14 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 15 -->
+<div class="card-wrap" id="card-15">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 15 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causaron la irritabilidad, explosiones de rabia o actuar agresivamente?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(15,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(15,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(15,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(15,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(15,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 15 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:75%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 15 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 16 -->
+<div class="card-wrap" id="card-16">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 16 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tomar demasiados riesgos o hacer cosas que pudieron haberle causado daño?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(16,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(16,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(16,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(16,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(16,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 16 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 16 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 17 -->
+<div class="card-wrap" id="card-17">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 17 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó estar "extremadamente alerta", vigilante o en guardia?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(17,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(17,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(17,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(17,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(17,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 17 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:85%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 17 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 18 -->
+<div class="card-wrap" id="card-18">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 18 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó sentirse muy nervioso o sobresaltarse fácilmente?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(18,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(18,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(18,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(18,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(18,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 18 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 18 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 19 -->
+<div class="card-wrap" id="card-19">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 19 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tener dificultad para concentrarse?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(19,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(19,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(19,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(19,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(19,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 19 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:95%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 19 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- ITEM 20 -->
+<div class="card-wrap" id="card-20">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 · Hiperactivación y Reactividad</span>
+        <span class="q-label">Ítem 20 de 20</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">¿Cuánta molestia le causó tener dificultad para dormirse o mantener el sueño?</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(20,0,this)">Nada</button>
+            <button class="option" onclick="selectOption(20,1,this)">Un poco</button>
+            <button class="option" onclick="selectOption(20,2,this)">Moderadamente</button>
+            <button class="option" onclick="selectOption(20,3,this)">Bastante</button>
+            <button class="option" onclick="selectOption(20,4,this)">Extremadamente</button>
+        </div>
+        <div class="q-progress-label">Pregunta 20 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-badge">Ítem 20 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- CARD FINAL -->
+<div class="card-wrap" id="card-final">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 — Lista de Verificación del TEPT</span>
+        <span class="q-label">Completado</span>
+    </div>
+    <div class="card-body">
+        <div class="final-title">Evaluación Completada</div>
+        <div class="final-msg">Ha respondido las 20 preguntas del PCL-5.</div>
+        <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de salud mental para revisar los resultados.</div>
+        <div style="text-align:center;">
+            <button class="btn-primary" onclick="showResults()">Ver Resultados (Médico)</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD RESULTADOS -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">PCL-5 — Lista de Verificación del TEPT</span>
+        <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+
+        <div class="section-label">Puntuación Total</div>
+        <div class="score-area">
+            <div class="score-num" id="total-score">—</div>
+            <div class="score-range">/ 80 puntos</div>
+            <div class="score-badge" id="total-badge">—</div>
+        </div>
+
+        <div class="section-label">Criterios DSM-5 (Punto de corte ≥ 2 por ítem)</div>
+        <div class="criteria-grid" id="criteria-grid">
+            <div class="criterion-pill" id="cr-b">
+                <div class="cr-label">Criterio B</div>
+                <div class="cr-name">Reexperimentación</div>
+                <div class="cr-icon" id="cr-b-icon">—</div>
+                <div class="cr-req">≥1 síntoma (íts. 1-5)</div>
+            </div>
+            <div class="criterion-pill" id="cr-c">
+                <div class="cr-label">Criterio C</div>
+                <div class="cr-name">Evitación</div>
+                <div class="cr-icon" id="cr-c-icon">—</div>
+                <div class="cr-req">≥1 síntoma (íts. 6-7)</div>
+            </div>
+            <div class="criterion-pill" id="cr-d">
+                <div class="cr-label">Criterio D</div>
+                <div class="cr-name">Cognición/Ánimo</div>
+                <div class="cr-icon" id="cr-d-icon">—</div>
+                <div class="cr-req">≥2 síntomas (íts. 8-14)</div>
+            </div>
+            <div class="criterion-pill" id="cr-e">
+                <div class="cr-label">Criterio E</div>
+                <div class="cr-name">Hiperactivación</div>
+                <div class="cr-icon" id="cr-e-icon">—</div>
+                <div class="cr-req">≥2 síntomas (íts. 15-20)</div>
+            </div>
+        </div>
+        <div class="provisional-banner" id="provisional-banner">—</div>
+
+        <div class="section-label">Subescalas por Criterio</div>
+        <div class="subscales-grid">
+            <div class="subscale-box">
+                <div class="sub-title">Reexperimentación</div>
+                <div class="sub-criterion">Criterio B · Ítems 1–5</div>
+                <div class="sub-num" id="sub-b">—</div>
+                <div class="sub-max">/ 20 pts</div>
+                <div class="sub-badge" id="badge-b">—</div>
+                <div class="sub-bar-wrap"><div class="sub-bar-fill" id="bar-b" style="width:0%"></div></div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Evitación</div>
+                <div class="sub-criterion">Criterio C · Ítems 6–7</div>
+                <div class="sub-num" id="sub-c">—</div>
+                <div class="sub-max">/ 8 pts</div>
+                <div class="sub-badge" id="badge-c">—</div>
+                <div class="sub-bar-wrap"><div class="sub-bar-fill" id="bar-c" style="width:0%"></div></div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Cognición y Estado de Ánimo</div>
+                <div class="sub-criterion">Criterio D · Ítems 8–14</div>
+                <div class="sub-num" id="sub-d">—</div>
+                <div class="sub-max">/ 28 pts</div>
+                <div class="sub-badge" id="badge-d">—</div>
+                <div class="sub-bar-wrap"><div class="sub-bar-fill" id="bar-d" style="width:0%"></div></div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Hiperactivación y Reactividad</div>
+                <div class="sub-criterion">Criterio E · Ítems 15–20</div>
+                <div class="sub-num" id="sub-e">—</div>
+                <div class="sub-max">/ 24 pts</div>
+                <div class="sub-badge" id="badge-e">—</div>
+                <div class="sub-bar-wrap"><div class="sub-bar-fill" id="bar-e" style="width:0%"></div></div>
+            </div>
+        </div>
+
+        <div class="section-label">Interpretación Clínica</div>
+        <div class="interp-box" id="interp-box"><ul id="interp-list"></ul></div>
+
+        <div class="alerts-box" id="alerts-box" style="display:none;">
+            <strong>Areas de Atención Prioritaria</strong>
+            <ul id="alerts-list"></ul>
+        </div>
+
+        <div style="font-size: 11px; color: #a0aec0; margin: 12px 0 16px; line-height: 1.5;">
+            <strong style="color:#718096;">Referencia:</strong> Blevins, C.A., Weathers, F.W. et al. (2015). The PTSD Checklist for DSM-5 (PCL-5). <em>J Trauma Stress</em>, 28(6):578-82. α = 0.94–0.96. Punto de corte recomendado: 31–33. Validación española: Paniagua-Granados et al. (2024). <em>Arch Psychiatr Nurs</em>, α = 0.929.
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="exportToPDF()">Generar PDF</button>
+            <button class="btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentCardId = 'card-0';
+    let responses = {};
+
+    const cardOrder = ['card-0'];
+    for (let i = 1; i <= 20; i++) cardOrder.push('card-' + i);
+    cardOrder.push('card-final');
+
+    function showCard(id) {
+        document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+        const key = (typeof id === 'number') ? 'card-' + id : id;
+        document.getElementById(key).classList.add('active');
+        currentCardId = key;
+        window.scrollTo(0, 0);
+        if (typeof id === 'number' && id >= 1 && id <= 20) restoreSelections(id);
+    }
+
+    function restoreSelections(n) {
+        if (responses[n] === undefined) return;
+        const card = document.getElementById('card-' + n);
+        if (!card) return;
+        card.querySelectorAll('.option').forEach((btn, idx) => {
+            btn.classList.toggle('selected', idx === responses[n]);
+        });
+    }
+
+    function nextInOrder() {
+        const idx = cardOrder.indexOf(currentCardId);
+        if (idx < cardOrder.length - 1) showCard(cardOrder[idx + 1]);
+    }
+
+    function previousCard() {
+        const idx = cardOrder.indexOf(currentCardId);
+        if (idx > 0) showCard(cardOrder[idx - 1]);
+    }
+
+    function selectOption(qNum, value, btn) {
+        btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        responses[qNum] = value;
+        setTimeout(() => nextInOrder(), 150);
+    }
+
+    // ── Scoring ──
+    function calculateScore() {
+        const B = [1,2,3,4,5].reduce((s,i) => s + (responses[i]||0), 0);
+        const C = [6,7].reduce((s,i) => s + (responses[i]||0), 0);
+        const D = [8,9,10,11,12,13,14].reduce((s,i) => s + (responses[i]||0), 0);
+        const E = [15,16,17,18,19,20].reduce((s,i) => s + (responses[i]||0), 0);
+        const total = B + C + D + E;
+
+        // DSM-5 provisional criteria: each item ≥ 2 counts as endorsed
+        const crB = [1,2,3,4,5].filter(i => (responses[i]||0) >= 2).length >= 1;
+        const crC = [6,7].filter(i => (responses[i]||0) >= 2).length >= 1;
+        const crD = [8,9,10,11,12,13,14].filter(i => (responses[i]||0) >= 2).length >= 2;
+        const crE = [15,16,17,18,19,20].filter(i => (responses[i]||0) >= 2).length >= 2;
+        const allCriteria = crB && crC && crD && crE;
+
+        return { total, B, C, D, E, crB, crC, crD, crE, allCriteria };
+    }
+
+    function getTotalLevel(score) {
+        if (score <= 20) return { label: 'Subcritico',         color: '#48bb78', bgColor: 'rgba(72,187,120,0.1)'   };
+        if (score <= 30) return { label: 'Subumbral',          color: '#f6ad55', bgColor: 'rgba(246,173,85,0.1)'  };
+        if (score <= 49) return { label: 'TEPT Probable',      color: '#ed8936', bgColor: 'rgba(237,137,54,0.1)'  };
+        return                  { label: 'TEPT Severo',        color: '#f56565', bgColor: 'rgba(245,101,101,0.1)' };
+    }
+
+    function getSubLevel(pct) {
+        if (pct <= 25) return { label: 'Minimo',   color: '#48bb78' };
+        if (pct <= 50) return { label: 'Leve',     color: '#f6ad55' };
+        if (pct <= 75) return { label: 'Moderado', color: '#ed8936' };
+        return               { label: 'Severo',   color: '#f56565' };
+    }
+
+    function setSub(numId, barId, badgeId, score, max) {
+        const lv = getSubLevel((score / max) * 100);
+        const el = document.getElementById(numId);
+        el.textContent = score;
+        el.style.color = lv.color;
+        document.getElementById(barId).style.width      = ((score/max)*100) + '%';
+        document.getElementById(barId).style.background = lv.color;
+        const b = document.getElementById(badgeId);
+        b.textContent = lv.label;
+        b.style.color = lv.color;
+        b.style.background = lv.color + '1a';
+        b.style.border = `1.5px solid ${lv.color}`;
+    }
+
+    function setCriterion(pillId, iconId, met) {
+        const pill = document.getElementById(pillId);
+        const icon = document.getElementById(iconId);
+        pill.classList.remove('met','not-met');
+        pill.classList.add(met ? 'met' : 'not-met');
+        icon.textContent = met ? '✓' : '✗';
+    }
+
+    function showResults() {
+        const s = calculateScore();
+        const lv = getTotalLevel(s.total);
+
+        // Total
+        const numEl = document.getElementById('total-score');
+        numEl.textContent = s.total;
+        numEl.style.color = lv.color;
+        const badge = document.getElementById('total-badge');
+        badge.textContent      = lv.label;
+        badge.style.color      = lv.color;
+        badge.style.background = lv.color + '1a';
+        badge.style.border     = `1.5px solid ${lv.color}`;
+
+        // Criteria pills
+        setCriterion('cr-b','cr-b-icon', s.crB);
+        setCriterion('cr-c','cr-c-icon', s.crC);
+        setCriterion('cr-d','cr-d-icon', s.crD);
+        setCriterion('cr-e','cr-e-icon', s.crE);
+
+        // Provisional banner
+        const banner = document.getElementById('provisional-banner');
+        if (s.allCriteria) {
+            banner.className = 'provisional-banner met';
+            banner.textContent = 'Cumple todos los criterios DSM-5: TEPT provisional positivo';
+        } else {
+            banner.className = 'provisional-banner not-met';
+            const missing = [!s.crB&&'B',!s.crC&&'C',!s.crD&&'D',!s.crE&&'E'].filter(Boolean);
+            banner.textContent = 'No cumple criterios DSM-5 completos (faltan: ' + missing.join(', ') + ')';
+        }
+
+        // Subscales
+        setSub('sub-b','bar-b','badge-b', s.B, 20);
+        setSub('sub-c','bar-c','badge-c', s.C, 8);
+        setSub('sub-d','bar-d','badge-d', s.D, 28);
+        setSub('sub-e','bar-e','badge-e', s.E, 24);
+
+        // Clinical interpretation
+        const recs = [];
+        if (s.total <= 20) {
+            recs.push('Puntuación subcrítica. Los síntomas reportados no alcanzan el umbral clínico de TEPT. Monitorizar si hay cambios con el tiempo.');
+        } else if (s.total <= 30) {
+            recs.push('Puntuación subumbral. Síntomas presentes pero por debajo del punto de corte diagnóstico (31-33). Considerar seguimiento o intervención preventiva.');
+        } else if (s.total <= 49) {
+            recs.push('TEPT probable (punto de corte: 31-33). Se recomienda evaluación diagnóstica estructurada (CAPS-5) para confirmar el diagnóstico y planificar el tratamiento.');
+        } else {
+            recs.push('TEPT severo. Puntuación muy por encima del punto de corte. Intervención clínica prioritaria; considerar tratamientos de primera línea (TCC centrada en trauma, EMDR, CPT, PE).');
+        }
+        if (s.B >= 12) recs.push(`Reexperimentación prominente (${s.B}/20): flashbacks, pesadillas y angustia intensa ante recordatorios son síntomas dominantes.`);
+        if (s.C >= 5)  recs.push(`Evitación significativa (${s.C}/8): el patrón de evitación puede estar manteniendo el cuadro y limitando la exposición a tratamiento.`);
+        if (s.D >= 16) recs.push(`Alteraciones cognitivas y del estado de ánimo marcadas (${s.D}/28): presencia de distorsiones cognitivas, culpa, embotamiento emocional y desconexión social.`);
+        if (s.E >= 14) recs.push(`Hiperactivación elevada (${s.E}/24): hipervigilancia, respuesta exagerada de sobresalto, irritabilidad y dificultades de sueño.`);
+        if (s.allCriteria) {
+            recs.push('Los cuatro criterios sintomáticos del DSM-5 están presentes. Confirmar con entrevista clínica (CAPS-5) y verificar criterios de duración (>1 mes) y deterioro funcional.');
+        }
+        recs.push('El PCL-5 es un instrumento de tamizaje. El diagnóstico definitivo de TEPT requiere evaluación clínica estructurada. La escala es sensible al cambio y útil para monitorizar la respuesta al tratamiento.');
+
+        document.getElementById('interp-list').innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+        document.getElementById('interp-box').style.display = 'block';
+
+        // Alerts
+        const alerts = [];
+        if (s.total >= 50) alerts.push('Puntuación muy elevada (≥ 50): cuadro de TEPT de alta intensidad con probable impacto funcional severo.');
+        if (responses[16] >= 3) alerts.push('Conductas de riesgo marcadas (ítem 16): evaluar impulsividad y conductas autodestructivas.');
+        if (responses[15] >= 3) alerts.push('Rabia e irritabilidad marcadas (ítem 15): valorar riesgo hacia terceros y dinámica familiar.');
+        if ((responses[3]||0) >= 3) alerts.push('Flashbacks intensos (ítem 3): revisar si interfieren significativamente con el funcionamiento diario.');
+        if (alerts.length) {
+            document.getElementById('alerts-list').innerHTML = alerts.map(a => `<li>${a}</li>`).join('');
+            document.getElementById('alerts-box').style.display = 'block';
+        }
+
+        showCard('card-results');
+    }
+
+    function exportToPDF() {
+        const s = calculateScore();
+        const lv = getTotalLevel(s.total);
+        const fecha = new Date().toLocaleDateString('es-ES');
+
+        const crColor = met => met ? '#48bb78' : '#f56565';
+        const crLabel = met => met ? 'Cumplido' : 'No cumplido';
+
+        function subRow(name, items, score, max) {
+            const pct = (score/max)*100;
+            const c = pct<=25?'#48bb78':pct<=50?'#f6ad55':pct<=75?'#ed8936':'#f56565';
+            const lbl = pct<=25?'Minimo':pct<=50?'Leve':pct<=75?'Moderado':'Severo';
+            return `<tr>
+              <td style="padding:8px 10px;font-size:13px;font-weight:600;color:#112F33;">${name}</td>
+              <td style="padding:8px 10px;text-align:center;font-size:10px;color:#a0aec0;">${items}</td>
+              <td style="padding:8px 10px;text-align:center;font-size:18px;font-weight:900;color:${c};">${score}</td>
+              <td style="padding:8px 10px;text-align:center;font-size:11px;color:#a0aec0;">/ ${max}</td>
+              <td style="padding:8px 10px;text-align:center;">
+                <span style="color:${c};background:${c}1a;border:1.5px solid ${c};border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;">${lbl}</span>
+              </td>
+              <td style="padding:8px 14px;width:110px;">
+                <div style="height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;">
+                  <div style="width:${pct}%;height:100%;background:${c};border-radius:3px;"></div>
+                </div>
+              </td>
+            </tr>`;
+        }
+
+        const provText = s.allCriteria
+            ? 'CUMPLE todos los criterios DSM-5 — TEPT provisional positivo'
+            : 'NO cumple criterios DSM-5 completos (faltan: ' + [!s.crB&&'B',!s.crC&&'C',!s.crD&&'D',!s.crE&&'E'].filter(Boolean).join(', ') + ')';
+        const provColor = s.allCriteria ? '#f56565' : '#48bb78';
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>PCL-5 — Resultados</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:740px;margin:40px auto;color:#112F33;}
+  h1{color:#29A98C;margin-bottom:4px;}h2{color:#29A98C;font-size:15px;margin:22px 0 8px;}
+  .score-area{text-align:center;border:2px solid #e2e8f0;border-radius:12px;padding:20px;margin:12px 0 16px;}
+  .score-num{font-size:64px;font-weight:900;line-height:1;color:${lv.color};}
+  .score-range{font-size:14px;color:#a0aec0;margin-top:2px;}
+  .score-badge{display:inline-block;margin-top:8px;padding:4px 16px;border-radius:20px;font-size:14px;font-weight:700;color:${lv.color};background:${lv.color}1a;border:1.5px solid ${lv.color};}
+  .criteria-table{width:100%;border-collapse:collapse;margin:8px 0 12px;}
+  .criteria-table td{padding:6px 10px;font-size:12px;border:1px solid #e2e8f0;}
+  .prov-banner{border-radius:8px;padding:10px 14px;text-align:center;font-size:13px;font-weight:600;color:${provColor};background:${provColor}1a;border:1.5px solid ${provColor};margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;margin:8px 0 20px;}
+  thead th{background:#f7fafc;color:#718096;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;text-align:left;border-bottom:1px solid #e2e8f0;}
+  tbody tr{border-bottom:1px solid #f0f4f8;}
+  .interp{background:#f7fafc;border-left:4px solid #29A98C;border-radius:0 8px 8px 0;padding:12px 16px;margin:8px 0 16px;font-size:13px;line-height:1.7;}
+  .interp ul{margin:4px 0 0 16px;}
+  .alerts{background:#fff5f5;border:1px solid #feb2b2;border-radius:8px;padding:12px 16px;margin:8px 0 16px;font-size:13px;color:#742a2a;}
+  .alerts ul{margin:4px 0 0 16px;}
+  .ref{font-size:11px;color:#a0aec0;margin-top:20px;line-height:1.5;}
+  footer{margin-top:36px;font-size:11px;color:#999;text-align:center;}
+</style></head><body>
+<h1>PCL-5 — Lista de Verificación del TEPT para el DSM-5</h1>
+<p style="color:#718096;">Fecha de evaluación: ${fecha}</p>
+<h2>Puntuación Total</h2>
+<div class="score-area">
+  <div class="score-num">${s.total}</div>
+  <div class="score-range">/ 80 puntos · Punto de corte: 31-33</div>
+  <div class="score-badge">${lv.label}</div>
+</div>
+<h2>Criterios DSM-5 (ítem ≥ 2 = síntoma endosado)</h2>
+<table class="criteria-table">
+<tr>
+  <td style="font-weight:700;">Criterio B — Reexperimentación (≥1 síntoma, ítems 1-5)</td>
+  <td style="color:${crColor(s.crB)};font-weight:700;text-align:center;">${crLabel(s.crB)}</td>
+</tr>
+<tr>
+  <td style="font-weight:700;">Criterio C — Evitación (≥1 síntoma, ítems 6-7)</td>
+  <td style="color:${crColor(s.crC)};font-weight:700;text-align:center;">${crLabel(s.crC)}</td>
+</tr>
+<tr>
+  <td style="font-weight:700;">Criterio D — Cognición y estado de ánimo (≥2 síntomas, ítems 8-14)</td>
+  <td style="color:${crColor(s.crD)};font-weight:700;text-align:center;">${crLabel(s.crD)}</td>
+</tr>
+<tr>
+  <td style="font-weight:700;">Criterio E — Hiperactivación (≥2 síntomas, ítems 15-20)</td>
+  <td style="color:${crColor(s.crE)};font-weight:700;text-align:center;">${crLabel(s.crE)}</td>
+</tr>
+</table>
+<div class="prov-banner">${provText}</div>
+<h2>Subescalas</h2>
+<table>
+  <thead><tr><th>Subescala</th><th>Items</th><th>Pts</th><th>Max</th><th>Nivel</th><th>Progreso</th></tr></thead>
+  <tbody>
+    ${subRow('Reexperimentación',              '1–5',   s.B, 20)}
+    ${subRow('Evitación',                      '6–7',   s.C, 8 )}
+    ${subRow('Cognición y Estado de Ánimo',    '8–14',  s.D, 28)}
+    ${subRow('Hiperactivación y Reactividad',  '15–20', s.E, 24)}
+  </tbody>
+</table>
+<h2>Interpretación Clínica</h2>
+<div class="interp"><ul>${
+  (() => {
+    const r = [];
+    if (s.total <= 20) r.push('Puntuación subcrítica. Sin indicios de TEPT activo.');
+    else if (s.total <= 30) r.push('Subumbral. Sintomatología presente pero por debajo del punto de corte; considerar seguimiento.');
+    else if (s.total <= 49) r.push('TEPT probable. Se recomienda evaluación diagnóstica con CAPS-5 y planificación de tratamiento.');
+    else r.push('TEPT severo. Intervención clínica prioritaria (TCC centrada en trauma, EMDR, CPT, PE).');
+    if (s.B >= 12) r.push(`Reexperimentación prominente (${s.B}/20).`);
+    if (s.C >= 5)  r.push(`Evitación significativa (${s.C}/8).`);
+    if (s.D >= 16) r.push(`Alteraciones cognitivas y del ánimo marcadas (${s.D}/28).`);
+    if (s.E >= 14) r.push(`Hiperactivación elevada (${s.E}/24).`);
+    r.push('Confirmar diagnóstico con evaluación clínica estructurada (CAPS-5). El PCL-5 es útil para monitorizar respuesta al tratamiento.');
+    return r.map(x=>`<li>${x}</li>`).join('');
+  })()
+}</ul></div>
+<div class="ref">
+  <strong>Referencia:</strong> Blevins, C.A., Weathers, F.W. et al. (2015). The PTSD Checklist for DSM-5 (PCL-5). <em>J Trauma Stress</em>, 28(6):578-82.
+  Punto de corte: 31-33 (Weathers et al., VA PTSD National Center). α = 0.94–0.96.
+  Validación española: Paniagua-Granados et al. (2024). <em>Arch Psychiatr Nurs</em>, α = 0.929.
+</div>
+<footer>PCL-5 · Generado el ${fecha}</footer>
+</body></html>`;
+
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        w.print();
+    }
+
+    function newEvaluation() {
+        responses = {};
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('alerts-box').style.display = 'none';
+        showCard('card-0');
+    }
+</script>
+</body>
+</html>
