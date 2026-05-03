@@ -23,7 +23,6 @@
         }
         .card-wrap.active { display: block; }
 
-        /* Card header */
         .card-header {
             background: linear-gradient(135deg, #29A98C, #112F33);
             color: #fff;
@@ -35,30 +34,22 @@
         .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
         .card-header .q-label   { font-size: 12px; opacity: .8; text-align: right; }
 
-        /* Section transition cards */
-        .section-card-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
+        .unscored-header {
+            background: linear-gradient(135deg, #718096, #2d3748);
             color: #fff;
             padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .section-card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
-        .section-body {
-            padding: 28px 32px 28px;
+        .unscored-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 600;
         }
-        .section-icon { font-size: 36px; text-align: center; margin-bottom: 10px; }
-        .section-title { font-size: 20px; font-weight: 700; color: #112F33; text-align: center; margin-bottom: 10px; }
-        .section-desc {
-            background: #f0faf7;
-            border-left: 4px solid #29A98C;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 16px;
-            font-size: 14px;
-            color: #2d3748;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-        .section-desc p + p { margin-top: 6px; }
-        .section-btn-wrap { text-align: center; }
 
         .card-body { padding: 28px 32px 24px; }
 
@@ -84,15 +75,6 @@
             padding: 4px 14px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 20px;
-        }
-        .unscored-note {
-            background: #fffaf0;
-            border: 1px solid #fbd38d;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 12px;
-            color: #744210;
             margin-bottom: 20px;
         }
         .start-wrap { text-align: center; }
@@ -129,49 +111,10 @@
             cursor: pointer;
             text-align: left;
             transition: all .2s;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            line-height: 1.4;
         }
         .option:hover  { border-color: #29A98C; background: rgba(41,169,140,0.06); }
         .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
-        .opt-score {
-            flex-shrink: 0;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            color: #718096;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 1px;
-        }
-        .option.selected .opt-score {
-            background: #29A98C;
-            color: #fff;
-        }
-        .opt-text { flex: 1; line-height: 1.4; }
-
-        /* Unscored item special styling */
-        .unscored-header {
-            background: linear-gradient(135deg, #718096, #2d3748);
-            color: #fff;
-            padding: 18px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .unscored-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 2px 10px;
-            font-size: 11px;
-            font-weight: 600;
-        }
 
         /* Progress bar */
         .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
@@ -234,19 +177,17 @@
         .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
 
         /* Final */
-        .final-icon  { font-size: 48px; text-align: center; margin-bottom: 12px; }
         .final-title { font-size: 22px; font-weight: 700; color: #112F33; text-align: center; margin-bottom: 10px; }
         .final-msg   { font-size: 15px; color: #4a5568; text-align: center; margin-bottom: 20px; line-height: 1.6; }
         .handoff-box { background: #f0faf7; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 20px; color: #276749; font-size: 14px; }
 
-        /* ── Results ── */
+        /* Results */
         .section-label {
             font-size: 11px; font-weight: 700; text-transform: uppercase;
             letter-spacing: .06em; color: #a0aec0; margin: 16px 0 8px;
         }
         .section-label:first-child { margin-top: 0; }
 
-        /* Total score: colored number, no box */
         .score-area {
             text-align: center;
             padding: 22px 20px 18px;
@@ -292,12 +233,9 @@
             padding: 2px 10px; border-radius: 20px;
             font-size: 10px; font-weight: 700;
         }
-
-        /* Subscale bar */
         .sub-bar-wrap { height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 6px; overflow: hidden; }
         .sub-bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
 
-        /* Interpretation */
         .interp-box {
             background: #f7fafc;
             border-left: 4px solid #29A98C;
@@ -321,7 +259,7 @@
         .alerts-box ul { margin: 6px 0 0 16px; }
 
         @media (max-width: 600px) {
-            .card-body, .section-body { padding: 20px 18px 18px; }
+            .card-body { padding: 20px 18px 18px; }
             .subscales-grid-3 { grid-template-columns: 1fr; }
             .subscales-grid-2 { grid-template-columns: 1fr; }
             .question-text { font-size: 17px; }
@@ -330,7 +268,7 @@
 </head>
 <body>
 
-<!-- ══════════ CARD 0: BIENVENIDA ══════════ -->
+<!-- CARD 0: BIENVENIDA -->
 <div class="card-wrap active" id="card-0">
     <div class="card-header">
         <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
@@ -338,46 +276,19 @@
     </div>
     <div class="card-body">
         <div class="welcome-title">Escala de Pánico y Agorafobia (PAS)</div>
-        <div class="time-badge">⏱ Aproximadamente 5–10 minutos · 13 preguntas</div>
+        <div class="time-badge">Aprox. 5 minutos · 13 preguntas</div>
         <div class="instructions-box">
-            <p>Esta escala evalúa la <strong>frecuencia e intensidad de los ataques de pánico</strong>, la evitación de situaciones por miedo, la ansiedad anticipatoria, el grado de deterioro en su vida diaria y las preocupaciones relacionadas con su salud.</p>
-            <br>
-            <p><strong>Período de evaluación:</strong> Piense en cómo se ha sentido durante la <strong>última semana</strong> al responder cada pregunta.</p>
-            <br>
-            <p><strong>Cómo responder:</strong> Seleccione la opción que mejor describa su situación. Cada pregunta tiene 5 opciones numeradas del 0 al 4, donde:</p>
-            <p>• <strong>0</strong> = Ningún síntoma / Sin dificultad</p>
-            <p>• <strong>4</strong> = Síntoma extremo / Máxima dificultad</p>
-            <br>
-            <p>Responda con honestidad según su experiencia real. No hay respuestas correctas o incorrectas.</p>
-        </div>
-        <div class="unscored-note">
-            ℹ Una de las preguntas (señalada con "información adicional") sirve para caracterizar mejor sus ataques pero <strong>no modifica su puntuación total</strong>.
+            <p>Responda pensando en cómo se ha sentido durante la <strong>última semana</strong>.</p>
+            <p>Cada pregunta tiene 5 opciones: desde <strong>0</strong> (sin síntoma o sin dificultad) hasta <strong>4</strong> (síntoma extremo o máxima dificultad). Seleccione la que mejor describa su situación.</p>
+            <p style="margin-top:8px;font-size:12px;color:#718096;">Una pregunta es informativa y no modifica su puntuación total.</p>
         </div>
         <div class="start-wrap">
-            <button class="btn-primary" onclick="showCard('sec-a')">Comenzar Evaluación</button>
+            <button class="btn-primary" onclick="showCard(1)">Comenzar Evaluación</button>
         </div>
     </div>
 </div>
 
-<!-- ══════════ SECCIÓN A: ATAQUES DE PÁNICO ══════════ -->
-<div class="card-wrap" id="sec-a">
-    <div class="section-card-header">
-        <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
-    </div>
-    <div class="section-body">
-        <div class="section-icon">⚡</div>
-        <div class="section-title">Sección A — Ataques de Pánico</div>
-        <div class="section-desc">
-            <p>Un <strong>ataque de pánico</strong> es un episodio repentino de miedo o malestar intenso que alcanza su punto máximo en minutos, acompañado de síntomas como palpitaciones, sudoración, sensación de ahogo, mareo, hormigueo o miedo a perder el control.</p>
-            <p>Las siguientes 3 preguntas (más una informativa) se refieren a los ataques de pánico que tuvo durante la <strong>última semana</strong>.</p>
-        </div>
-        <div class="section-btn-wrap">
-            <button class="btn-primary" onclick="showCard(1)">Continuar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════ ÍTEM 1: Frecuencia ══════════ -->
+<!-- ITEM 1: Frecuencia -->
 <div class="card-wrap" id="card-1">
     <div class="card-header">
         <span class="scale-name">PAS · Ataques de Pánico</span>
@@ -385,28 +296,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Cuántos ataques de pánico tuvo durante la semana pasada?</div>
-        <div class="question-context">Incluya tanto los ataques completos como los incompletos (síntomas similares al pánico que no llegaron a su máxima intensidad).</div>
+        <div class="question-context">Incluya ataques completos e incompletos (síntomas similares al pánico que no llegaron a su máxima intensidad).</div>
         <div class="options">
-            <button class="option" onclick="selectOption(1,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin ataques de pánico en la semana pasada</span>
-            </button>
-            <button class="option" onclick="selectOption(1,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">1 ataque de pánico en la semana pasada</span>
-            </button>
-            <button class="option" onclick="selectOption(1,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">2 a 3 ataques de pánico en la semana pasada</span>
-            </button>
-            <button class="option" onclick="selectOption(1,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">4 a 6 ataques de pánico en la semana pasada</span>
-            </button>
-            <button class="option" onclick="selectOption(1,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">1 o más ataques de pánico por día</span>
-            </button>
+            <button class="option" onclick="selectOption(1,0,this)">Sin ataques de pánico</button>
+            <button class="option" onclick="selectOption(1,1,this)">1 ataque</button>
+            <button class="option" onclick="selectOption(1,2,this)">2 a 3 ataques</button>
+            <button class="option" onclick="selectOption(1,3,this)">4 a 6 ataques</button>
+            <button class="option" onclick="selectOption(1,4,this)">1 o más ataques por día</button>
         </div>
         <div class="q-progress-label">Pregunta 1 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div>
@@ -417,7 +313,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 2: Severidad ══════════ -->
+<!-- ITEM 2: Severidad -->
 <div class="card-wrap" id="card-2">
     <div class="card-header">
         <span class="scale-name">PAS · Ataques de Pánico</span>
@@ -425,28 +321,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Cómo describiría la intensidad de sus ataques de pánico durante la semana pasada?</div>
-        <div class="question-context">Si no tuvo ataques esta semana, seleccione la opción 0.</div>
+        <div class="question-context">Si no tuvo ataques esta semana, seleccione la primera opción.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(2,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin ataques de pánico</span>
-            </button>
-            <button class="option" onclick="selectOption(2,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Generalmente muy leves — apenas perceptibles</span>
-            </button>
-            <button class="option" onclick="selectOption(2,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Generalmente moderados — notables pero tolerables</span>
-            </button>
-            <button class="option" onclick="selectOption(2,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Generalmente severos — muy perturbadores</span>
-            </button>
-            <button class="option" onclick="selectOption(2,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Generalmente extremadamente severos — incapacitantes</span>
-            </button>
+            <button class="option" onclick="selectOption(2,0,this)">Sin ataques de pánico</button>
+            <button class="option" onclick="selectOption(2,1,this)">Muy leves — apenas perceptibles</button>
+            <button class="option" onclick="selectOption(2,2,this)">Moderados — notables pero tolerables</button>
+            <button class="option" onclick="selectOption(2,3,this)">Severos — muy perturbadores</button>
+            <button class="option" onclick="selectOption(2,4,this)">Extremadamente severos — incapacitantes</button>
         </div>
         <div class="q-progress-label">Pregunta 2 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%"></div></div>
@@ -457,7 +338,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 3: Duración ══════════ -->
+<!-- ITEM 3: Duración -->
 <div class="card-wrap" id="card-3">
     <div class="card-header">
         <span class="scale-name">PAS · Ataques de Pánico</span>
@@ -465,28 +346,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Cuánto tiempo duró en promedio cada ataque de pánico durante la semana pasada?</div>
-        <div class="question-context">Si no tuvo ataques esta semana, seleccione la opción 0.</div>
+        <div class="question-context">Si no tuvo ataques esta semana, seleccione la primera opción.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(3,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin ataques de pánico</span>
-            </button>
-            <button class="option" onclick="selectOption(3,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">1 a 10 minutos</span>
-            </button>
-            <button class="option" onclick="selectOption(3,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Más de 10 minutos hasta 1 hora</span>
-            </button>
-            <button class="option" onclick="selectOption(3,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Más de 1 hora hasta 2 horas</span>
-            </button>
-            <button class="option" onclick="selectOption(3,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Más de 2 horas</span>
-            </button>
+            <button class="option" onclick="selectOption(3,0,this)">Sin ataques de pánico</button>
+            <button class="option" onclick="selectOption(3,1,this)">1 a 10 minutos</button>
+            <button class="option" onclick="selectOption(3,2,this)">Más de 10 minutos hasta 1 hora</button>
+            <button class="option" onclick="selectOption(3,3,this)">Más de 1 hora hasta 2 horas</button>
+            <button class="option" onclick="selectOption(3,4,this)">Más de 2 horas</button>
         </div>
         <div class="q-progress-label">Pregunta 3 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:23%"></div></div>
@@ -497,7 +363,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM U: Tipo de ataque (NO PUNTUADO) ══════════ -->
+<!-- ITEM U: Tipo de ataque (NO PUNTUADO) -->
 <div class="card-wrap" id="card-u">
     <div class="unscored-header">
         <span class="scale-name">PAS · Información Adicional</span>
@@ -505,32 +371,14 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Cómo han sido sus ataques de pánico durante la última semana?</div>
-        <div class="question-context">Esta información es descriptiva y ayuda a caracterizar mejor su experiencia, pero no modifica su puntuación total.</div>
+        <div class="question-context">Esta pregunta describe el tipo de ataques y no afecta su puntuación total.</div>
         <div class="options">
-            <button class="option" onclick="selectOptionU(0,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">No tuve ataques de pánico</span>
-            </button>
-            <button class="option" onclick="selectOptionU(1,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">Solo ataques esperados — ocurrieron únicamente en situaciones específicas que ya me provocaban ansiedad</span>
-            </button>
-            <button class="option" onclick="selectOptionU(2,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">Principalmente esperados, pero algunos sin razón aparente</span>
-            </button>
-            <button class="option" onclick="selectOptionU(3,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">Mezcla similar de esperados e inesperados</span>
-            </button>
-            <button class="option" onclick="selectOptionU(4,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">Principalmente inesperados, pero algunos en situaciones conocidas</span>
-            </button>
-            <button class="option" onclick="selectOptionU(5,this)">
-                <span class="opt-score" style="background:#e2e8f0;color:#718096;">—</span>
-                <span class="opt-text">Solo ataques inesperados — ocurrieron de forma espontánea, sin situación desencadenante</span>
-            </button>
+            <button class="option" onclick="selectOptionU(0,this)">No tuve ataques de pánico</button>
+            <button class="option" onclick="selectOptionU(1,this)">Solo ataques esperados — ocurrieron únicamente en situaciones que ya me provocaban ansiedad</button>
+            <button class="option" onclick="selectOptionU(2,this)">Principalmente esperados, pero algunos sin razón aparente</button>
+            <button class="option" onclick="selectOptionU(3,this)">Mezcla similar de esperados e inesperados</button>
+            <button class="option" onclick="selectOptionU(4,this)">Principalmente inesperados, pero algunos en situaciones conocidas</button>
+            <button class="option" onclick="selectOptionU(5,this)">Solo ataques inesperados — ocurrieron de forma espontánea, sin desencadenante</button>
         </div>
         <div class="q-progress-label">Pregunta adicional (no puntuada)</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:27%"></div></div>
@@ -541,54 +389,21 @@
     </div>
 </div>
 
-<!-- ══════════ SECCIÓN B: EVITACIÓN AGORAFÓBICA ══════════ -->
-<div class="card-wrap" id="sec-b">
-    <div class="section-card-header">
-        <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
-    </div>
-    <div class="section-body">
-        <div class="section-icon">🚪</div>
-        <div class="section-title">Sección B — Evitación Agorafóbica</div>
-        <div class="section-desc">
-            <p>La <strong>agorafobia</strong> es el miedo y la evitación de situaciones en las que escapar podría ser difícil o en las que podría no recibir ayuda si ocurre un ataque de pánico.</p>
-            <p>Las siguientes 3 preguntas se refieren a situaciones que usted evita o en las que siente malestar debido al miedo a tener un ataque de pánico (transporte público, espacios abiertos, centros comerciales, cines, estar solo, etc.).</p>
-        </div>
-        <div class="section-btn-wrap">
-            <button class="btn-primary" onclick="showCard(4)">Continuar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════ ÍTEM 4: Evitación ══════════ -->
+<!-- ITEM 4: Evitación -->
 <div class="card-wrap" id="card-4">
     <div class="card-header">
         <span class="scale-name">PAS · Evitación Agorafóbica</span>
         <span class="q-label">Ítem 4 de 13</span>
     </div>
     <div class="card-body">
-        <div class="question-text">¿Con qué frecuencia evitó situaciones por miedo a tener un ataque de pánico o por el malestar que le producen?</div>
-        <div class="question-context">Si no tiene miedo a ninguna situación específica, seleccione la opción 0.</div>
+        <div class="question-text">¿Con qué frecuencia evitó situaciones por miedo a tener un ataque de pánico?</div>
+        <div class="question-context">Situaciones como transporte público, espacios abiertos, centros comerciales, cines, estar solo, alejarse de casa, etc.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(4,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin evitación (o sin agorafobia)</span>
-            </button>
-            <button class="option" onclick="selectOption(4,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Evitación infrecuente — raramente evito estas situaciones</span>
-            </button>
-            <button class="option" onclick="selectOption(4,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Evitación ocasional — a veces las evito</span>
-            </button>
-            <button class="option" onclick="selectOption(4,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Evitación frecuente — las evito con frecuencia</span>
-            </button>
-            <button class="option" onclick="selectOption(4,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Evitación muy frecuente — casi siempre o siempre las evito</span>
-            </button>
+            <button class="option" onclick="selectOption(4,0,this)">Sin evitación</button>
+            <button class="option" onclick="selectOption(4,1,this)">Raramente las evito</button>
+            <button class="option" onclick="selectOption(4,2,this)">A veces las evito</button>
+            <button class="option" onclick="selectOption(4,3,this)">Las evito con frecuencia</button>
+            <button class="option" onclick="selectOption(4,4,this)">Casi siempre o siempre las evito</button>
         </div>
         <div class="q-progress-label">Pregunta 4 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:31%"></div></div>
@@ -599,7 +414,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 5: Número de situaciones ══════════ -->
+<!-- ITEM 5: Número de situaciones -->
 <div class="card-wrap" id="card-5">
     <div class="card-header">
         <span class="scale-name">PAS · Evitación Agorafóbica</span>
@@ -607,28 +422,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Cuántas situaciones distintas evita o le producen malestar por miedo al pánico?</div>
-        <div class="question-context">Ejemplos: transporte público, puentes, túneles, ascensores, centros comerciales, cines, restaurantes, colas, estar solo en casa, alejarse de su domicilio, etc.</div>
+        <div class="question-context">Cuente el número de tipos de situaciones diferentes: transporte, puentes, ascensores, colas, restaurantes, etc.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(5,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Ninguna situación</span>
-            </button>
-            <button class="option" onclick="selectOption(5,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">1 a 2 situaciones</span>
-            </button>
-            <button class="option" onclick="selectOption(5,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">3 a 4 situaciones</span>
-            </button>
-            <button class="option" onclick="selectOption(5,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">5 a 7 situaciones</span>
-            </button>
-            <button class="option" onclick="selectOption(5,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">8 o más situaciones</span>
-            </button>
+            <button class="option" onclick="selectOption(5,0,this)">Ninguna situación</button>
+            <button class="option" onclick="selectOption(5,1,this)">1 a 2 situaciones</button>
+            <button class="option" onclick="selectOption(5,2,this)">3 a 4 situaciones</button>
+            <button class="option" onclick="selectOption(5,3,this)">5 a 7 situaciones</button>
+            <button class="option" onclick="selectOption(5,4,this)">8 o más situaciones</button>
         </div>
         <div class="q-progress-label">Pregunta 5 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:38%"></div></div>
@@ -639,7 +439,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 6: Relevancia ══════════ -->
+<!-- ITEM 6: Relevancia -->
 <div class="card-wrap" id="card-6">
     <div class="card-header">
         <span class="scale-name">PAS · Evitación Agorafóbica</span>
@@ -647,28 +447,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Qué tan importantes son para su vida diaria las situaciones que evita?</div>
-        <div class="question-context">Considere si las situaciones que evita le afectan en actividades cotidianas, laborales o sociales.</div>
+        <div class="question-context">Considere si afectan actividades cotidianas, laborales o sociales.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(6,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin importancia / No tengo agorafobia</span>
-            </button>
-            <button class="option" onclick="selectOption(6,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Poco importantes — son situaciones que raramente necesito</span>
-            </button>
-            <button class="option" onclick="selectOption(6,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderadamente importantes — afectan algunas actividades cotidianas</span>
-            </button>
-            <button class="option" onclick="selectOption(6,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Muy importantes — afectan significativamente mi vida diaria</span>
-            </button>
-            <button class="option" onclick="selectOption(6,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extremadamente importantes — me limitan de forma severa o total</span>
-            </button>
+            <button class="option" onclick="selectOption(6,0,this)">Sin importancia / No tengo agorafobia</button>
+            <button class="option" onclick="selectOption(6,1,this)">Poco importantes — son situaciones que raramente necesito</button>
+            <button class="option" onclick="selectOption(6,2,this)">Moderadamente importantes — afectan algunas actividades cotidianas</button>
+            <button class="option" onclick="selectOption(6,3,this)">Muy importantes — afectan significativamente mi vida diaria</button>
+            <button class="option" onclick="selectOption(6,4,this)">Extremadamente importantes — me limitan de forma severa</button>
         </div>
         <div class="q-progress-label">Pregunta 6 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:46%"></div></div>
@@ -679,25 +464,7 @@
     </div>
 </div>
 
-<!-- ══════════ SECCIÓN C: ANSIEDAD ANTICIPATORIA ══════════ -->
-<div class="card-wrap" id="sec-c">
-    <div class="section-card-header">
-        <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
-    </div>
-    <div class="section-body">
-        <div class="section-icon">😰</div>
-        <div class="section-title">Sección C — Ansiedad Anticipatoria</div>
-        <div class="section-desc">
-            <p>La <strong>ansiedad anticipatoria</strong> ("miedo al miedo") es la preocupación persistente por tener otro ataque de pánico o por las consecuencias de padecerlo.</p>
-            <p>Las siguientes 2 preguntas se refieren a ese miedo o preocupación constante de que pueda ocurrirle un ataque durante la <strong>última semana</strong>.</p>
-        </div>
-        <div class="section-btn-wrap">
-            <button class="btn-primary" onclick="showCard(7)">Continuar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════ ÍTEM 7: Frecuencia ansiedad anticipatoria ══════════ -->
+<!-- ITEM 7: Frecuencia ansiedad anticipatoria -->
 <div class="card-wrap" id="card-7">
     <div class="card-header">
         <span class="scale-name">PAS · Ansiedad Anticipatoria</span>
@@ -705,28 +472,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Con qué frecuencia tuvo miedo de sufrir un nuevo ataque de pánico durante la semana pasada?</div>
-        <div class="question-context">Esto incluye pensar que "podría pasarme algo" o preocuparse por cuándo ocurrirá el próximo ataque.</div>
+        <div class="question-context">Incluya pensamientos como "podría pasarme algo" o la preocupación por cuándo ocurrirá el próximo ataque.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(7,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin este miedo</span>
-            </button>
-            <button class="option" onclick="selectOption(7,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Miedo infrecuente — lo pensé raramente</span>
-            </button>
-            <button class="option" onclick="selectOption(7,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">A veces — lo pensé en ocasiones durante la semana</span>
-            </button>
-            <button class="option" onclick="selectOption(7,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Frecuente — lo pensé frecuentemente durante la semana</span>
-            </button>
-            <button class="option" onclick="selectOption(7,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Casi siempre — lo pensé casi todo el tiempo</span>
-            </button>
+            <button class="option" onclick="selectOption(7,0,this)">Sin este miedo</button>
+            <button class="option" onclick="selectOption(7,1,this)">Raramente — lo pensé muy poco</button>
+            <button class="option" onclick="selectOption(7,2,this)">A veces — lo pensé ocasionalmente durante la semana</button>
+            <button class="option" onclick="selectOption(7,3,this)">Con frecuencia — lo pensé frecuentemente</button>
+            <button class="option" onclick="selectOption(7,4,this)">Casi siempre — lo pensé casi todo el tiempo</button>
         </div>
         <div class="q-progress-label">Pregunta 7 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:54%"></div></div>
@@ -737,7 +489,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 8: Intensidad ansiedad anticipatoria ══════════ -->
+<!-- ITEM 8: Intensidad ansiedad anticipatoria -->
 <div class="card-wrap" id="card-8">
     <div class="card-header">
         <span class="scale-name">PAS · Ansiedad Anticipatoria</span>
@@ -745,28 +497,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿Qué tan intenso o perturbador fue ese miedo a tener otro ataque de pánico?</div>
-        <div class="question-context">Si no tuvo este miedo, seleccione la opción 0.</div>
+        <div class="question-context">Si no tuvo este miedo, seleccione la primera opción.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(8,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin este miedo</span>
-            </button>
-            <button class="option" onclick="selectOption(8,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — apenas me afectó</span>
-            </button>
-            <button class="option" onclick="selectOption(8,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderado — me preocupó de forma notable</span>
-            </button>
-            <button class="option" onclick="selectOption(8,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcado — me preocupó mucho y afectó mi funcionamiento</span>
-            </button>
-            <button class="option" onclick="selectOption(8,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extremo — fue muy perturbador e incapacitante</span>
-            </button>
+            <button class="option" onclick="selectOption(8,0,this)">Sin este miedo</button>
+            <button class="option" onclick="selectOption(8,1,this)">Leve — apenas me afectó</button>
+            <button class="option" onclick="selectOption(8,2,this)">Moderado — me preocupó de forma notable</button>
+            <button class="option" onclick="selectOption(8,3,this)">Marcado — me preocupó mucho y afectó mi funcionamiento</button>
+            <button class="option" onclick="selectOption(8,4,this)">Extremo — muy perturbador e incapacitante</button>
         </div>
         <div class="q-progress-label">Pregunta 8 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:62%"></div></div>
@@ -777,24 +514,7 @@
     </div>
 </div>
 
-<!-- ══════════ SECCIÓN D: DISCAPACIDAD FUNCIONAL ══════════ -->
-<div class="card-wrap" id="sec-d">
-    <div class="section-card-header">
-        <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
-    </div>
-    <div class="section-body">
-        <div class="section-icon">🧩</div>
-        <div class="section-title">Sección D — Deterioro Funcional</div>
-        <div class="section-desc">
-            <p>Las siguientes 3 preguntas evalúan cómo han afectado los ataques de pánico, la ansiedad o la evitación a su funcionamiento en diferentes áreas de su vida durante la <strong>última semana</strong>.</p>
-        </div>
-        <div class="section-btn-wrap">
-            <button class="btn-primary" onclick="showCard(9)">Continuar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════ ÍTEM 9: Familia ══════════ -->
+<!-- ITEM 9: Familia -->
 <div class="card-wrap" id="card-9">
     <div class="card-header">
         <span class="scale-name">PAS · Deterioro Funcional</span>
@@ -802,28 +522,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿En qué medida han afectado el pánico o la ansiedad sus relaciones familiares?</div>
-        <div class="question-context">Considere su relación de pareja, relación con sus hijos, con su familia de origen, o la convivencia familiar en general.</div>
+        <div class="question-context">Considere su relación de pareja, hijos, familia de origen o convivencia familiar.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(9,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin deterioro — mis relaciones familiares no se han visto afectadas</span>
-            </button>
-            <button class="option" onclick="selectOption(9,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — afectación mínima, apenas perceptible</span>
-            </button>
-            <button class="option" onclick="selectOption(9,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderado — afectación notable en algunas situaciones familiares</span>
-            </button>
-            <button class="option" onclick="selectOption(9,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcado — afectación significativa en mis relaciones familiares</span>
-            </button>
-            <button class="option" onclick="selectOption(9,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extremo — mis relaciones familiares están muy deterioradas</span>
-            </button>
+            <button class="option" onclick="selectOption(9,0,this)">Sin deterioro — no se han visto afectadas</button>
+            <button class="option" onclick="selectOption(9,1,this)">Leve — afectación mínima, apenas perceptible</button>
+            <button class="option" onclick="selectOption(9,2,this)">Moderado — afectación notable en algunas situaciones</button>
+            <button class="option" onclick="selectOption(9,3,this)">Marcado — afectación significativa en mis relaciones familiares</button>
+            <button class="option" onclick="selectOption(9,4,this)">Extremo — mis relaciones familiares están muy deterioradas</button>
         </div>
         <div class="q-progress-label">Pregunta 9 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:69%"></div></div>
@@ -834,7 +539,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 10: Social ══════════ -->
+<!-- ITEM 10: Social -->
 <div class="card-wrap" id="card-10">
     <div class="card-header">
         <span class="scale-name">PAS · Deterioro Funcional</span>
@@ -842,28 +547,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿En qué medida han afectado el pánico o la ansiedad sus relaciones sociales y actividades de ocio?</div>
-        <div class="question-context">Incluya amistades, actividades grupales, ir al cine, restaurantes, eventos sociales, hobbies, deporte, etc.</div>
+        <div class="question-context">Amistades, actividades grupales, cine, restaurantes, eventos sociales, hobbies, deporte, etc.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(10,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin deterioro — mi vida social y ocio no se han visto afectados</span>
-            </button>
-            <button class="option" onclick="selectOption(10,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — afectación mínima, apenas perceptible</span>
-            </button>
-            <button class="option" onclick="selectOption(10,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderado — algunas actividades sociales se han reducido</span>
-            </button>
-            <button class="option" onclick="selectOption(10,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcado — mi vida social y ocio están significativamente limitados</span>
-            </button>
-            <button class="option" onclick="selectOption(10,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extremo — casi no tengo vida social ni actividades de ocio</span>
-            </button>
+            <button class="option" onclick="selectOption(10,0,this)">Sin deterioro — no se han visto afectados</button>
+            <button class="option" onclick="selectOption(10,1,this)">Leve — afectación mínima, apenas perceptible</button>
+            <button class="option" onclick="selectOption(10,2,this)">Moderado — algunas actividades sociales se han reducido</button>
+            <button class="option" onclick="selectOption(10,3,this)">Marcado — mi vida social está significativamente limitada</button>
+            <button class="option" onclick="selectOption(10,4,this)">Extremo — casi no tengo vida social ni actividades de ocio</button>
         </div>
         <div class="q-progress-label">Pregunta 10 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:77%"></div></div>
@@ -874,7 +564,7 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 11: Trabajo ══════════ -->
+<!-- ITEM 11: Trabajo -->
 <div class="card-wrap" id="card-11">
     <div class="card-header">
         <span class="scale-name">PAS · Deterioro Funcional</span>
@@ -882,28 +572,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿En qué medida han afectado el pánico o la ansiedad su trabajo, estudios o tareas del hogar?</div>
-        <div class="question-context">Considere su rendimiento, asistencia, concentración o capacidad para cumplir con sus responsabilidades laborales, académicas o domésticas.</div>
+        <div class="question-context">Considere rendimiento, asistencia, concentración o capacidad para cumplir con sus responsabilidades.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(11,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin deterioro — mi trabajo / estudios / hogar no se han visto afectados</span>
-            </button>
-            <button class="option" onclick="selectOption(11,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — afectación mínima, apenas perceptible</span>
-            </button>
-            <button class="option" onclick="selectOption(11,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderado — afectación notable, pero sigo funcionando</span>
-            </button>
-            <button class="option" onclick="selectOption(11,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcado — mi rendimiento o asistencia están significativamente reducidos</span>
-            </button>
-            <button class="option" onclick="selectOption(11,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extremo — no puedo trabajar, estudiar ni cumplir con las tareas del hogar</span>
-            </button>
+            <button class="option" onclick="selectOption(11,0,this)">Sin deterioro — no se han visto afectados</button>
+            <button class="option" onclick="selectOption(11,1,this)">Leve — afectación mínima, apenas perceptible</button>
+            <button class="option" onclick="selectOption(11,2,this)">Moderado — afectación notable, pero sigo funcionando</button>
+            <button class="option" onclick="selectOption(11,3,this)">Marcado — rendimiento o asistencia significativamente reducidos</button>
+            <button class="option" onclick="selectOption(11,4,this)">Extremo — no puedo trabajar, estudiar ni cumplir con el hogar</button>
         </div>
         <div class="q-progress-label">Pregunta 11 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:85%"></div></div>
@@ -914,25 +589,7 @@
     </div>
 </div>
 
-<!-- ══════════ SECCIÓN E: PREOCUPACIONES DE SALUD ══════════ -->
-<div class="card-wrap" id="sec-e">
-    <div class="section-card-header">
-        <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
-    </div>
-    <div class="section-body">
-        <div class="section-icon">🫀</div>
-        <div class="section-title">Sección E — Preocupaciones de Salud</div>
-        <div class="section-desc">
-            <p>Las últimas 2 preguntas evalúan las <strong>preocupaciones sobre su salud física</strong> que pueden surgir en relación con el trastorno de pánico.</p>
-            <p>Muchas personas con ataques de pánico temen que sus síntomas indiquen una enfermedad física grave (del corazón, cerebro u otros órganos), o que los ataques les estén causando daño corporal permanente.</p>
-        </div>
-        <div class="section-btn-wrap">
-            <button class="btn-primary" onclick="showCard(12)">Continuar</button>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════ ÍTEM 12: Daño corporal ══════════ -->
+<!-- ITEM 12: Daño corporal -->
 <div class="card-wrap" id="card-12">
     <div class="card-header">
         <span class="scale-name">PAS · Preocupaciones de Salud</span>
@@ -940,28 +597,13 @@
     </div>
     <div class="card-body">
         <div class="question-text">¿En qué medida le preocupa que los ataques de pánico le estén causando algún daño físico permanente?</div>
-        <div class="question-context">Por ejemplo, preocupación de que los ataques puedan dañar su corazón, cerebro u otros órganos, o de que le ocurra algo grave durante un ataque.</div>
+        <div class="question-context">Por ejemplo, preocupación de que puedan dañar su corazón, cerebro u otros órganos.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(12,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">Sin esta preocupación</span>
-            </button>
-            <button class="option" onclick="selectOption(12,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — lo pienso ocasionalmente pero no me angustia</span>
-            </button>
-            <button class="option" onclick="selectOption(12,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderada — me preocupa de forma notable</span>
-            </button>
-            <button class="option" onclick="selectOption(12,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcada — me preocupa mucho y con frecuencia</span>
-            </button>
-            <button class="option" onclick="selectOption(12,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extrema — estoy convencido/a de que me estoy dañando físicamente</span>
-            </button>
+            <button class="option" onclick="selectOption(12,0,this)">Sin esta preocupación</button>
+            <button class="option" onclick="selectOption(12,1,this)">Leve — lo pienso ocasionalmente pero no me angustia</button>
+            <button class="option" onclick="selectOption(12,2,this)">Moderada — me preocupa de forma notable</button>
+            <button class="option" onclick="selectOption(12,3,this)">Marcada — me preocupa mucho y con frecuencia</button>
+            <button class="option" onclick="selectOption(12,4,this)">Extrema — estoy convencido/a de que me estoy dañando físicamente</button>
         </div>
         <div class="q-progress-label">Pregunta 12 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:92%"></div></div>
@@ -972,36 +614,21 @@
     </div>
 </div>
 
-<!-- ══════════ ÍTEM 13: Enfermedad orgánica ══════════ -->
+<!-- ITEM 13: Enfermedad orgánica -->
 <div class="card-wrap" id="card-13">
     <div class="card-header">
         <span class="scale-name">PAS · Preocupaciones de Salud</span>
         <span class="q-label">Ítem 13 de 13</span>
     </div>
     <div class="card-body">
-        <div class="question-text">¿En qué medida cree usted que sus síntomas se deben a una enfermedad física grave, a pesar de que los médicos le hayan indicado que está bien?</div>
-        <div class="question-context">Por ejemplo, creer que tiene una enfermedad del corazón, del cerebro u otro problema orgánico que no ha sido detectado, a pesar de las evaluaciones médicas.</div>
+        <div class="question-text">¿En qué medida cree que sus síntomas se deben a una enfermedad física grave, aunque los médicos le hayan dicho que está bien?</div>
+        <div class="question-context">Por ejemplo, creer que tiene una enfermedad del corazón o del cerebro no detectada, a pesar de las evaluaciones médicas.</div>
         <div class="options">
-            <button class="option" onclick="selectOption(13,0,this)">
-                <span class="opt-score">0</span>
-                <span class="opt-text">No tengo esta creencia — acepto que mis síntomas son de pánico</span>
-            </button>
-            <button class="option" onclick="selectOption(13,1,this)">
-                <span class="opt-score">1</span>
-                <span class="opt-text">Leve — a veces me pregunto si habrá algo físico, pero no lo creo firmemente</span>
-            </button>
-            <button class="option" onclick="selectOption(13,2,this)">
-                <span class="opt-score">2</span>
-                <span class="opt-text">Moderada — con cierta frecuencia creo que podría tener una enfermedad física</span>
-            </button>
-            <button class="option" onclick="selectOption(13,3,this)">
-                <span class="opt-score">3</span>
-                <span class="opt-text">Marcada — frecuentemente creo que tengo una enfermedad física no detectada</span>
-            </button>
-            <button class="option" onclick="selectOption(13,4,this)">
-                <span class="opt-score">4</span>
-                <span class="opt-text">Extrema — estoy muy convencido/a de que tengo una enfermedad física grave</span>
-            </button>
+            <button class="option" onclick="selectOption(13,0,this)">No tengo esta creencia — acepto que mis síntomas son de pánico</button>
+            <button class="option" onclick="selectOption(13,1,this)">Leve — a veces me pregunto si habrá algo físico, pero no lo creo firmemente</button>
+            <button class="option" onclick="selectOption(13,2,this)">Moderada — con cierta frecuencia creo que podría tener una enfermedad física</button>
+            <button class="option" onclick="selectOption(13,3,this)">Marcada — frecuentemente creo que tengo una enfermedad física no detectada</button>
+            <button class="option" onclick="selectOption(13,4,this)">Extrema — estoy muy convencido/a de que tengo una enfermedad física grave</button>
         </div>
         <div class="q-progress-label">Pregunta 13 de 13</div>
         <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
@@ -1012,24 +639,23 @@
     </div>
 </div>
 
-<!-- ══════════ CARD FINAL ══════════ -->
+<!-- CARD FINAL -->
 <div class="card-wrap" id="card-final">
     <div class="card-header">
         <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
         <span class="q-label">Completado</span>
     </div>
     <div class="card-body">
-        <div class="final-icon">✅</div>
         <div class="final-title">Evaluación Completada</div>
-        <div class="final-msg">Gracias por completar la Escala de Pánico y Agorafobia (PAS).<br>Ha respondido las 13 preguntas.</div>
-        <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de la salud mental para la revisión e interpretación de los resultados.</div>
+        <div class="final-msg">Ha respondido las 13 preguntas.</div>
+        <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de salud mental para revisar los resultados.</div>
         <div style="text-align:center;">
             <button class="btn-primary" onclick="showResults()">Ver Resultados (Médico)</button>
         </div>
     </div>
 </div>
 
-<!-- ══════════ CARD RESULTADOS ══════════ -->
+<!-- CARD RESULTADOS -->
 <div class="card-wrap" id="card-results">
     <div class="card-header">
         <span class="scale-name">Escala de Pánico y Agorafobia — Bandelow (PAS)</span>
@@ -1037,7 +663,6 @@
     </div>
     <div class="card-body">
 
-        <!-- Puntuación total: número coloreado, sin caja degradada -->
         <div class="section-label">Puntuación Total</div>
         <div class="score-area">
             <div class="score-num" id="total-score">—</div>
@@ -1045,7 +670,6 @@
             <div class="score-badge" id="total-badge">—</div>
         </div>
 
-        <!-- 5 Subescalas: grid 3+2 -->
         <div class="section-label">Subescalas</div>
         <div class="subscales-grid-3">
             <div class="subscale-box">
@@ -1087,25 +711,21 @@
             </div>
         </div>
 
-        <!-- Tipo de ataque (ítem U) -->
         <div id="type-section" style="display:none; margin-bottom: 12px;">
             <div class="section-label">Tipo de Ataques (Información Adicional)</div>
             <div class="interp-box" id="type-box"></div>
         </div>
 
-        <!-- Interpretación clínica -->
         <div class="section-label">Interpretación Clínica</div>
         <div class="interp-box" id="interp-box" style="display:none;"><ul id="interp-list"></ul></div>
 
-        <!-- Alertas / áreas de atención prioritaria -->
         <div class="alerts-box" id="alerts-box" style="display:none;">
-            <strong>⚠ Áreas de Atención Prioritaria</strong>
+            <strong>Areas de Atención Prioritaria</strong>
             <ul id="alerts-list"></ul>
         </div>
 
-        <!-- Referencia bibliográfica -->
         <div style="font-size: 11px; color: #a0aec0; margin: 12px 0 16px; line-height: 1.5;">
-            <strong style="color:#718096;">Referencia:</strong> Bandelow, B. (1999). <em>Panic and Agoraphobia Scale (PAS): Manual</em>. Hogrefe &amp; Huber. Desarrollada originalmente en 1995 (Int Clin Psychopharmacol, 10(2):73-82). α = 0.86.
+            <strong style="color:#718096;">Referencia:</strong> Bandelow, B. (1999). <em>Panic and Agoraphobia Scale (PAS): Manual</em>. Hogrefe &amp; Huber. Publicación original: Int Clin Psychopharmacol, 10(2):73-82. α = 0.86.
         </div>
 
         <div class="action-buttons">
@@ -1116,22 +736,16 @@
 </div>
 
 <script>
-    // ── State ──
     let currentCardId = 'card-0';
     let responses = {};
-    let responseU = null; // unscored qualifier
+    let responseU = null;
 
-    // Card order for back navigation
     const cardOrder = [
-        'card-0','sec-a',
+        'card-0',
         'card-1','card-2','card-3','card-u',
-        'sec-b',
         'card-4','card-5','card-6',
-        'sec-c',
         'card-7','card-8',
-        'sec-d',
         'card-9','card-10','card-11',
-        'sec-e',
         'card-12','card-13',
         'card-final'
     ];
@@ -1154,6 +768,15 @@
         });
     }
 
+    function restoreSelectionsU() {
+        if (responseU === null) return;
+        const card = document.getElementById('card-u');
+        if (!card) return;
+        card.querySelectorAll('.option').forEach((btn, idx) => {
+            btn.classList.toggle('selected', idx === responseU);
+        });
+    }
+
     function nextInOrder() {
         const idx = cardOrder.indexOf(currentCardId);
         if (idx < cardOrder.length - 1) showCard(cardOrder[idx + 1]);
@@ -1161,7 +784,11 @@
 
     function previousCard() {
         const idx = cardOrder.indexOf(currentCardId);
-        if (idx > 0) showCard(cardOrder[idx - 1]);
+        if (idx > 0) {
+            const prevId = cardOrder[idx - 1];
+            showCard(prevId);
+            if (prevId === 'card-u') restoreSelectionsU();
+        }
     }
 
     function selectOption(qNum, value, btn) {
@@ -1178,7 +805,6 @@
         setTimeout(() => nextInOrder(), 150);
     }
 
-    // ── Scoring ──
     function calculateScore() {
         const panic  = (responses[1]||0) + (responses[2]||0) + (responses[3]||0);
         const agora  = (responses[4]||0) + (responses[5]||0) + (responses[6]||0);
@@ -1190,32 +816,32 @@
     }
 
     function getTotalLevel(score) {
-        if (score <= 10)  return { label: 'Mínimo / Subcrínico', color: '#48bb78' };
-        if (score <= 20)  return { label: 'Leve a Moderado',     color: '#f6ad55' };
-        if (score <= 30)  return { label: 'Moderado a Marcado',  color: '#ed8936' };
-        if (score <= 40)  return { label: 'Severo',              color: '#f56565' };
-        return                  { label: 'Muy Severo',          color: '#c53030' };
+        if (score <= 10) return { label: 'Minimo / Subcrinico',   color: '#48bb78' };
+        if (score <= 20) return { label: 'Leve a Moderado',       color: '#f6ad55' };
+        if (score <= 30) return { label: 'Moderado a Marcado',    color: '#ed8936' };
+        if (score <= 40) return { label: 'Severo',                color: '#f56565' };
+        return                  { label: 'Muy Severo',            color: '#c53030' };
     }
 
     function getSubLevel(pct) {
-        if (pct <= 25) return { label: 'Mínimo',   color: '#48bb78' };
+        if (pct <= 25) return { label: 'Minimo',   color: '#48bb78' };
         if (pct <= 50) return { label: 'Leve',     color: '#f6ad55' };
         if (pct <= 75) return { label: 'Moderado', color: '#ed8936' };
         return               { label: 'Severo',   color: '#f56565' };
     }
 
     function applyBadge(badgeEl, lv) {
-        badgeEl.textContent       = lv.label;
-        badgeEl.style.color       = lv.color;
-        badgeEl.style.background  = lv.color + '1a';
-        badgeEl.style.border      = `1.5px solid ${lv.color}`;
+        badgeEl.textContent      = lv.label;
+        badgeEl.style.color      = lv.color;
+        badgeEl.style.background = lv.color + '1a';
+        badgeEl.style.border     = `1.5px solid ${lv.color}`;
     }
 
     function setSub(numId, barId, badgeId, score, max) {
-        const lv  = getSubLevel((score / max) * 100);
-        const el  = document.getElementById(numId);
-        el.textContent  = score;
-        el.style.color  = lv.color;
+        const lv = getSubLevel((score / max) * 100);
+        const el = document.getElementById(numId);
+        el.textContent = score;
+        el.style.color = lv.color;
         document.getElementById(barId).style.width      = ((score/max)*100) + '%';
         document.getElementById(barId).style.background = lv.color;
         applyBadge(document.getElementById(badgeId), lv);
@@ -1234,7 +860,6 @@
         const s = calculateScore();
         const lv = getTotalLevel(s.total);
 
-        // Total
         const numEl = document.getElementById('total-score');
         numEl.textContent = s.total;
         numEl.style.color = lv.color;
@@ -1244,47 +869,43 @@
         badge.style.background = lv.color + '1a';
         badge.style.border     = `1.5px solid ${lv.color}`;
 
-        // Subscales
         setSub('sub-panic',  'bar-panic',  'badge-panic',  s.panic,  12);
         setSub('sub-agora',  'bar-agora',  'badge-agora',  s.agora,  12);
         setSub('sub-antic',  'bar-antic',  'badge-antic',  s.antic,  8 );
         setSub('sub-disab',  'bar-disab',  'badge-disab',  s.disab,  12);
         setSub('sub-health', 'bar-health', 'badge-health', s.health, 8 );
 
-        // Tipo de ataque (U)
         if (responseU !== null) {
             document.getElementById('type-box').innerHTML =
                 `<strong>Tipo predominante:</strong> ${typeLabels[responseU]}`;
             document.getElementById('type-section').style.display = 'block';
         }
 
-        // Clinical interpretation
         const recs = [];
         if (s.total <= 10) {
-            recs.push('Puntuación subcrínica. Los síntomas reportados no alcanzan el umbral de significación clínica para trastorno de pánico activo.');
+            recs.push('Puntuación subcrítica. Los síntomas no alcanzan el umbral de significación clínica para trastorno de pánico activo.');
         } else {
-            if (s.total <= 20) recs.push('Nivel leve a moderado de trastorno de pánico. Se recomienda seguimiento clínico y consideración de intervención.');
+            if (s.total <= 20) recs.push('Nivel leve a moderado. Se recomienda seguimiento clínico y consideración de intervención.');
             else if (s.total <= 30) recs.push('Nivel moderado a marcado. Síntomas que impactan el funcionamiento. Se recomienda evaluación e intervención terapéutica.');
             else if (s.total <= 40) recs.push('Nivel severo. Trastorno de pánico significativo con probable deterioro funcional importante. Intervención prioritaria.');
             else recs.push('Nivel muy severo. Cuadro incapacitante de pánico y/o agorafobia que requiere atención clínica urgente e integral.');
         }
-        if (s.panic > 6)  recs.push(`Ataques de pánico prominentes (${s.panic}/12): evaluar frecuencia, intensidad y duración; considerar tratamiento farmacológico y/o psicoterapia enfocada en pánico.`);
-        if (s.agora > 6)  recs.push(`Evitación agorafóbica significativa (${s.agora}/12): la exposición gradual (terapia cognitivo-conductual) es el tratamiento de primera elección.`);
+        if (s.panic > 6)  recs.push(`Ataques de pánico prominentes (${s.panic}/12): evaluar frecuencia, intensidad y duración; considerar tratamiento farmacológico y/o psicoterapia.`);
+        if (s.agora > 6)  recs.push(`Evitación agorafóbica significativa (${s.agora}/12): la exposición gradual en TCC es el tratamiento de primera elección.`);
         if (s.antic > 4)  recs.push(`Ansiedad anticipatoria elevada (${s.antic}/8): trabajar en reestructuración cognitiva del "miedo al miedo".`);
         if (s.disab > 6)  recs.push(`Deterioro funcional marcado (${s.disab}/12): evaluar impacto en trabajo, vida social y familiar; puede requerir intervención multimodal.`);
-        if (s.health > 4) recs.push(`Preocupaciones de salud elevadas (${s.health}/8): descartar condiciones médicas comórbidas; trabajar en psicoeducación sobre síntomas del pánico.`);
-        recs.push('La escala PAS está diseñada para monitorizar la respuesta al tratamiento a lo largo del tiempo, no solo para el diagnóstico inicial.');
+        if (s.health > 4) recs.push(`Preocupaciones de salud elevadas (${s.health}/8): psicoeducación sobre síntomas del pánico y descartar condiciones médicas comórbidas.`);
+        recs.push('La PAS está diseñada para monitorizar la respuesta al tratamiento a lo largo del tiempo, no solo para el diagnóstico inicial.');
 
         document.getElementById('interp-list').innerHTML = recs.map(r => `<li>${r}</li>`).join('');
         document.getElementById('interp-box').style.display = 'block';
 
-        // Alerts
         const alerts = [];
         if (s.panic >= 9)  alerts.push('Ataques de pánico muy frecuentes, severos o prolongados.');
         if (s.agora >= 9)  alerts.push('Evitación agorafóbica extensa que limita gravemente la movilidad.');
         if (s.disab >= 9)  alerts.push('Deterioro funcional grave en múltiples áreas de vida.');
         if (s.health >= 6) alerts.push('Preocupaciones hipocondríacas marcadas o creencia firme en enfermedad orgánica.');
-        if (responseU === 5) alerts.push('Ataques exclusivamente espontáneos (inesperados): patrón compatible con trastorno de pánico sin agorafobia o de inicio reciente.');
+        if (responseU === 5) alerts.push('Ataques exclusivamente espontáneos: patrón compatible con trastorno de pánico sin agorafobia o de inicio reciente.');
         if (alerts.length) {
             document.getElementById('alerts-list').innerHTML = alerts.map(a => `<li>${a}</li>`).join('');
             document.getElementById('alerts-box').style.display = 'block';
@@ -1301,7 +922,7 @@
         function subRow(name, score, max) {
             const pct = (score/max)*100;
             const c = pct<=25?'#48bb78':pct<=50?'#f6ad55':pct<=75?'#ed8936':'#f56565';
-            const lbl = pct<=25?'Mínimo':pct<=50?'Leve':pct<=75?'Moderado':'Severo';
+            const lbl = pct<=25?'Minimo':pct<=50?'Leve':pct<=75?'Moderado':'Severo';
             return `<tr>
               <td style="padding:8px 10px;font-size:13px;font-weight:600;color:#112F33;">${name}</td>
               <td style="padding:8px 10px;text-align:center;font-size:18px;font-weight:900;color:${c};">${score}</td>
@@ -1351,20 +972,20 @@
 ${typeHTML}
 <h2>Subescalas</h2>
 <table>
-  <thead><tr><th>Subescala</th><th>Pts</th><th>Máx</th><th>Nivel</th><th>Progreso</th></tr></thead>
+  <thead><tr><th>Subescala</th><th>Pts</th><th>Max</th><th>Nivel</th><th>Progreso</th></tr></thead>
   <tbody>
-    ${subRow('Ataques de Pánico',        s.panic,  12)}
-    ${subRow('Evitación Agorafóbica',    s.agora,  12)}
-    ${subRow('Ansiedad Anticipatoria',   s.antic,  8 )}
-    ${subRow('Deterioro Funcional',      s.disab,  12)}
-    ${subRow('Preocupaciones de Salud',  s.health, 8 )}
+    ${subRow('Ataques de Pánico',       s.panic,  12)}
+    ${subRow('Evitación Agorafóbica',   s.agora,  12)}
+    ${subRow('Ansiedad Anticipatoria',  s.antic,  8 )}
+    ${subRow('Deterioro Funcional',     s.disab,  12)}
+    ${subRow('Preocupaciones de Salud', s.health, 8 )}
   </tbody>
 </table>
 <h2>Interpretación Clínica</h2>
 <div class="interp"><ul>${
   (() => {
     const recs = [];
-    if (s.total <= 10) recs.push('Puntuación subcrínica. Los síntomas no alcanzan el umbral clínico.');
+    if (s.total <= 10) recs.push('Puntuación subcrítica. Los síntomas no alcanzan el umbral clínico.');
     else if (s.total <= 20) recs.push('Nivel leve a moderado. Se recomienda seguimiento y consideración de intervención.');
     else if (s.total <= 30) recs.push('Nivel moderado a marcado. Intervención terapéutica recomendada.');
     else if (s.total <= 40) recs.push('Nivel severo. Intervención clínica prioritaria.');
@@ -1378,7 +999,7 @@ ${typeHTML}
     return recs.map(r=>`<li>${r}</li>`).join('');
   })()
 }</ul></div>
-${s.total >= 21 || s.panic >= 9 || s.agora >= 9 || s.disab >= 9 ? `<div class="alerts"><strong>⚠ Áreas de Atención Prioritaria</strong><ul>${
+${s.panic >= 9 || s.agora >= 9 || s.disab >= 9 || s.health >= 6 ? `<div class="alerts"><strong>Areas de Atención Prioritaria</strong><ul>${
   [
     s.panic  >= 9 ? '<li>Ataques de pánico muy frecuentes, severos o prolongados.</li>' : '',
     s.agora  >= 9 ? '<li>Evitación agorafóbica extensa.</li>' : '',
@@ -1403,8 +1024,8 @@ ${s.total >= 21 || s.panic >= 9 || s.agora >= 9 || s.disab >= 9 ? `<div class="a
         responses = {};
         responseU = null;
         document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-        document.getElementById('interp-box').style.display  = 'none';
-        document.getElementById('alerts-box').style.display  = 'none';
+        document.getElementById('interp-box').style.display   = 'none';
+        document.getElementById('alerts-box').style.display   = 'none';
         document.getElementById('type-section').style.display = 'none';
         showCard('card-0');
     }
