@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-SSRS Screener — Tamizaje de Riesgo Suicida Columbia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
+            color: white;
+            padding: 22px 28px 18px;
+            position: relative;
+        }
+        .clinico-badge {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .scale-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        .card-header h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
+        .card-header .subtitle { font-size: 12px; opacity: 0.72; }
+        .card-body { padding: 28px 32px 24px; }
+        .progress-bar-wrap {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 24px;
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #c53030, #63171b);
+            transition: width 0.4s ease;
+        }
+
+        /* Guide card */
+        .guide-section { margin-bottom: 20px; }
+        .guide-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #c53030;
+            margin-bottom: 8px;
+        }
+        .guide-box {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+        .guide-box ul { padding-left: 18px; }
+        .guide-box li { margin-bottom: 4px; }
+        .risk-ref-table { width: 100%; border-collapse: collapse; }
+        .risk-ref-table td {
+            padding: 7px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        .risk-ref-table tr:last-child td { border-bottom: none; }
+        .start-btn {
+            background: linear-gradient(135deg, #c53030, #63171b);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+        .start-btn:hover { opacity: 0.9; }
+
+        /* Item section headers */
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #c53030;
+            margin-bottom: 6px;
+        }
+
+        /* Symptom rows (SÍ/NO toggles) */
+        .sym-block { margin-bottom: 18px; }
+        .sym-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .sym-row.answered-yes {
+            border-color: #f56565;
+            background: rgba(245,101,101,0.04);
+        }
+        .sym-row.answered-no {
+            opacity: 0.55;
+            border-color: #e2e8f0;
+        }
+        .sym-content { flex: 1; }
+        .sym-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .sym-desc {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        .sym-probe {
+            font-size: 12px;
+            color: #a0aec0;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        .toggle-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .toggle-btn {
+            width: 54px;
+            padding: 6px 0;
+            border-radius: 8px;
+            border: 2px solid;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            font-family: inherit;
+            transition: all 0.15s;
+            background: white;
+        }
+        .toggle-si { border-color: #fc8181; color: #fc8181; }
+        .toggle-si.active { background: #fc8181; color: white; }
+        .toggle-no { border-color: #68d391; color: #68d391; }
+        .toggle-no.active { background: #68d391; color: white; }
+
+        /* Behavior section (same toggle style) */
+        .behav-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 13px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .behav-row.answered-yes { border-color: #f56565; background: rgba(245,101,101,0.04); }
+        .behav-row.answered-no { opacity: 0.55; }
+        .behav-content { flex: 1; }
+        .behav-name { font-size: 14px; font-weight: 600; color: #1a202c; margin-bottom: 3px; }
+        .behav-desc { font-size: 12px; color: #718096; line-height: 1.4; }
+
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 6px 0;
+            font-family: inherit;
+            transition: color 0.15s;
+        }
+        .back-btn:hover { color: #c53030; }
+        .next-btn {
+            background: linear-gradient(135deg, #c53030, #63171b);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+        .next-btn:hover { opacity: 0.9; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 600; }
+
+        /* Skip notice */
+        .skip-notice {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #276749;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        /* Results */
+        .result-center { text-align: center; margin-bottom: 24px; }
+        .risk-category-badge {
+            display: inline-block;
+            padding: 10px 28px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            border: 2px solid;
+            margin-bottom: 8px;
+        }
+        .risk-category-label {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 4px;
+        }
+        .result-section { margin-bottom: 20px; }
+        .result-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        .interp-box {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .criteria-pill {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pill-check { font-size: 16px; }
+        .pill-label { font-weight: 600; color: #2d3748; }
+        .pill-sub { font-size: 11px; color: #718096; display: block; }
+        .behavior-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .action-btn {
+            width: 100%;
+            padding: 13px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #4a5568;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 10px;
+            transition: border-color 0.2s;
+        }
+        .action-btn:hover { border-color: #c53030; }
+        .hidden { display: none; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 16px; }
+            .criteria-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="card-wrap">
+
+    <!-- CARD 0: GUÍA CLÍNICA -->
+    <div id="card-0">
+        <div class="card-header">
+            <span class="clinico-badge">CLÍNICO</span>
+            <div class="scale-label">C-SSRS Screener · Heteroaplicada · Riesgo Suicida</div>
+            <h2>Tamizaje de Riesgo Suicida Columbia</h2>
+            <div class="subtitle">Columbia Suicide Severity Rating Scale — Versión Screener (Posner et al., 2011)</div>
+        </div>
+        <div class="card-body">
+            <div class="guide-section">
+                <div class="guide-title">¿Qué evalúa?</div>
+                <div class="guide-box">
+                    Evalúa <strong>ideación suicida</strong> (5 niveles de gravedad) y <strong>conducta suicida</strong> en el último mes. Cada nivel positivo escala la categoría de riesgo. No requiere suma de puntos: el ítem positivo más grave determina la categoría.
+                </div>
+            </div>
+            <div class="guide-section">
+                <div class="guide-title">Cómo aplicarla</div>
+                <div class="guide-box">
+                    <ul>
+                        <li>Use un tono conversacional, sin precipitar las preguntas.</li>
+                        <li>Lea la <em>sonda sugerida</em> en cursiva si el paciente no entiende la pregunta.</li>
+                        <li>Si los ítems 1 y 2 son <strong>ambos negativos</strong>, la escala salta directamente a conducta.</li>
+                        <li>Registre también en el expediente cualquier descripción relevante del paciente.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="guide-section">
+                <div class="guide-title">Categorías de riesgo (referencia rápida)</div>
+                <table class="risk-ref-table">
+                    <tr><td>Solo ítem 1 positivo</td><td><strong>Ideación pasiva</strong> — Monitorear</td></tr>
+                    <tr><td>Ítem 2 positivo</td><td><strong>Ideación activa inespecífica</strong> — Evaluar</td></tr>
+                    <tr><td>Ítem 3 positivo</td><td><strong>Ideación con método</strong> — Alto riesgo</td></tr>
+                    <tr><td>Ítem 4 o 5 positivo</td><td><strong>Ideación con plan / intención</strong> — Muy alto riesgo</td></tr>
+                    <tr><td>Conducta suicida</td><td><strong>Conducta activa</strong> — Intervención urgente</td></tr>
+                </table>
+            </div>
+            <button class="start-btn" onclick="showCard('card-1')">Iniciar evaluación</button>
+        </div>
+    </div>
+
+    <!-- CARD 1: IDEACIÓN Q1 + Q2 -->
+    <div id="card-1" class="hidden">
+        <div class="card-header">
+            <span class="clinico-badge">CLÍNICO</span>
+            <div class="scale-label">C-SSRS · Ideación Suicida · Ítems 1–2</div>
+            <h2>Deseos de morir e ideación activa</h2>
+            <div class="subtitle">Evalúa el último mes</div>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:33%"></div></div>
+            <p id="skip-notice-1" class="skip-notice"></p>
+
+            <!-- Ítem 1 -->
+            <div class="sym-block">
+                <div class="section-label">Ítem 1 — Deseos de morir</div>
+                <div class="sym-row" id="row-q1">
+                    <div class="sym-content">
+                        <div class="sym-name">¿Ha deseado estar muerto o no despertar?</div>
+                        <div class="sym-desc">Reconoce pensamientos de querer morir o quedarse dormido y no despertar, sin necesariamente querer quitarse la vida.</div>
+                        <div class="sym-probe">"¿Ha tenido pensamientos de que preferiría estar muerto, o de dormirse y no despertar?"</div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle-btn toggle-si" id="q1-si" onclick="setQ(1,'si')">SÍ</button>
+                        <button class="toggle-btn toggle-no" id="q1-no" onclick="setQ(1,'no')">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ítem 2 -->
+            <div class="sym-block">
+                <div class="section-label">Ítem 2 — Pensamientos suicidas activos inespecíficos</div>
+                <div class="sym-row" id="row-q2">
+                    <div class="sym-content">
+                        <div class="sym-name">¿Ha pensado realmente en matarse?</div>
+                        <div class="sym-desc">Pensamientos de querer suicidarse, sin especificar método ni plan durante el período evaluado.</div>
+                        <div class="sym-probe">"¿Ha tenido pensamientos de suicidarse, aunque sea de forma vaga, sin un plan concreto?"</div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle-btn toggle-si" id="q2-si" onclick="setQ(2,'si')">SÍ</button>
+                        <button class="toggle-btn toggle-no" id="q2-no" onclick="setQ(2,'no')">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-row">
+                <button class="back-btn" onclick="showCard('card-0')">← Anterior</button>
+                <button class="next-btn" onclick="nextFromCard1()">Continuar →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 2: IDEACIÓN Q3 + Q4 + Q5 (solo si Q2 = sí) -->
+    <div id="card-2" class="hidden">
+        <div class="card-header">
+            <span class="clinico-badge">CLÍNICO</span>
+            <div class="scale-label">C-SSRS · Ideación Suicida · Ítems 3–5</div>
+            <h2>Método, intención y plan</h2>
+            <div class="subtitle">Continúe solo si el ítem 2 fue positivo</div>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:66%"></div></div>
+
+            <!-- Ítem 3 -->
+            <div class="sym-block">
+                <div class="section-label">Ítem 3 — Ideación con método (sin plan)</div>
+                <div class="sym-row" id="row-q3">
+                    <div class="sym-content">
+                        <div class="sym-name">¿Ha pensado en cómo podría hacerlo?</div>
+                        <div class="sym-desc">Ha considerado al menos un método para quitarse la vida, pero sin un plan detallado de cuándo, dónde o cómo.</div>
+                        <div class="sym-probe">"¿Ha pensado en alguna manera de suicidarse, aunque sin tener un plan específico?"</div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle-btn toggle-si" id="q3-si" onclick="setQ(3,'si')">SÍ</button>
+                        <button class="toggle-btn toggle-no" id="q3-no" onclick="setQ(3,'no')">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ítem 4 -->
+            <div class="sym-block">
+                <div class="section-label">Ítem 4 — Ideación con intención (sin plan específico)</div>
+                <div class="sym-row" id="row-q4">
+                    <div class="sym-content">
+                        <div class="sym-name">¿Ha tenido intención de actuar sobre estos pensamientos?</div>
+                        <div class="sym-desc">Tiene pensamientos suicidas y cierta intención de llevarlos a cabo, a diferencia de quienes dicen "nunca lo haría".</div>
+                        <div class="sym-probe">"¿Ha habido un momento en que, además de pensar en suicidarse, haya sentido que podría llegar a hacerlo?"</div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle-btn toggle-si" id="q4-si" onclick="setQ(4,'si')">SÍ</button>
+                        <button class="toggle-btn toggle-no" id="q4-no" onclick="setQ(4,'no')">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ítem 5 -->
+            <div class="sym-block">
+                <div class="section-label">Ítem 5 — Ideación con plan específico e intención</div>
+                <div class="sym-row" id="row-q5">
+                    <div class="sym-content">
+                        <div class="sym-name">¿Ha elaborado un plan y tiene intención de llevarlo a cabo?</div>
+                        <div class="sym-desc">Ha desarrollado detalles sobre cuándo, dónde y cómo suicidarse, con cierta intención de ejecutarlo.</div>
+                        <div class="sym-probe">"¿Ha llegado a pensar en cuándo, dónde o exactamente cómo lo haría, y siente que podría llevarlo a cabo?"</div>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle-btn toggle-si" id="q5-si" onclick="setQ(5,'si')">SÍ</button>
+                        <button class="toggle-btn toggle-no" id="q5-no" onclick="setQ(5,'no')">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-row">
+                <button class="back-btn" onclick="showCard('card-1')">← Anterior</button>
+                <button class="next-btn" onclick="showCard('card-3')">Continuar →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 3: CONDUCTA SUICIDA -->
+    <div id="card-3" class="hidden">
+        <div class="card-header">
+            <span class="clinico-badge">CLÍNICO</span>
+            <div class="scale-label">C-SSRS · Conducta Suicida</div>
+            <h2>Conductas suicidas recientes</h2>
+            <div class="subtitle">Últimos 3 meses</div>
+        </div>
+        <div class="card-body">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:90%"></div></div>
+            <p style="font-size:13px;color:#718096;margin-bottom:18px;line-height:1.5;">Marque todo lo que haya ocurrido. Si el paciente niega, confirme con una pregunta directa.</p>
+
+            <div class="behav-row" id="row-b1">
+                <div class="behav-content">
+                    <div class="behav-name">Intento real de suicidio</div>
+                    <div class="behav-desc">Acto autodestructivo cometido con algún deseo de morir, aunque la intención no sea del 100%.</div>
+                    <div class="sym-probe" style="font-size:12px;margin-top:4px;">"¿Ha intentado quitarse la vida, o hecho algo peligroso con la intención de morir?"</div>
+                </div>
+                <div class="toggle-wrap">
+                    <button class="toggle-btn toggle-si" id="b1-si" onclick="setB(1,'si')">SÍ</button>
+                    <button class="toggle-btn toggle-no" id="b1-no" onclick="setB(1,'no')">NO</button>
+                </div>
+            </div>
+
+            <div class="behav-row" id="row-b2">
+                <div class="behav-content">
+                    <div class="behav-name">Intento interrumpido</div>
+                    <div class="behav-desc">Comenzó un acto suicida pero fue detenido por alguien o algo externo antes de completarlo.</div>
+                    <div class="sym-probe" style="font-size:12px;margin-top:4px;">"¿Empezó a hacer algo para quitarse la vida pero alguien o algo lo detuvo?"</div>
+                </div>
+                <div class="toggle-wrap">
+                    <button class="toggle-btn toggle-si" id="b2-si" onclick="setB(2,'si')">SÍ</button>
+                    <button class="toggle-btn toggle-no" id="b2-no" onclick="setB(2,'no')">NO</button>
+                </div>
+            </div>
+
+            <div class="behav-row" id="row-b3">
+                <div class="behav-content">
+                    <div class="behav-name">Intento abortado</div>
+                    <div class="behav-desc">Comenzó preparativos para un intento pero se detuvo por sí mismo antes de actuar.</div>
+                    <div class="sym-probe" style="font-size:12px;margin-top:4px;">"¿Empezó a preparar algo pero se detuvo antes de hacerlo?"</div>
+                </div>
+                <div class="toggle-wrap">
+                    <button class="toggle-btn toggle-si" id="b3-si" onclick="setB(3,'si')">SÍ</button>
+                    <button class="toggle-btn toggle-no" id="b3-no" onclick="setB(3,'no')">NO</button>
+                </div>
+            </div>
+
+            <div class="behav-row" id="row-b4">
+                <div class="behav-content">
+                    <div class="behav-name">Actos preparatorios</div>
+                    <div class="behav-desc">Pasos concretos hacia un intento: reunir pastillas, comprar un arma, regalar pertenencias, escribir una nota.</div>
+                    <div class="sym-probe" style="font-size:12px;margin-top:4px;">"¿Ha hecho preparativos para suicidarse, como reunir pastillas, comprar algo o escribir una nota?"</div>
+                </div>
+                <div class="toggle-wrap">
+                    <button class="toggle-btn toggle-si" id="b4-si" onclick="setB(4,'si')">SÍ</button>
+                    <button class="toggle-btn toggle-no" id="b4-no" onclick="setB(4,'no')">NO</button>
+                </div>
+            </div>
+
+            <div class="nav-row">
+                <button class="back-btn" onclick="backFromCard3()">← Anterior</button>
+                <button class="next-btn" onclick="showCard('card-results')">Ver resultado →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div id="card-results" class="hidden">
+        <div class="card-header">
+            <span class="clinico-badge">CLÍNICO</span>
+            <div class="scale-label">C-SSRS · Resultado</div>
+            <h2>Tamizaje de Riesgo Suicida Columbia</h2>
+            <div class="subtitle">Columbia Suicide Severity Rating Scale — Screener</div>
+        </div>
+        <div class="card-body">
+            <div class="result-center">
+                <div class="risk-category-label">Categoría de riesgo Columbia</div>
+                <div class="risk-category-badge" id="res-badge">—</div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Interpretación y recomendación clínica</div>
+                <div class="interp-box" id="res-interp"></div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Ideación suicida registrada</div>
+                <div id="res-ideacion" class="interp-box"></div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-section-title">Conducta suicida registrada</div>
+                <div id="res-conducta" class="interp-box"></div>
+            </div>
+
+            <button class="action-btn" onclick="exportPDF()" style="margin-top:6px;">Exportar como PDF</button>
+            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
+        </div>
+    </div>
+
+</div>
+<script>
+const q = {};   // q[1..5] = 'si'|'no'|null  (ideación)
+const b = {};   // b[1..4] = 'si'|'no'|null  (conducta)
+
+// Track which card came before card-3 (may be card-1 or card-2)
+let prevCard3 = 'card-2';
+
+function setQ(n, val) {
+    q[n] = val;
+    const row = document.getElementById(`row-q${n}`);
+    row.classList.toggle('answered-yes', val === 'si');
+    row.classList.toggle('answered-no', val === 'no');
+    document.getElementById(`q${n}-si`).classList.toggle('active', val === 'si');
+    document.getElementById(`q${n}-no`).classList.toggle('active', val === 'no');
+}
+
+function setB(n, val) {
+    b[n] = val;
+    const row = document.getElementById(`row-b${n}`);
+    row.classList.toggle('answered-yes', val === 'si');
+    row.classList.toggle('answered-no', val === 'no');
+    document.getElementById(`b${n}-si`).classList.toggle('active', val === 'si');
+    document.getElementById(`b${n}-no`).classList.toggle('active', val === 'no');
+}
+
+function nextFromCard1() {
+    // If Q1 AND Q2 both negative or unanswered as no → skip card-2
+    const q1no = q[1] === 'no' || q[1] === undefined;
+    const q2no = q[2] === 'no' || q[2] === undefined;
+    if (q1no && q2no) {
+        prevCard3 = 'card-1';
+        const notice = document.getElementById('skip-notice-1');
+        // No skip notice needed on card-1, just navigate
+        showCard('card-3');
+    } else {
+        prevCard3 = 'card-2';
+        showCard('card-2');
+    }
+}
+
+function backFromCard3() {
+    showCard(prevCard3);
+}
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap > div').forEach(d => d.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    if (id === 'card-results') buildResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// --- Results logic ---
+const ideaLabels = [
+    null,
+    "Deseos de morir (ítem 1)",
+    "Pensamiento suicida activo inespecífico (ítem 2)",
+    "Ideación con método sin plan (ítem 3)",
+    "Ideación con intención sin plan específico (ítem 4)",
+    "Ideación con plan e intención (ítem 5)"
+];
+const behavLabels = [
+    null,
+    "Intento real de suicidio",
+    "Intento interrumpido por circunstancia externa",
+    "Intento abortado (se detuvo por sí mismo)",
+    "Actos o conducta preparatoria"
+];
+
+function buildResults() {
+    // Determine highest ideation level
+    let maxIdea = 0;
+    for (let i = 5; i >= 1; i--) {
+        if (q[i] === 'si') { maxIdea = i; break; }
+    }
+    const anyBehavior = [1,2,3,4].some(n => b[n] === 'si');
+
+    // Category
+    let color, categoryText, interp;
+
+    if (anyBehavior) {
+        color = '#742a2a';
+        categoryText = 'CONDUCTA SUICIDA ACTIVA';
+        interp = 'Se identifica conducta suicida reciente. Requiere intervención clínica urgente: evaluación de seguridad inmediata, plan de seguridad estructurado, considerar hospitalización. Documentar en expediente y activar protocolos de crisis.';
+    } else if (maxIdea === 5) {
+        color = '#c53030';
+        categoryText = 'RIESGO MUY ALTO — Plan e intención';
+        interp = 'Ideación suicida con plan elaborado e intención de actuar. Intervención urgente: no dejar solo al paciente, retirar medios letales accesibles, plan de seguridad, considerar hospitalización psiquiátrica.';
+    } else if (maxIdea === 4) {
+        color = '#e53e3e';
+        categoryText = 'RIESGO ALTO — Intención sin plan';
+        interp = 'Ideación suicida activa con intención de actuar. Requiere evaluación urgente de medios, red de apoyo y plan de seguridad. Seguimiento estrecho o derivación a urgencias si no hay red protectora.';
+    } else if (maxIdea === 3) {
+        color = '#ed8936';
+        categoryText = 'RIESGO MODERADO-ALTO — Método identificado';
+        interp = 'Ideación con método contemplado. Evaluar acceso a medios letales, factores protectores e impulsividad. Plan de seguridad recomendado y seguimiento en menos de una semana.';
+    } else if (maxIdea === 2) {
+        color = '#f6ad55';
+        categoryText = 'RIESGO MODERADO — Ideación activa';
+        interp = 'Ideación suicida activa no específica. Profundizar en factores de riesgo y protectores. Seguimiento próximo y psicoeducación sobre manejo de crisis.';
+    } else if (maxIdea === 1) {
+        color = '#68d391';
+        categoryText = 'RIESGO BAJO — Ideación pasiva';
+        interp = 'Solo deseos pasivos de morir sin intención activa. Monitorear en consultas siguientes. Fortalecer factores protectores y red de apoyo.';
+    } else {
+        color = '#48bb78';
+        categoryText = 'SIN IDEACIÓN NI CONDUCTA SUICIDA';
+        interp = 'No se identifican indicadores de ideación o conducta suicida en el último mes. Continuar monitoreo de rutina.';
+    }
+
+    const badge = document.getElementById('res-badge');
+    badge.textContent = categoryText;
+    badge.style.color = color;
+    badge.style.borderColor = color;
+    badge.style.background = color + '12';
+
+    document.getElementById('res-interp').textContent = interp;
+
+    // Ideation summary
+    let ideaHtml = '';
+    let anyIdea = false;
+    for (let i = 1; i <= 5; i++) {
+        if (q[i] === 'si') {
+            anyIdea = true;
+            ideaHtml += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0">
+                <span style="color:#f56565;font-size:16px;">✓</span>
+                <span style="font-size:13px;color:#2d3748">${ideaLabels[i]}</span>
+            </div>`;
+        }
+    }
+    if (!anyIdea) {
+        ideaHtml = '<span style="font-size:13px;color:#68d391">✓ Sin ideación suicida reportada</span>';
+    }
+    document.getElementById('res-ideacion').innerHTML = ideaHtml;
+
+    // Behavior summary
+    let behavHtml = '';
+    let anyB = false;
+    for (let i = 1; i <= 4; i++) {
+        if (b[i] === 'si') {
+            anyB = true;
+            behavHtml += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0">
+                <span style="color:#f56565;font-size:16px;">✓</span>
+                <span style="font-size:13px;color:#2d3748">${behavLabels[i]}</span>
+            </div>`;
+        }
+    }
+    if (!anyB) {
+        behavHtml = '<span style="font-size:13px;color:#68d391">✓ Sin conductas suicidas reportadas (últimos 3 meses)</span>';
+    }
+    document.getElementById('res-conducta').innerHTML = behavHtml;
+}
+
+function exportPDF() {
+    // Determine results
+    let maxIdea = 0;
+    for (let i = 5; i >= 1; i--) { if (q[i] === 'si') { maxIdea = i; break; } }
+    const anyBehavior = [1,2,3,4].some(n => b[n] === 'si');
+
+    let color, categoryText;
+    if (anyBehavior) { color = '#742a2a'; categoryText = 'CONDUCTA SUICIDA ACTIVA'; }
+    else if (maxIdea === 5) { color = '#c53030'; categoryText = 'RIESGO MUY ALTO — Plan e intención'; }
+    else if (maxIdea === 4) { color = '#e53e3e'; categoryText = 'RIESGO ALTO — Intención sin plan'; }
+    else if (maxIdea === 3) { color = '#ed8936'; categoryText = 'RIESGO MODERADO-ALTO — Método identificado'; }
+    else if (maxIdea === 2) { color = '#f6ad55'; categoryText = 'RIESGO MODERADO — Ideación activa'; }
+    else if (maxIdea === 1) { color = '#68d391'; categoryText = 'RIESGO BAJO — Ideación pasiva'; }
+    else { color = '#48bb78'; categoryText = 'SIN IDEACIÓN NI CONDUCTA SUICIDA'; }
+
+    let ideaRows = '';
+    for (let i = 1; i <= 5; i++) {
+        const val = q[i] === 'si' ? '<span style="color:#f56565;font-weight:700">SÍ</span>' : q[i] === 'no' ? 'No' : '—';
+        ideaRows += `<tr><td>${ideaLabels[i]}</td><td style="text-align:center">${val}</td></tr>`;
+    }
+    let behavRows = '';
+    for (let i = 1; i <= 4; i++) {
+        const val = b[i] === 'si' ? '<span style="color:#f56565;font-weight:700">SÍ</span>' : b[i] === 'no' ? 'No' : '—';
+        behavRows += `<tr><td>${behavLabels[i]}</td><td style="text-align:center">${val}</td></tr>`;
+    }
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>C-SSRS Screener</title>
+<style>
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
+h1{color:#63171b;font-size:20px;margin-bottom:4px}
+.meta{font-size:13px;color:#718096;margin-bottom:20px}
+.cat-box{padding:14px 20px;background:${color}18;border:2px solid ${color};border-radius:10px;margin-bottom:20px}
+.cat-label{font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.cat-val{font-size:18px;font-weight:800;color:${color}}
+h2{font-size:14px;color:#4a5568;margin:20px 0 8px;text-transform:uppercase;letter-spacing:0.5px}
+table{width:100%;border-collapse:collapse}
+td{padding:9px 12px;border-bottom:1px solid #e2e8f0;font-size:13px}
+.footer{margin-top:32px;font-size:11px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:12px}
+</style></head><body>
+<h1>C-SSRS — Tamizaje de Riesgo Suicida Columbia</h1>
+<div class="meta">Screener · Evaluación del último mes · Fecha: ${new Date().toLocaleDateString('es-MX', {day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="cat-box">
+    <div class="cat-label">Categoría de riesgo Columbia</div>
+    <div class="cat-val">${categoryText}</div>
+</div>
+<h2>Ideación suicida</h2>
+<table>${ideaRows}</table>
+<h2>Conducta suicida (últimos 3 meses)</h2>
+<table>${behavRows}</table>
+<div class="footer">C-SSRS · Posner K, et al. (2011). Am J Psychiatry, 168(12), 1266-1277. · Columbia University.</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 600);
+}
+
+function restart() {
+    [1,2,3,4,5].forEach(i => { delete q[i]; });
+    [1,2,3,4].forEach(i => { delete b[i]; });
+    // Reset all toggle states
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.sym-row, .behav-row').forEach(row => {
+        row.classList.remove('answered-yes', 'answered-no');
+    });
+    prevCard3 = 'card-2';
+    showCard('card-0');
+}
+
+showCard('card-0');
+</script>
+</body>
+</html>
