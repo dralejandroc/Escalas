@@ -715,6 +715,26 @@
             <span class="spectrum-badge sp-det" style="margin-left:auto;">Espectro 4</span>
         </div>
 
+        <!-- CAPE-15 Negativa -->
+        <div class="scale-input-row">
+            <div class="sir-left">
+                <div class="sir-scale-name">CAPE-15 · Subescala Negativa</div>
+                <div class="sir-scale-full">Community Assessment of Psychic Experiences — 15 (media ítems 9–12)</div>
+                <div class="sir-range">Rango: 0.00–3.00</div>
+                <div style="font-size:12px;color:#555;line-height:1.5;">
+                    Subclínico ≤0.50 · Leve ≤1.00 · Moderado ≤1.50 · Grave >1.50
+                </div>
+                <a href="../autoaplicadas/cape15-assessment.html" target="_blank" class="sir-link">Abrir escala ↗</a>
+                <div id="lvl-cape15neg" class="hitop-level-badge" style="display:none;"></div>
+            </div>
+            <div class="sir-right">
+                <input type="number" class="score-input" id="in-cape15neg"
+                    min="0" max="3" step="0.01" placeholder="—"
+                    oninput="onScoreInput('cape15neg',this.value)" style="font-size:15px;">
+                <span class="score-label">/ 3.00</span>
+            </div>
+        </div>
+
         <!-- PID-5 Desapego -->
         <div class="scale-input-row">
             <div class="sir-left">
@@ -739,7 +759,7 @@
             <div>
                 <div class="synthesis-label">Nivel HiTOP · Espectro Desapego</div>
                 <div class="synthesis-level" id="synth-4-level">—</div>
-                <div class="synthesis-desc" id="synth-4-desc">Ingrese la puntuación del dominio Desapego.</div>
+                <div class="synthesis-desc" id="synth-4-desc">Ingrese al menos una puntuación para calcular el nivel espectral.</div>
             </div>
         </div>
 
@@ -881,24 +901,23 @@
             </div>
         </div>
 
-        <!-- TDAH -->
+        <!-- ASRS -->
         <div class="scale-input-row">
             <div class="sir-left">
-                <div class="sir-scale-name">ASRS / TDAH</div>
-                <div class="sir-scale-full">Adult ADHD Self-Report Scale — puntuación sintomática positiva</div>
-                <div class="sir-range">Positivo / Negativo (cribado)</div>
+                <div class="sir-scale-name">ASRS / TDAH · Parte A</div>
+                <div class="sir-scale-full">Adult ADHD Self-Report Scale v1.1 — n.º de ítems positivos en Parte A (6 ítems)</div>
+                <div class="sir-range">Rango: 0–6 ítems positivos</div>
                 <div style="font-size:12px;color:#555;line-height:1.5;">
-                    Ingrese 1 = Cribado positivo (clínicamente significativo) · 0 = Negativo
+                    Ausente 0–3 · Subclínico 4 · Clínico 5–6
                 </div>
                 <a href="../autoaplicadas/tdah-assessment.html" target="_blank" class="sir-link">Abrir escala ↗</a>
+                <div id="lvl-tdah" class="hitop-level-badge" style="display:none;"></div>
             </div>
             <div class="sir-right">
-                <select id="in-tdah" class="score-input" style="font-size:13px;width:90px;height:40px;"
-                    onchange="onScoreInput('tdah',this.value)">
-                    <option value="">—</option>
-                    <option value="0">Neg.</option>
-                    <option value="1">Pos.</option>
-                </select>
+                <input type="number" class="score-input" id="in-tdah"
+                    min="0" max="6" placeholder="—"
+                    oninput="onScoreInput('tdah',this.value)">
+                <span class="score-label">/ 6</span>
             </div>
         </div>
 
@@ -938,33 +957,38 @@
             Valore el deterioro funcional del paciente en cada área vital utilizando una escala de <strong>0 (ningún deterioro)</strong> a <strong>10 (deterioro grave)</strong>. Este componente contribuye al p-factor y al diagnóstico presuntivo.
         </div>
 
+        <div class="info-box" style="margin-bottom:14px;font-size:13px;">
+            <strong>Escala de cada área:</strong> 0 = Sin deterioro · 1 = Leve · 2 = Moderado · 3 = Marcado · 4 = Grave<br>
+            <strong>Puntuación total:</strong> suma de las 4 áreas (0–16). A mayor puntuación, mayor carga funcional global.
+        </div>
+
         <div class="func-grid">
             <div class="func-item">
                 <div class="func-item-name">🏠 Funcionamiento familiar</div>
-                <input type="range" class="func-slider" id="f-familiar" min="0" max="10" value="0" oninput="updateFuncVal('familiar',this.value)">
+                <input type="range" class="func-slider" id="f-familiar" min="0" max="4" value="0" oninput="updateFuncVal('familiar',this.value)">
                 <div class="func-val" id="fv-familiar">0</div>
             </div>
             <div class="func-item">
                 <div class="func-item-name">💼 Funcionamiento laboral/académico</div>
-                <input type="range" class="func-slider" id="f-laboral" min="0" max="10" value="0" oninput="updateFuncVal('laboral',this.value)">
+                <input type="range" class="func-slider" id="f-laboral" min="0" max="4" value="0" oninput="updateFuncVal('laboral',this.value)">
                 <div class="func-val" id="fv-laboral">0</div>
             </div>
             <div class="func-item">
                 <div class="func-item-name">👥 Funcionamiento social</div>
-                <input type="range" class="func-slider" id="f-social" min="0" max="10" value="0" oninput="updateFuncVal('social',this.value)">
+                <input type="range" class="func-slider" id="f-social" min="0" max="4" value="0" oninput="updateFuncVal('social',this.value)">
                 <div class="func-val" id="fv-social">0</div>
             </div>
             <div class="func-item">
                 <div class="func-item-name">🧍 Autocuidado / autonomía</div>
-                <input type="range" class="func-slider" id="f-autocuidado" min="0" max="10" value="0" oninput="updateFuncVal('autocuidado',this.value)">
+                <input type="range" class="func-slider" id="f-autocuidado" min="0" max="4" value="0" oninput="updateFuncVal('autocuidado',this.value)">
                 <div class="func-val" id="fv-autocuidado">0</div>
             </div>
         </div>
 
         <div class="synthesis-box">
             <div>
-                <div class="synthesis-label">Deterioro funcional global (media)</div>
-                <div class="synthesis-level" id="synth-7-level">0.0 / 10</div>
+                <div class="synthesis-label">Deterioro funcional global (suma)</div>
+                <div class="synthesis-level" id="synth-7-level">0 / 16</div>
                 <div class="synthesis-desc" id="synth-7-desc">Ajuste los controles para registrar el deterioro en cada área.</div>
             </div>
         </div>
@@ -1030,18 +1054,20 @@ const scores = {};
 
 /* ── Cutoff maps ──────────────────────────────────────── */
 const cutoffs = {
-    phq9:     { max: 27, ranges: [5, 10, 20],  labels: ['Subclínico','Leve','Moderado','Grave'] },
-    hars:     { max: 56, ranges: [8, 15, 24],  labels: ['Subclínico','Leve','Moderado','Grave'] },
-    pcl5:     { max: 80, ranges: [21, 31, 50], labels: ['Subclínico','Leve','Moderado','Grave'] },
-    pas:      { max: 52, ranges: [9, 19, 32],  labels: ['Subclínico','Leve','Moderado','Grave'] },
-    phq15:    { max: 30, ranges: [5, 10, 15],  labels: ['Subclínico','Leve','Moderado','Grave'] },
-    cape15:   { max: 3,  ranges: [0.5, 1.0, 1.5], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
-    pid5psic: { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
-    pid5det:  { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
-    pid5ant:  { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
-    pid5dis:  { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
-    audit:    { max: 40, ranges: [8, 15, 20],  labels: ['Subclínico','Leve','Moderado','Grave'] },
-    dudit:    { max: 44, ranges: [6, 11, 25],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    phq9:      { max: 27, ranges: [5, 10, 20],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    hars:      { max: 56, ranges: [8, 15, 24],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    pcl5:      { max: 80, ranges: [21, 31, 50], labels: ['Subclínico','Leve','Moderado','Grave'] },
+    pas:       { max: 52, ranges: [9, 19, 32],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    phq15:     { max: 30, ranges: [5, 10, 15],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    cape15:    { max: 3,  ranges: [0.5, 1.0, 1.5], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    cape15neg: { max: 3,  ranges: [0.5, 1.0, 1.5], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    pid5psic:  { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    pid5det:   { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    pid5ant:   { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    pid5dis:   { max: 3,  ranges: [0.5, 1.0, 2.0], labels: ['Subclínico','Leve','Moderado','Grave'], decimal: true },
+    audit:     { max: 40, ranges: [8, 15, 20],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    dudit:     { max: 44, ranges: [6, 11, 25],  labels: ['Subclínico','Leve','Moderado','Grave'] },
+    tdah:      { max: 6,  ranges: [4, 5, 7],    labels: ['Subclínico','Leve','Moderado','Grave'] },
 };
 
 function getLevel(key, val) {
@@ -1083,9 +1109,9 @@ const spectraKeys = {
     1: ['phq9','hars','pcl5','pas'],
     2: ['phq15'],
     3: ['cape15','pid5psic'],
-    4: ['pid5det'],
+    4: ['cape15neg','pid5det'],
     5: ['pid5ant'],
-    6: ['pid5dis','audit','dudit'],
+    6: ['pid5dis','audit','dudit','tdah'],
 };
 
 function updateSpectralSynthesis() {
@@ -1099,10 +1125,6 @@ function updateSpectralSynthesis() {
                 if (lv > maxLv) maxLv = lv;
             }
         });
-        // TDAH special for spectrum 6
-        if (sp === 6 && scores['tdah'] === 1) {
-            if (maxLv < 2) maxLv = 2;
-        }
 
         const lvEl  = document.getElementById('synth-' + sp + '-level');
         const dscEl = document.getElementById('synth-' + sp + '-desc');
@@ -1131,10 +1153,10 @@ const funcAreas = ['familiar','laboral','social','autocuidado'];
 function updateFuncVal(area, val) {
     document.getElementById('fv-' + area).textContent = val;
     const vals = funcAreas.map(a => parseInt(document.getElementById('f-' + a).value));
-    const mean = (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);
+    const sum = vals.reduce((a, b) => a + b, 0);
     const el = document.getElementById('synth-7-level');
-    if (el) el.textContent = mean + ' / 10';
-    scores['func'] = parseFloat(mean);
+    if (el) el.textContent = sum + ' / 16';
+    scores['func'] = sum;
 }
 
 /* ── Build results ────────────────────────────────────── */
@@ -1162,7 +1184,6 @@ function buildResults() {
                 if (lv > maxLv) maxLv = lv;
             }
         });
-        if (sp === 6 && scores['tdah'] === 1 && maxLv < 2) maxLv = 2;
         spLevels[sp] = maxLv;
         if (maxLv >= 0) { evaluatedCount++; totalWeight += maxLv; }
     }
@@ -1192,8 +1213,7 @@ function buildResults() {
         const lvText = lv >= 0 ? (lvlEmojis[lv] + ' ' + lvlNames[lv]) : '— No evaluado';
         const lvColor = lv >= 0 ? ['#166534','#92400e','#c2410c','#991b1b'][lv] : '#9ca3af';
         const keysUsed = (spectraKeys[sp] || []).filter(k => scores[k] !== undefined);
-        const tdahUsed = sp === 6 && scores['tdah'] !== undefined ? ['TDAH'] : [];
-        const allUsed = [...keysUsed.map(k => k.toUpperCase()), ...tdahUsed];
+        const allUsed = keysUsed.map(k => k.toUpperCase().replace('CAPE15NEG','CAPE-15 Neg').replace('PID5','PID-5 '));
 
         html += `<tr style="border-bottom:1px solid #f3f0ff;">
             <td style="padding:9px 10px;">
@@ -1218,13 +1238,14 @@ function buildResults() {
     }
 
     // Functional deterioration
-    if (funcMean !== null) {
-        const fLv = funcMean < 2 ? 0 : funcMean < 5 ? 1 : funcMean < 8 ? 2 : 3;
+    const funcSum = scores['func'] !== null && scores['func'] !== undefined ? scores['func'] : null;
+    if (funcSum !== null) {
+        const fLv = funcSum <= 2 ? 0 : funcSum <= 6 ? 1 : funcSum <= 11 ? 2 : 3;
         html += `<div class="synthesis-box" style="margin-bottom:16px;">
             <div>
                 <div class="synthesis-label">Deterioro funcional global</div>
-                <div class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][fLv] };">${funcMean.toFixed(1)} / 10</div>
-                <div class="synthesis-desc">Media de las cuatro áreas vitales evaluadas.</div>
+                <div class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][fLv] };">${funcSum} / 16</div>
+                <div class="synthesis-desc">Suma de las cuatro áreas vitales (0–4 c/u). 0–2=Mínimo · 3–6=Leve · 7–11=Moderado · 12–16=Grave.</div>
             </div>
         </div>`;
     }
