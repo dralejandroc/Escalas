@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             align-items: flex-start;
@@ -24,7 +24,7 @@
             overflow: hidden;
         }
         .card-header {
-            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
+            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: white;
             padding: 22px 28px 18px;
             position: relative;
@@ -62,7 +62,7 @@
         .progress-bar {
             height: 6px;
             border-radius: 3px;
-            background: linear-gradient(90deg, #c53030, #63171b);
+            background: linear-gradient(90deg, #29A98C, #112F33);
             transition: width 0.4s ease;
         }
 
@@ -73,7 +73,7 @@
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #c53030;
+            color: #29A98C;
             margin-bottom: 8px;
         }
         .guide-box {
@@ -95,7 +95,7 @@
         }
         .risk-ref-table tr:last-child td { border-bottom: none; }
         .start-btn {
-            background: linear-gradient(135deg, #c53030, #63171b);
+            background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
             border: none;
             padding: 14px 32px;
@@ -116,7 +116,7 @@
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #c53030;
+            color: #29A98C;
             margin-bottom: 6px;
         }
 
@@ -133,8 +133,8 @@
             transition: all 0.2s;
         }
         .sym-row.answered-yes {
-            border-color: #f56565;
-            background: rgba(245,101,101,0.04);
+            border-color: #29A98C;
+            background: rgba(41,169,140,0.05);
         }
         .sym-row.answered-no {
             opacity: 0.55;
@@ -179,10 +179,10 @@
             transition: all 0.15s;
             background: white;
         }
-        .toggle-si { border-color: #fc8181; color: #fc8181; }
-        .toggle-si.active { background: #fc8181; color: white; }
-        .toggle-no { border-color: #68d391; color: #68d391; }
-        .toggle-no.active { background: #68d391; color: white; }
+        .toggle-si { border-color: #f6ad55; color: #f6ad55; }
+        .toggle-si.active { background: #f6ad55; color: white; }
+        .toggle-no { border-color: #29A98C; color: #29A98C; }
+        .toggle-no.active { background: #29A98C; color: white; }
 
         /* Behavior section (same toggle style) */
         .behav-row {
@@ -195,7 +195,7 @@
             margin-bottom: 10px;
             transition: all 0.2s;
         }
-        .behav-row.answered-yes { border-color: #f56565; background: rgba(245,101,101,0.04); }
+        .behav-row.answered-yes { border-color: #29A98C; background: rgba(41,169,140,0.05); }
         .behav-row.answered-no { opacity: 0.55; }
         .behav-content { flex: 1; }
         .behav-name { font-size: 14px; font-weight: 600; color: #1a202c; margin-bottom: 3px; }
@@ -217,9 +217,9 @@
             font-family: inherit;
             transition: color 0.15s;
         }
-        .back-btn:hover { color: #c53030; }
+        .back-btn:hover { color: #29A98C; }
         .next-btn {
-            background: linear-gradient(135deg, #c53030, #63171b);
+            background: linear-gradient(135deg, #29A98C, #112F33);
             color: white;
             border: none;
             padding: 10px 24px;
@@ -318,7 +318,7 @@
             margin-top: 10px;
             transition: border-color 0.2s;
         }
-        .action-btn:hover { border-color: #c53030; }
+        .action-btn:hover { border-color: #29A98C; }
         .hidden { display: none; }
 
         @media (max-width: 600px) {
@@ -713,7 +713,7 @@ function buildResults() {
         if (q[i] === 'si') {
             anyIdea = true;
             ideaHtml += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0">
-                <span style="color:#f56565;font-size:16px;">✓</span>
+                <span style="color:#29A98C;font-size:16px;">✓</span>
                 <span style="font-size:13px;color:#2d3748">${ideaLabels[i]}</span>
             </div>`;
         }
@@ -730,7 +730,7 @@ function buildResults() {
         if (b[i] === 'si') {
             anyB = true;
             behavHtml += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0">
-                <span style="color:#f56565;font-size:16px;">✓</span>
+                <span style="color:#29A98C;font-size:16px;">✓</span>
                 <span style="font-size:13px;color:#2d3748">${behavLabels[i]}</span>
             </div>`;
         }
@@ -758,19 +758,19 @@ function exportPDF() {
 
     let ideaRows = '';
     for (let i = 1; i <= 5; i++) {
-        const val = q[i] === 'si' ? '<span style="color:#f56565;font-weight:700">SÍ</span>' : q[i] === 'no' ? 'No' : '—';
+        const val = q[i] === 'si' ? '<span style="color:#29A98C;font-weight:700">SÍ</span>' : q[i] === 'no' ? 'No' : '—';
         ideaRows += `<tr><td>${ideaLabels[i]}</td><td style="text-align:center">${val}</td></tr>`;
     }
     let behavRows = '';
     for (let i = 1; i <= 4; i++) {
-        const val = b[i] === 'si' ? '<span style="color:#f56565;font-weight:700">SÍ</span>' : b[i] === 'no' ? 'No' : '—';
+        const val = b[i] === 'si' ? '<span style="color:#29A98C;font-weight:700">SÍ</span>' : b[i] === 'no' ? 'No' : '—';
         behavRows += `<tr><td>${behavLabels[i]}</td><td style="text-align:center">${val}</td></tr>`;
     }
 
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>C-SSRS Screener</title>
 <style>
 body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
-h1{color:#63171b;font-size:20px;margin-bottom:4px}
+h1{color:#112F33;font-size:20px;margin-bottom:4px}
 .meta{font-size:13px;color:#718096;margin-bottom:20px}
 .cat-box{padding:14px 20px;background:${color}18;border:2px solid ${color};border-radius:10px;margin-bottom:20px}
 .cat-label{font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
