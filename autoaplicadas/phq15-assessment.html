@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHQ-15 — Cuestionario de Síntomas Somáticos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
+        }
+        .card-wrap.active { display: block; }
+        .card-header {
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 12px; opacity: .8; text-align: right; }
+        .card-body { padding: 28px 32px 24px; }
+
+        /* Progress */
+        .progress-bar-wrap {
+            height: 6px; background: #e2e8f0; border-radius: 3px;
+            overflow: hidden; margin-bottom: 20px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #553c9a, #2d1b69);
+            border-radius: 3px; transition: width .3s;
+        }
+
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 12px; }
+        .instructions-box {
+            background: #f5f3ff;
+            border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .scale-badge {
+            display: inline-block;
+            background: rgba(85,60,154,0.12);
+            border: 1.5px solid #553c9a;
+            color: #553c9a;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 15px 40px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s; width: 100%;
+            font-family: inherit;
+        }
+        .btn-primary:hover { opacity: .9; }
+
+        /* Multi-item card */
+        .card-instructions {
+            font-size: 13px;
+            color: #553c9a;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            background: rgba(85,60,154,0.06);
+            border-radius: 8px;
+        }
+        .item-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .item-row {
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            transition: border-color .2s, background .2s;
+        }
+        .item-row.answered { border-color: #553c9a; background: rgba(85,60,154,0.04); }
+        .item-header {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .item-num {
+            font-size: 11px;
+            font-weight: 700;
+            color: #553c9a;
+            min-width: 26px;
+            padding-top: 1px;
+            letter-spacing: .3px;
+        }
+        .item-text {
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .item-opts {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .opt-compact {
+            flex: 1;
+            min-width: 90px;
+            padding: 8px 6px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #4a5568;
+            cursor: pointer;
+            text-align: center;
+            transition: all .15s;
+            font-family: inherit;
+            line-height: 1.3;
+        }
+        .opt-compact:hover { border-color: #553c9a; background: rgba(85,60,154,0.06); }
+        .opt-compact.selected {
+            border-color: #553c9a;
+            background: rgba(85,60,154,0.10);
+            color: #2d1b69;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .btn-back {
+            background: none;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            color: #718096;
+            padding: 7px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-back:hover { border-color: #553c9a; color: #553c9a; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+        .btn-next {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s;
+            font-family: inherit;
+        }
+        .btn-next:hover { opacity: .9; }
+
+        /* Results */
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin: 16px 0 8px;
+        }
+        .section-label:first-child { margin-top: 0; }
+        .score-area {
+            text-align: center;
+            padding: 22px 20px 18px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 4px;
+        }
+        .score-num { font-size: 72px; font-weight: 900; line-height: 1; color: #2d3748; }
+        .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
+        .score-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .subscales-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px; margin-bottom: 4px;
+        }
+        .subscale-box {
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 12px 10px; text-align: center;
+        }
+        .sub-title { font-size: 10px; color: #718096; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing:.03em; line-height: 1.3; }
+        .sub-num   { font-size: 28px; font-weight: 900; line-height: 1; }
+        .sub-max   { font-size: 11px; color: #a0aec0; margin-top: 2px; }
+        .interp-box {
+            background: #f7fafc; border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0; padding: 14px 16px;
+            margin-bottom: 4px; font-size: 13px; color: #2d3748; line-height: 1.7;
+        }
+        .cutoff-table { width: 100%; border-collapse: collapse; }
+        .cutoff-table td {
+            padding: 8px 12px; font-size: 13px;
+            border-bottom: 1px solid #e2e8f0; color: #4a5568;
+        }
+        .cutoff-table tr:last-child td { border-bottom: none; }
+        .dot { font-size: 16px; font-weight: 700; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+        .action-btn {
+            padding: 12px 28px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #4a5568;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color .2s;
+        }
+        .action-btn:hover { border-color: #553c9a; color: #553c9a; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .subscales-grid { grid-template-columns: 1fr; }
+            .item-opts { flex-direction: column; }
+            .opt-compact { min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARD 0: BIENVENIDA -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">PHQ-15 — Síntomas Somáticos</span>
+        <span class="q-label">Autoaplicada · HiTOP</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Cuestionario de Síntomas Físicos (PHQ-15)</div>
+        <div class="scale-badge">15 síntomas · Aprox. 3 minutos · Últimas 4 semanas</div>
+        <div class="instructions-box">
+            <p>A continuación hay una lista de síntomas físicos comunes. Por favor indique <strong>cuánto le han molestado</strong> los siguientes síntomas durante las últimas <strong>4 semanas</strong>.</p>
+        </div>
+        <button class="btn-primary" onclick="showCard('card-1')">Comenzar Evaluación</button>
+    </div>
+</div>
+
+<!-- CARD 1: ÍTEMS 1-5 (Dolor) -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">PHQ-15 — Síntomas de Dolor</span>
+        <span class="q-label">Ítems 1–5 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33%"></div></div>
+        <div class="card-instructions">Durante las últimas 4 semanas, ¿cuánto le han molestado estos síntomas?</div>
+        <div class="item-list" id="items-card1"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-0')">← Anterior</button>
+            <span class="item-badge">1–5 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-2', 1, 5)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 2: ÍTEMS 6-10 (Autonómico) -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">PHQ-15 — Síntomas Cardiopulmonares</span>
+        <span class="q-label">Ítems 6–10 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:66%"></div></div>
+        <div class="card-instructions">Durante las últimas 4 semanas, ¿cuánto le han molestado estos síntomas?</div>
+        <div class="item-list" id="items-card2"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-1')">← Anterior</button>
+            <span class="item-badge">6–10 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-3', 6, 10)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 3: ÍTEMS 11-15 (Fatiga/GI) -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">PHQ-15 — Síntomas Digestivos y Funcionales</span>
+        <span class="q-label">Ítems 11–15 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="card-instructions">Durante las últimas 4 semanas, ¿cuánto le han molestado estos síntomas?</div>
+        <div class="item-list" id="items-card3"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-2')">← Anterior</button>
+            <span class="item-badge">11–15 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-results', 11, 15)">Ver resultados →</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTADOS -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">PHQ-15 — Resultado</span>
+        <span class="q-label">Perfil somático</span>
+    </div>
+    <div class="card-body">
+        <div class="section-label">Puntuación total</div>
+        <div class="score-area" id="score-area">
+            <div class="score-num" id="res-score">—</div>
+            <div class="score-range">de 30 puntos posibles</div>
+            <div class="score-badge" id="res-badge">—</div>
+        </div>
+
+        <div class="section-label">Subescalas</div>
+        <div class="subscales-grid">
+            <div class="subscale-box">
+                <div class="sub-title">Dolor</div>
+                <div class="sub-num" id="sub-dolor">—</div>
+                <div class="sub-max">de 8 pts (ítems 1–4)</div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Autonómico</div>
+                <div class="sub-num" id="sub-auto">—</div>
+                <div class="sub-max">de 10 pts (ítems 5–9)</div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Fatiga / Cognitivo</div>
+                <div class="sub-num" id="sub-fatiga">—</div>
+                <div class="sub-max">de 12 pts (ítems 10–15)</div>
+            </div>
+        </div>
+
+        <div class="section-label">Interpretación clínica</div>
+        <div class="interp-box" id="res-interp"></div>
+
+        <div class="section-label">Puntos de corte (referencia)</div>
+        <table class="cutoff-table">
+            <tr><td><strong>0–4</strong></td><td>Carga somática mínima</td><td class="dot" style="color:#48bb78;">●</td></tr>
+            <tr><td><strong>5–9</strong></td><td>Carga somática leve</td><td class="dot" style="color:#f6ad55;">●</td></tr>
+            <tr><td><strong>10–14</strong></td><td>Carga somática moderada</td><td class="dot" style="color:#ed8936;">●</td></tr>
+            <tr><td><strong>≥ 15</strong></td><td>Carga somática grave</td><td class="dot" style="color:#f56565;">●</td></tr>
+        </table>
+        <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Kroenke K, Spitzer RL, Williams JB. (2002). <em>Arch Intern Med</em>, 162(11), 1232–1237.</p>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="exportPDF()">Exportar como PDF</button>
+            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const answers = {};
+
+const items = {
+    1:  "Dolores de estómago",
+    2:  "Dolor de espalda",
+    3:  "Dolor en los brazos, piernas o articulaciones (rodillas, caderas, etc.)",
+    4:  "Dolor menstrual u otros problemas con los períodos menstruales",
+    5:  "Dolores de cabeza",
+    6:  "Dolor en el pecho",
+    7:  "Mareos",
+    8:  "Desmayos",
+    9:  "Corazón acelerado o palpitaciones",
+    10: "Falta de aliento",
+    11: "Dolor o problemas durante las relaciones sexuales",
+    12: "Estreñimiento, heces sueltas o diarrea",
+    13: "Náuseas, gases o indigestión",
+    14: "Cansancio o falta de energía",
+    15: "Problemas para dormir"
+};
+
+const optLabels = ['0 — En absoluto', '1 — Un poco', '2 — Mucho'];
+
+const cardItems = {
+    'card-1': [1,2,3,4,5],
+    'card-2': [6,7,8,9,10],
+    'card-3': [11,12,13,14,15]
+};
+
+function buildCard(cardId) {
+    const container = document.getElementById('items-' + cardId);
+    if (!container) return;
+    container.innerHTML = '';
+    cardItems[cardId].forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'item-row' + (answers[n] !== undefined ? ' answered' : '');
+        div.id = 'row-' + n;
+        div.innerHTML = `
+            <div class="item-header">
+                <span class="item-num">${n}.</span>
+                <span class="item-text">${items[n]}</span>
+            </div>
+            <div class="item-opts" id="opts-${n}"></div>`;
+        container.appendChild(div);
+
+        const optsEl = div.querySelector('#opts-' + n);
+        optLabels.forEach((label, val) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-compact' + (answers[n] === val ? ' selected' : '');
+            btn.textContent = label;
+            btn.onclick = () => selectItem(n, val);
+            optsEl.appendChild(btn);
+        });
+    });
+}
+
+function selectItem(num, val) {
+    answers[num] = val;
+    document.querySelectorAll('#opts-' + num + ' .opt-compact').forEach((btn, i) => {
+        btn.classList.toggle('selected', i === val);
+    });
+    const row = document.getElementById('row-' + num);
+    if (row) row.classList.add('answered');
+}
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (cardItems[id]) buildCard(id);
+    if (id === 'card-results') buildResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextCard(toId, startItem, endItem) {
+    for (let i = startItem; i <= endItem; i++) {
+        if (answers[i] === undefined) {
+            alert('Por favor responda todos los ítems antes de continuar.');
+            return;
+        }
+    }
+    showCard(toId);
+}
+
+function buildResults() {
+    let total = 0;
+    for (let i = 1; i <= 15; i++) total += (answers[i] || 0);
+
+    const dolor  = [1,2,3,4].reduce((s,i)=>s+(answers[i]||0), 0);
+    const auto   = [5,6,7,8,9].reduce((s,i)=>s+(answers[i]||0), 0);
+    const fatiga = [10,11,12,13,14,15].reduce((s,i)=>s+(answers[i]||0), 0);
+
+    document.getElementById('res-score').textContent = total;
+    document.getElementById('sub-dolor').textContent  = dolor;
+    document.getElementById('sub-auto').textContent   = auto;
+    document.getElementById('sub-fatiga').textContent = fatiga;
+
+    let color, label, interp;
+    if (total <= 4) {
+        color = '#48bb78'; label = 'Mínimo';
+        interp = 'Carga somática mínima. No se evidencian síntomas físicos significativos en el período evaluado.';
+    } else if (total <= 9) {
+        color = '#f6ad55'; label = 'Leve';
+        interp = 'Carga somática leve. Algunos síntomas físicos presentes con impacto limitado. Se recomienda monitoreo en consultas posteriores.';
+    } else if (total <= 14) {
+        color = '#ed8936'; label = 'Moderado';
+        interp = 'Carga somática moderada. Los síntomas físicos pueden interferir con el funcionamiento. Se sugiere evaluación médica para descartar causas orgánicas y valorar intervención.';
+    } else {
+        color = '#f56565'; label = 'Grave';
+        interp = 'Carga somática grave. Múltiples síntomas físicos intensos. Evaluación médica integral recomendada. Considerar criterios diagnósticos de Trastorno de Síntomas Somáticos.';
+    }
+
+    const scoreEl = document.getElementById('res-score');
+    scoreEl.style.color = color;
+    const badge = document.getElementById('res-badge');
+    badge.textContent = label;
+    badge.style.cssText = `color:${color}; background:${color}18; border:1.5px solid ${color}; border-radius:20px; padding:5px 18px;`;
+
+    document.getElementById('res-interp').textContent = interp;
+
+    [['sub-dolor', dolor, 8], ['sub-auto', auto, 10], ['sub-fatiga', fatiga, 12]].forEach(([id, val, max]) => {
+        const ratio = val / max;
+        const c = ratio < 0.33 ? '#48bb78' : ratio < 0.5 ? '#f6ad55' : ratio < 0.7 ? '#ed8936' : '#f56565';
+        document.getElementById(id).style.color = c;
+    });
+}
+
+function exportPDF() {
+    let total = 0;
+    for (let i = 1; i <= 15; i++) total += (answers[i] || 0);
+    const dolor  = [1,2,3,4].reduce((s,i)=>s+(answers[i]||0), 0);
+    const auto   = [5,6,7,8,9].reduce((s,i)=>s+(answers[i]||0), 0);
+    const fatiga = [10,11,12,13,14,15].reduce((s,i)=>s+(answers[i]||0), 0);
+
+    const [label, color] = total <= 4 ? ['Mínimo','#48bb78'] : total <= 9 ? ['Leve','#f6ad55'] : total <= 14 ? ['Moderado','#ed8936'] : ['Grave','#f56565'];
+    const optNames = ['En absoluto','Un poco','Mucho'];
+
+    let rows = '';
+    for (let i = 1; i <= 15; i++) {
+        const v = answers[i] !== undefined ? answers[i] : null;
+        rows += `<tr><td>${i}</td><td>${items[i]}</td><td style="text-align:center">${v !== null ? v : '—'}</td><td style="text-align:center">${v !== null ? optNames[v] : '—'}</td></tr>`;
+    }
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PHQ-15</title>
+<style>
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
+h1{color:#2d1b69;font-size:20px;margin-bottom:4px}
+.meta{font-size:12px;color:#718096;margin-bottom:20px}
+.score-box{margin:16px 0;padding:20px;background:#f7fafc;border-radius:10px;text-align:center}
+.score-num{font-size:52px;font-weight:800;color:${color};line-height:1}
+.score-lbl{font-size:15px;font-weight:700;color:${color};margin-top:4px}
+.subs{display:flex;gap:10px;margin:14px 0}
+.sub{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center}
+.sub-n{font-size:22px;font-weight:800;color:#553c9a}
+.sub-t{font-size:10px;color:#718096;text-transform:uppercase;margin-top:2px}
+table{width:100%;border-collapse:collapse;margin-top:16px}
+th{background:#f7fafc;padding:8px 10px;text-align:left;font-size:11px;color:#718096;text-transform:uppercase}
+td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12px}
+.footer{margin-top:24px;font-size:10px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:8px}
+</style></head><body>
+<h1>PHQ-15 — Cuestionario de Síntomas Somáticos</h1>
+<div class="meta">Patient Health Questionnaire-15 · Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="score-box">
+<div class="score-num">${total}<span style="font-size:20px;color:#a0aec0"> / 30</span></div>
+<div class="score-lbl">${label}</div>
+</div>
+<div class="subs">
+<div class="sub"><div class="sub-n">${dolor}<small style="font-size:12px;color:#a0aec0">/8</small></div><div class="sub-t">Dolor (íts. 1–4)</div></div>
+<div class="sub"><div class="sub-n">${auto}<small style="font-size:12px;color:#a0aec0">/10</small></div><div class="sub-t">Autonómico (íts. 5–9)</div></div>
+<div class="sub"><div class="sub-n">${fatiga}<small style="font-size:12px;color:#a0aec0">/12</small></div><div class="sub-t">Fatiga/Cogn. (íts. 10–15)</div></div>
+</div>
+<table>
+<tr><th>#</th><th>Síntoma</th><th>Pts.</th><th>Respuesta</th></tr>
+${rows}
+</table>
+<div class="footer">PHQ-15 · Kroenke K, Spitzer RL, Williams JB. (2002). Arch Intern Med, 162(11), 1232–1237. · Sistema HiTOP — Instrumento de apoyo diagnóstico.</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 600);
+}
+
+function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    showCard('card-0');
+}
+
+showCard('card-0');
+</script>
+</body>
+</html>

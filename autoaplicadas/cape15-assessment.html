@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPE-15 — Evaluación de Experiencias Psíquicas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
+        }
+        .card-wrap.active { display: block; }
+        .card-header {
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 12px; opacity: .8; text-align: right; }
+        .card-body { padding: 28px 32px 24px; }
+
+        /* Progress */
+        .progress-bar-wrap {
+            height: 6px; background: #e2e8f0; border-radius: 3px;
+            overflow: hidden; margin-bottom: 20px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #553c9a, #2d1b69);
+            border-radius: 3px; transition: width .3s;
+        }
+
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 12px; }
+        .instructions-box {
+            background: #f5f3ff;
+            border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .scale-badge {
+            display: inline-block;
+            background: rgba(85,60,154,0.12);
+            border: 1.5px solid #553c9a;
+            color: #553c9a;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .anchor-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .legend-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .legend-title {
+            font-size: 11px; font-weight: 700; color: #553c9a;
+            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+        }
+        .legend-row { font-size: 12px; color: #4a5568; margin-bottom: 2px; }
+        .legend-score { font-weight: 700; color: #553c9a; min-width: 14px; display: inline-block; }
+        .btn-primary {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 15px 40px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s; width: 100%;
+            font-family: inherit;
+        }
+        .btn-primary:hover { opacity: .9; }
+
+        /* Item list */
+        .item-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+        .item-row {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            transition: border-color .2s, background .2s;
+        }
+        .item-row.answered-both {
+            border-color: #553c9a;
+            background: rgba(85,60,154,0.04);
+        }
+        .item-text {
+            font-size: 14px; font-weight: 500; color: #1a202c;
+            line-height: 1.45; margin-bottom: 12px;
+        }
+        .item-num-inline {
+            font-size: 11px; font-weight: 700; color: #553c9a;
+            margin-right: 6px; letter-spacing: .3px;
+        }
+
+        /* Dual selector */
+        .dual-selector { display: flex; flex-direction: column; gap: 8px; }
+        .selector-row { display: flex; align-items: center; gap: 8px; }
+        .selector-label {
+            font-size: 11px; font-weight: 700; color: #718096;
+            text-transform: uppercase; letter-spacing: .4px;
+            min-width: 74px; flex-shrink: 0;
+        }
+        .opts-row { display: flex; gap: 5px; flex: 1; }
+        .opt-pill {
+            flex: 1;
+            padding: 6px 4px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 11px;
+            color: #4a5568;
+            cursor: pointer;
+            text-align: center;
+            transition: all .15s;
+            font-family: inherit;
+            line-height: 1.3;
+        }
+        .opt-pill:hover { border-color: #553c9a; background: rgba(85,60,154,0.06); }
+        .opt-pill.selected {
+            border-color: #553c9a;
+            background: rgba(85,60,154,0.12);
+            color: #2d1b69;
+            font-weight: 700;
+        }
+        .opt-pill.freq.selected { background: rgba(85,60,154,0.12); border-color: #553c9a; }
+        .opt-pill.dist.selected { background: rgba(85,60,154,0.08); border-color: #6b46c1; }
+
+        /* Navigation */
+        .nav-row {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+        }
+        .btn-back {
+            background: none; border: 1px solid #cbd5e0; border-radius: 8px;
+            color: #718096; padding: 7px 16px; font-size: 13px;
+            cursor: pointer; transition: all .2s; font-family: inherit;
+        }
+        .btn-back:hover { border-color: #553c9a; color: #553c9a; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+        .btn-next {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: white; border: none; border-radius: 8px;
+            padding: 9px 20px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s; font-family: inherit;
+        }
+        .btn-next:hover { opacity: .9; }
+
+        /* Results */
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin: 16px 0 10px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .subscale-card {
+            border: 1.5px solid #e2e8f0; border-radius: 14px;
+            padding: 16px 18px; margin-bottom: 10px;
+        }
+        .subscale-card.level-ausente   { border-color: #48bb78; }
+        .subscale-card.level-subclinico { border-color: #f6ad55; }
+        .subscale-card.level-clinico   { border-color: #ed8936; }
+        .subscale-card.level-grave     { border-color: #f56565; }
+
+        .sub-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .sub-name { font-size: 15px; font-weight: 700; color: #1a202c; }
+        .sub-items { font-size: 11px; color: #a0aec0; }
+        .sub-score-row {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+        }
+        .sub-mean {
+            font-size: 32px; font-weight: 900; line-height: 1; min-width: 52px;
+        }
+        .sub-meta { flex: 1; }
+        .sub-level-badge {
+            display: inline-block; padding: 3px 12px; border-radius: 12px;
+            font-size: 12px; font-weight: 700; margin-bottom: 4px;
+        }
+        .sub-distress { font-size: 12px; color: #718096; }
+
+        .sub-bar-wrap {
+            height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden;
+        }
+        .sub-bar-fill {
+            height: 100%; border-radius: 4px; transition: width .6s ease;
+        }
+
+        .alert-box {
+            background: #fff5f5; border: 1.5px solid #fed7d7;
+            border-radius: 10px; padding: 12px 16px;
+            font-size: 13px; color: #742a2a; line-height: 1.6; margin-bottom: 4px;
+        }
+
+        .interp-box {
+            background: #f7fafc; border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0; padding: 14px 16px;
+            margin-bottom: 4px; font-size: 13px; color: #2d3748; line-height: 1.7;
+        }
+        .cutoff-table { width: 100%; border-collapse: collapse; }
+        .cutoff-table td {
+            padding: 7px 12px; font-size: 12px;
+            border-bottom: 1px solid #e2e8f0; color: #4a5568;
+        }
+        .cutoff-table tr:last-child td { border-bottom: none; }
+        .dot { font-size: 14px; font-weight: 700; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+        .action-btn {
+            padding: 12px 28px; background: white;
+            border: 2px solid #e2e8f0; border-radius: 12px;
+            font-size: 14px; color: #4a5568;
+            cursor: pointer; font-family: inherit; transition: border-color .2s;
+        }
+        .action-btn:hover { border-color: #553c9a; color: #553c9a; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .anchor-legend { grid-template-columns: 1fr; }
+            .selector-label { min-width: 62px; font-size: 10px; }
+            .opt-pill { font-size: 10px; padding: 5px 3px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARD 0: BIENVENIDA -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Experiencias Psíquicas</span>
+        <span class="q-label">Autoaplicada · HiTOP</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Evaluación de Experiencias Psíquicas (CAPE-15)</div>
+        <div class="scale-badge">15 preguntas · Aprox. 5 minutos · Experiencias generales</div>
+        <div class="instructions-box">
+            <p>Este cuestionario pregunta sobre experiencias que algunas personas tienen. Para cada una, indique <strong>con qué frecuencia</strong> ha tenido la experiencia, y si la tiene, <strong>cuánto malestar le causa</strong>.</p>
+            <p style="margin-top:8px;">No hay respuestas correctas ni incorrectas. Responda con sinceridad según su experiencia real.</p>
+        </div>
+        <div class="anchor-legend">
+            <div class="legend-box">
+                <div class="legend-title">Frecuencia</div>
+                <div class="legend-row"><span class="legend-score">0</span> — Nunca</div>
+                <div class="legend-row"><span class="legend-score">1</span> — A veces</div>
+                <div class="legend-row"><span class="legend-score">2</span> — Seguido</div>
+                <div class="legend-row"><span class="legend-score">3</span> — Casi siempre</div>
+            </div>
+            <div class="legend-box">
+                <div class="legend-title">Malestar que causa</div>
+                <div class="legend-row"><span class="legend-score">0</span> — No me molesta</div>
+                <div class="legend-row"><span class="legend-score">1</span> — Un poco</div>
+                <div class="legend-row"><span class="legend-score">2</span> — Bastante</div>
+                <div class="legend-row"><span class="legend-score">3</span> — Mucho</div>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="showCard('card-1')">Comenzar Evaluación</button>
+    </div>
+</div>
+
+<!-- CARD 1: ÍTEMS 1-3 -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Ideas de Referencia</span>
+        <span class="q-label">Ítems 1–3 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="item-list" id="items-card1"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-0')">← Anterior</button>
+            <span class="item-badge">1–3 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-2', 1, 3)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 2: ÍTEMS 4-6 -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Alucinaciones y Pensamiento</span>
+        <span class="q-label">Ítems 4–6 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="item-list" id="items-card2"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-1')">← Anterior</button>
+            <span class="item-badge">4–6 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-3', 4, 6)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 3: ÍTEMS 7-9 -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Percepciones y Apatía</span>
+        <span class="q-label">Ítems 7–9 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="item-list" id="items-card3"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-2')">← Anterior</button>
+            <span class="item-badge">7–9 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-4', 7, 9)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 4: ÍTEMS 10-12 -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Embotamiento y Anhedonia</span>
+        <span class="q-label">Ítems 10–12 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="item-list" id="items-card4"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-3')">← Anterior</button>
+            <span class="item-badge">10–12 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-5', 10, 12)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 5: ÍTEMS 13-15 -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Estado de Ánimo</span>
+        <span class="q-label">Ítems 13–15 de 15</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="item-list" id="items-card5"></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-4')">← Anterior</button>
+            <span class="item-badge">13–15 / 15</span>
+            <button class="btn-next" onclick="nextCard('card-results', 13, 15)">Ver resultados →</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTADOS -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">CAPE-15 — Resultado</span>
+        <span class="q-label">Perfil dimensional</span>
+    </div>
+    <div class="card-body">
+        <div class="section-label">Perfil por subescala</div>
+        <div id="subscale-positiva" class="subscale-card"></div>
+        <div id="subscale-negativa" class="subscale-card"></div>
+        <div id="subscale-depresiva" class="subscale-card"></div>
+
+        <div id="alert-item15" class="alert-box" style="display:none">
+            ⚠️ <strong>Ítem 15:</strong> La persona refiere haber tenido pensamientos de que sería mejor estar muerta. Se recomienda explorar directamente el riesgo suicida en la entrevista clínica.
+        </div>
+
+        <div class="section-label">Interpretación clínica</div>
+        <div class="interp-box" id="res-interp"></div>
+
+        <div class="section-label">Puntos de corte — media de frecuencia por subescala (0–3)</div>
+        <table class="cutoff-table">
+            <tr><td><strong>0 – 0.5</strong></td><td>Ausente — sin elevación clínica significativa</td><td class="dot" style="color:#48bb78;">●</td></tr>
+            <tr><td><strong>0.51 – 1.0</strong></td><td>Subclínico — monitorear</td><td class="dot" style="color:#f6ad55;">●</td></tr>
+            <tr><td><strong>1.01 – 1.5</strong></td><td>Clínico — evaluación adicional recomendada</td><td class="dot" style="color:#ed8936;">●</td></tr>
+            <tr><td><strong>&gt; 1.5</strong></td><td>Grave — evaluar síndrome completo</td><td class="dot" style="color:#f56565;">●</td></tr>
+        </table>
+        <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Capra C, et al. (2013). <em>Schizophr Res</em>, 149(1-3), 201–203. Konings M, et al. (2006). <em>Psychosis</em>. CAPE original: Stefanis NC, et al. (2002).</p>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="exportPDF()">Exportar como PDF</button>
+            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* answers[n] = { freq: 0-3, dist: 0-3 } */
+const answers = {};
+
+const items = {
+    1:  "¿Tiene la sensación de que hay mensajes especiales para usted en lo que ve o escucha (televisión, radio, periódicos)?",
+    2:  "¿Cree que ciertas personas no son lo que parecen ser?",
+    3:  "¿Siente que recibe mensajes especiales de alguna manera inusual?",
+    4:  "¿Ha tenido la experiencia de escuchar voces cuando está solo/a?",
+    5:  "¿Siente que algo está interfiriendo con su capacidad de pensar?",
+    6:  "¿Cree que puede influir en otras personas usando solo el pensamiento?",
+    7:  "¿Ha tenido la sensación de que personas a su alrededor no son reales?",
+    8:  "¿Siente que sus pensamientos están siendo controlados por algo externo a usted?",
+    9:  "¿Ha sentido que no le interesan las personas a su alrededor?",
+    10: "¿Siente que es incapaz de experimentar emociones fuertes?",
+    11: "¿Ha sentido que no hay nada que le produzca placer?",
+    12: "¿Se ha sentido incapaz de iniciar cosas porque le parece que todo da igual?",
+    13: "¿Ha tenido la sensación de que no hay esperanza para el futuro?",
+    14: "¿Ha sentido que no vale nada como persona?",
+    15: "¿Ha tenido pensamientos de que sería mejor estar muerto/a?"
+};
+
+const freqLabels = ['Nunca', 'A veces', 'Seguido', 'Casi siempre'];
+const distLabels = ['No molesta', 'Un poco', 'Bastante', 'Mucho'];
+
+const cardItems = {
+    'card-1': [1,2,3],
+    'card-2': [4,5,6],
+    'card-3': [7,8,9],
+    'card-4': [10,11,12],
+    'card-5': [13,14,15]
+};
+
+/* Subscale definitions */
+const subscales = {
+    positiva:  { label: 'Subescala Positiva', desc: 'Psicosis subumbral', items: [1,2,3,4,5,6,7,8] },
+    negativa:  { label: 'Subescala Negativa',  desc: 'Síntomas de desapego', items: [9,10,11,12] },
+    depresiva: { label: 'Subescala Depresiva', desc: 'Estado de ánimo', items: [13,14,15] }
+};
+
+function buildCard(cardId) {
+    const container = document.getElementById('items-' + cardId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    (cardItems[cardId] || []).forEach(n => {
+        const a = answers[n];
+        const bothAnswered = a && a.freq !== undefined && a.dist !== undefined;
+        const div = document.createElement('div');
+        div.className = 'item-row' + (bothAnswered ? ' answered-both' : '');
+        div.id = 'row-' + n;
+
+        div.innerHTML = `
+            <div class="item-text"><span class="item-num-inline">${n}.</span>${items[n]}</div>
+            <div class="dual-selector">
+                <div class="selector-row">
+                    <span class="selector-label">Frecuencia</span>
+                    <div class="opts-row" id="freq-${n}"></div>
+                </div>
+                <div class="selector-row">
+                    <span class="selector-label">Malestar</span>
+                    <div class="opts-row" id="dist-${n}"></div>
+                </div>
+            </div>`;
+        container.appendChild(div);
+
+        const freqEl = div.querySelector('#freq-' + n);
+        freqLabels.forEach((label, val) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-pill freq' + (a && a.freq === val ? ' selected' : '');
+            btn.textContent = label;
+            btn.onclick = () => selectFreq(n, val);
+            freqEl.appendChild(btn);
+        });
+
+        const distEl = div.querySelector('#dist-' + n);
+        distLabels.forEach((label, val) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-pill dist' + (a && a.dist === val ? ' selected' : '');
+            btn.textContent = label;
+            btn.onclick = () => selectDist(n, val);
+            distEl.appendChild(btn);
+        });
+    });
+}
+
+function selectFreq(n, val) {
+    if (!answers[n]) answers[n] = {};
+    answers[n].freq = val;
+    document.querySelectorAll('#freq-' + n + ' .opt-pill').forEach((b, i) => b.classList.toggle('selected', i === val));
+    checkBoth(n);
+}
+
+function selectDist(n, val) {
+    if (!answers[n]) answers[n] = {};
+    answers[n].dist = val;
+    document.querySelectorAll('#dist-' + n + ' .opt-pill').forEach((b, i) => b.classList.toggle('selected', i === val));
+    checkBoth(n);
+}
+
+function checkBoth(n) {
+    const a = answers[n];
+    const row = document.getElementById('row-' + n);
+    if (row && a && a.freq !== undefined && a.dist !== undefined) {
+        row.classList.add('answered-both');
+    }
+}
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (cardItems[id]) buildCard(id);
+    if (id === 'card-results') buildResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextCard(toId, startItem, endItem) {
+    for (let i = startItem; i <= endItem; i++) {
+        const a = answers[i];
+        if (!a || a.freq === undefined || a.dist === undefined) {
+            alert('Por favor responda tanto la frecuencia como el malestar de todos los ítems antes de continuar.');
+            return;
+        }
+    }
+    showCard(toId);
+}
+
+function getLevel(mean) {
+    if (mean <= 0.5)  return ['Ausente',     '#48bb78', 'level-ausente'];
+    if (mean <= 1.0)  return ['Subclínico',  '#f6ad55', 'level-subclinico'];
+    if (mean <= 1.5)  return ['Clínico',     '#ed8936', 'level-clinico'];
+    return                   ['Grave',       '#f56565', 'level-grave'];
+}
+
+function buildSubscaleCard(elId, subKey) {
+    const sub = subscales[subKey];
+    const freqs = sub.items.map(i => answers[i]?.freq ?? 0);
+    const dists = sub.items.map(i => answers[i]?.dist ?? 0);
+    const meanFreq = freqs.reduce((a,b) => a+b, 0) / sub.items.length;
+    const meanDist = dists.reduce((a,b) => a+b, 0) / sub.items.length;
+    const [levelLabel, color, levelClass] = getLevel(meanFreq);
+    const barWidth = (meanFreq / 3) * 100;
+
+    const el = document.getElementById(elId);
+    el.className = 'subscale-card ' + levelClass;
+    el.innerHTML = `
+        <div class="sub-header">
+            <div>
+                <div class="sub-name">${sub.label}</div>
+                <div class="sub-items">${sub.desc} · ítems ${sub.items[0]}–${sub.items[sub.items.length-1]}</div>
+            </div>
+        </div>
+        <div class="sub-score-row">
+            <div class="sub-mean" style="color:${color}">${meanFreq.toFixed(2)}</div>
+            <div class="sub-meta">
+                <div class="sub-level-badge" style="background:${color}18; color:${color}; border:1.5px solid ${color}">${levelLabel}</div>
+                <div class="sub-distress">Malestar promedio: ${meanDist.toFixed(2)} / 3.0</div>
+            </div>
+        </div>
+        <div class="sub-bar-wrap">
+            <div class="sub-bar-fill" style="width:${barWidth}%; background:${color}"></div>
+        </div>`;
+
+    return { meanFreq, meanDist, levelLabel, color };
+}
+
+function buildResults() {
+    const pos = buildSubscaleCard('subscale-positiva',  'positiva');
+    const neg = buildSubscaleCard('subscale-negativa',  'negativa');
+    const dep = buildSubscaleCard('subscale-depresiva', 'depresiva');
+
+    /* Item 15 alert */
+    const item15 = document.getElementById('alert-item15');
+    if (answers[15] && answers[15].freq >= 1) {
+        item15.style.display = 'block';
+    } else {
+        item15.style.display = 'none';
+    }
+
+    /* Clinical interpretation */
+    const elevated = [];
+    if (pos.meanFreq > 0.5) elevated.push(`Positiva (${pos.meanFreq.toFixed(2)} — ${pos.levelLabel})`);
+    if (neg.meanFreq > 0.5) elevated.push(`Negativa (${neg.meanFreq.toFixed(2)} — ${neg.levelLabel})`);
+    if (dep.meanFreq > 0.5) elevated.push(`Depresiva (${dep.meanFreq.toFixed(2)} — ${dep.levelLabel})`);
+
+    let interp;
+    if (elevated.length === 0) {
+        interp = 'No se detectan experiencias psíquicas por encima del umbral subclínico en ninguna de las tres subescalas. Perfil dentro de rangos normativos. Continuar seguimiento de rutina.';
+    } else {
+        const maxFreq = Math.max(pos.meanFreq, neg.meanFreq, dep.meanFreq);
+        let base = `Elevación detectable en: ${elevated.join('; ')}. `;
+        if (pos.meanFreq > 1.0) {
+            base += 'La subescala Positiva elevada puede indicar experiencias de tipo psicótico subumbral. ';
+            if (pos.meanFreq > 1.5) base += 'Se recomienda evaluación clínica completa del espectro psicótico. ';
+        }
+        if (neg.meanFreq > 1.0) {
+            base += 'La subescala Negativa elevada sugiere embotamiento afectivo, anhedonia y/o retirada social. ';
+        }
+        if (dep.meanFreq > 1.0) {
+            base += 'La subescala Depresiva elevada indica estado de ánimo bajo con posible impacto funcional. ';
+        }
+        base += 'Complementar con evaluación clínica dirigida.';
+        interp = base;
+    }
+    document.getElementById('res-interp').textContent = interp;
+}
+
+function exportPDF() {
+    const sub = {};
+    ['positiva','negativa','depresiva'].forEach(key => {
+        const s = subscales[key];
+        const freqs = s.items.map(i => answers[i]?.freq ?? 0);
+        const dists = s.items.map(i => answers[i]?.dist ?? 0);
+        sub[key] = {
+            meanFreq: freqs.reduce((a,b)=>a+b,0)/s.items.length,
+            meanDist: dists.reduce((a,b)=>a+b,0)/s.items.length
+        };
+    });
+
+    const levelOf = m => m <= 0.5 ? 'Ausente' : m <= 1.0 ? 'Subclínico' : m <= 1.5 ? 'Clínico' : 'Grave';
+    const colorOf = m => m <= 0.5 ? '#48bb78' : m <= 1.0 ? '#f6ad55' : m <= 1.5 ? '#ed8936' : '#f56565';
+
+    let rows = '';
+    for (let i = 1; i <= 15; i++) {
+        const a = answers[i];
+        const fText = a && a.freq !== undefined ? freqLabels[a.freq] : '—';
+        const dText = a && a.dist !== undefined ? distLabels[a.dist] : '—';
+        rows += `<tr><td>${i}</td><td>${items[i]}</td><td style="text-align:center">${a?.freq ?? '—'}</td><td>${fText}</td><td style="text-align:center">${a?.dist ?? '—'}</td><td>${dText}</td></tr>`;
+    }
+
+    const subRows = ['positiva','negativa','depresiva'].map(key => {
+        const s = subscales[key];
+        const mf = sub[key].meanFreq.toFixed(2);
+        const md = sub[key].meanDist.toFixed(2);
+        const level = levelOf(sub[key].meanFreq);
+        const c = colorOf(sub[key].meanFreq);
+        return `<tr><td>${s.label}</td><td>Íts. ${s.items[0]}–${s.items[s.items.length-1]}</td><td style="text-align:center;font-weight:700;color:${c}">${mf}</td><td style="color:${c};font-weight:700">${level}</td><td style="text-align:center">${md}</td></tr>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CAPE-15</title>
+<style>
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:720px;margin:0 auto}
+h1{color:#2d1b69;font-size:20px;margin-bottom:4px}
+.meta{font-size:12px;color:#718096;margin-bottom:20px}
+h3{font-size:13px;color:#553c9a;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin-bottom:10px}
+th{background:#f7fafc;padding:8px 10px;text-align:left;font-size:11px;color:#718096;text-transform:uppercase}
+td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12px}
+.footer{margin-top:24px;font-size:10px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:8px}
+</style></head><body>
+<h1>CAPE-15 — Evaluación de Experiencias Psíquicas</h1>
+<div class="meta">Community Assessment of Psychic Experiences (versión breve 15 ítems) · Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+<h3>Resumen por subescala</h3>
+<table>
+<tr><th>Subescala</th><th>Ítems</th><th>Media frec.</th><th>Nivel</th><th>Media malestar</th></tr>
+${subRows}
+</table>
+<h3>Respuestas detalladas</h3>
+<table>
+<tr><th>#</th><th>Ítem</th><th>Frec.</th><th>Respuesta</th><th>Males.</th><th>Malestar</th></tr>
+${rows}
+</table>
+<div class="footer">CAPE-15 · Capra C, et al. (2013). Schizophr Res, 149(1-3), 201–203. · Sistema HiTOP — Instrumento de apoyo diagnóstico.</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 600);
+}
+
+function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    showCard('card-0');
+}
+
+showCard('card-0');
+</script>
+</body>
+</html>
