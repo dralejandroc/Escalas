@@ -1159,6 +1159,114 @@ function updateFuncVal(area, val) {
     scores['func'] = sum;
 }
 
+/* ── Radar chart (Canvas hexagonal) ──────────────────── */
+function drawRadar(canvasId, spLevels) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const maxR = Math.min(W, H) / 2 - 48;
+
+    // Labels in order: INT, SOM, PEN, DES, ANT, DIS (clockwise from top)
+    const labels  = ['INT','SOM','PEN','DES','ANT','DIS'];
+    const fullLbl = ['Internalizante','Somatoforme','T. Pensamiento','Desapego','Antagónico','Desinhibido'];
+    const n = 6;
+    const step = (2 * Math.PI) / n;
+    const startAngle = -Math.PI / 2; // top
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid rings (0.5, 1, 1.5, 2, 2.5, 3)
+    const rings = [0.5, 1, 1.5, 2, 2.5, 3];
+    rings.forEach((r, ri) => {
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+            const angle = startAngle + i * step;
+            const px = cx + (r / 3) * maxR * Math.cos(angle);
+            const py = cy + (r / 3) * maxR * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = ri === 5 ? '#9f7aea' : '#e9d5ff';
+        ctx.lineWidth = ri === 5 ? 1.5 : 1;
+        ctx.stroke();
+        // Ring label (right side)
+        const lx = cx + (r / 3) * maxR * Math.cos(startAngle + 0 * step);
+        ctx.fillStyle = '#a78bfa';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(r.toFixed(1), lx + 3, cy - (r / 3) * maxR - 2);
+    });
+
+    // Axes
+    for (let i = 0; i < n; i++) {
+        const angle = startAngle + i * step;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + maxR * Math.cos(angle), cy + maxR * Math.sin(angle));
+        ctx.strokeStyle = '#d8b4fe';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    // Data polygon
+    const lvColors = ['rgba(22,101,52,', 'rgba(146,64,14,', 'rgba(194,65,12,', 'rgba(153,27,27,'];
+    const maxLv = Math.max(0, ...Object.values(spLevels).filter(v => v >= 0));
+    const fillColor = lvColors[maxLv] || lvColors[0];
+
+    ctx.beginPath();
+    let anyData = false;
+    for (let i = 0; i < n; i++) {
+        const lv = spLevels[i + 1];
+        const val = lv >= 0 ? lv : 0;
+        if (lv >= 0) anyData = true;
+        const angle = startAngle + i * step;
+        const r = (val / 3) * maxR;
+        const px = cx + r * Math.cos(angle);
+        const py = cy + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    if (anyData) {
+        ctx.fillStyle = fillColor + '0.28)';
+        ctx.fill();
+        ctx.strokeStyle = fillColor + '0.85)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+    }
+
+    // Dots at data points
+    for (let i = 0; i < n; i++) {
+        const lv = spLevels[i + 1];
+        if (lv < 0) continue;
+        const angle = startAngle + i * step;
+        const r = (lv / 3) * maxR;
+        ctx.beginPath();
+        ctx.arc(cx + r * Math.cos(angle), cy + r * Math.sin(angle), 5, 0, 2 * Math.PI);
+        ctx.fillStyle = fillColor + '1)';
+        ctx.fill();
+    }
+
+    // Axis labels
+    for (let i = 0; i < n; i++) {
+        const angle = startAngle + i * step;
+        const lx = cx + (maxR + 26) * Math.cos(angle);
+        const ly = cy + (maxR + 26) * Math.sin(angle);
+        ctx.fillStyle = '#553c9a';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(labels[i], lx, ly);
+        ctx.font = '9px sans-serif';
+        ctx.fillStyle = '#9ca3af';
+        ctx.fillText(fullLbl[i], lx, ly + 12);
+    }
+
+    // Severity level marks on top axis
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+}
+
 /* ── Build results ────────────────────────────────────── */
 function buildResults() {
     goTo(8);
@@ -1167,7 +1275,7 @@ function buildResults() {
         '', 'Internalizante', 'Somatoforme', 'T. del Pensamiento',
         'Desapego', 'Antagónico', 'Desinhibido'
     ];
-    const spectraEmojis = ['','🌧️','🫀','🔮','🧊','⚔️','⚡'];
+    const spectraEmojis  = ['','🌧️','🫀','🔮','🧊','⚔️','⚡'];
     const spectraBadgeClass = ['','sp-int','sp-som','sp-pen','sp-det','sp-ant','sp-des'];
 
     // Compute spectral levels
@@ -1188,125 +1296,189 @@ function buildResults() {
         if (maxLv >= 0) { evaluatedCount++; totalWeight += maxLv; }
     }
 
-    // p-factor orientativo (0–3 mean of evaluated spectra)
     const pFactor = evaluatedCount > 0 ? (totalWeight / evaluatedCount).toFixed(2) : null;
-    const funcMean = scores['func'] !== undefined ? scores['func'] : null;
+    const funcSum = scores['func'] !== undefined ? scores['func'] : null;
 
     let html = '';
 
-    // Header summary
-    html += `<div style="margin-bottom:20px;">
-        <div style="font-size:22px;font-weight:800;color:#2d1b69;margin-bottom:4px;">Perfil Dimensional HiTOP</div>
+    // Header
+    html += `<div style="margin-bottom:18px;">
+        <div style="font-size:22px;font-weight:800;color:#2d1b69;margin-bottom:3px;">Perfil Dimensional HiTOP</div>
         <div style="font-size:13px;color:#6b7280;">Síntesis espectral orientativa · ${new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</div>
     </div>`;
 
-    // Spectral levels table
-    html += `<table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px;">
+    // Radar canvas placeholder (will be drawn after innerHTML set)
+    html += `<div style="display:flex;justify-content:center;margin-bottom:20px;">
+        <canvas id="radar-canvas" width="380" height="320" style="max-width:100%;"></canvas>
+    </div>`;
+
+    // p-factor bar
+    if (pFactor !== null) {
+        const pfLv = parseFloat(pFactor) < 0.5 ? 0 : parseFloat(pFactor) < 1.0 ? 1 : parseFloat(pFactor) < 2.0 ? 2 : 3;
+        const pfPct = Math.round((parseFloat(pFactor) / 3) * 100);
+        html += `<div class="synthesis-box" style="margin-bottom:16px;gap:18px;">
+            <div style="flex:1;">
+                <div class="synthesis-label">Factor p — Carga psicopatológica general</div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0;">
+                    <span class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][pfLv] };">${lvlEmojis[pfLv]} ${pFactor}</span>
+                    <span style="font-size:13px;color:#9ca3af;">/ 3.00</span>
+                </div>
+                <div style="height:8px;background:#e9d5ff;border-radius:4px;overflow:hidden;margin-bottom:4px;">
+                    <div style="height:100%;width:${pfPct}%;background:${ ['#166534','#92400e','#c2410c','#991b1b'][pfLv] };border-radius:4px;transition:width .4s;"></div>
+                </div>
+                <div class="synthesis-desc">${evaluatedCount} de 6 espectros evaluados · Bajo &lt;0.50 · Moderado &lt;1.0 · Elevado &lt;2.0 · Muy elevado ≥2.0</div>
+            </div>
+        </div>`;
+    }
+
+    // Spectral table
+    html += `<table style="width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px;">
         <thead><tr style="background:#ede9fe;">
-            <th style="padding:9px 10px;text-align:left;font-weight:700;color:#553c9a;border-radius:8px 0 0 0;">Espectro</th>
-            <th style="padding:9px 10px;text-align:left;font-weight:700;color:#553c9a;">Nivel HiTOP</th>
-            <th style="padding:9px 10px;text-align:left;font-weight:700;color:#553c9a;border-radius:0 8px 0 0;">Escalas ingresadas</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:700;color:#553c9a;">Espectro</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:700;color:#553c9a;">Nivel HiTOP</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:700;color:#553c9a;">Escalas</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:700;color:#553c9a;">Acción sugerida</th>
         </tr></thead><tbody>`;
+
+    const actions = [
+        '',
+        'Evaluar Depresión Mayor, T. Ansiedad, TEPT. Considerar intervención psicoterapéutica y/o farmacológica.',
+        'Evaluar T. Síntomas Somáticos, T. Conversión. Coordinación con medicina general.',
+        'Descartar psicosis. Evaluar T. Esquizotípico o espectro. Considerar antipsicóticos.',
+        'Evaluar T. Esquizoide, T. Evitativo. Psicoterapia orientada a vínculos.',
+        'Evaluar T. Narcisista, T. Paranoide, Psicopatía. Derivar a especialista en personalidad.',
+        'Evaluar T. por Sustancias, TDAH, T. Antisocial. Intervención motivacional y/o farmacológica.',
+    ];
 
     for (let sp = 1; sp <= 6; sp++) {
         const lv = spLevels[sp];
         const lvText = lv >= 0 ? (lvlEmojis[lv] + ' ' + lvlNames[lv]) : '— No evaluado';
         const lvColor = lv >= 0 ? ['#166534','#92400e','#c2410c','#991b1b'][lv] : '#9ca3af';
         const keysUsed = (spectraKeys[sp] || []).filter(k => scores[k] !== undefined);
-        const allUsed = keysUsed.map(k => k.toUpperCase().replace('CAPE15NEG','CAPE-15 Neg').replace('PID5','PID-5 '));
+        const allUsed = keysUsed.map(k => k.replace('cape15neg','CAPE-15 Neg').replace('cape15','CAPE-15').replace('pid5psic','PID-5 Psic').replace('pid5det','PID-5 Det').replace('pid5ant','PID-5 Ant').replace('pid5dis','PID-5 Dis').replace('phq9','PHQ-9').replace('phq15','PHQ-15').replace('hars','HARS').replace('pcl5','PCL-5').replace('pas','PAS').replace('audit','AUDIT').replace('dudit','DUDIT').replace('tdah','ASRS'));
+        const actionText = lv >= 2 ? actions[sp] : (lv === 1 ? 'Monitorear evolución. Re-evaluar en próxima consulta.' : (lv === 0 ? 'Sin acción inmediata.' : '—'));
 
-        html += `<tr style="border-bottom:1px solid #f3f0ff;">
-            <td style="padding:9px 10px;">
-                ${spectraEmojis[sp]} <span class="spectrum-badge ${spectraBadgeClass[sp]}">${spectraNames[sp]}</span>
-            </td>
-            <td style="padding:9px 10px;font-weight:700;color:${lvColor};">${lvText}</td>
-            <td style="padding:9px 10px;font-size:12px;color:#6b7280;">${allUsed.length ? allUsed.join(', ') : '—'}</td>
+        html += `<tr style="border-bottom:1px solid #f3f0ff;vertical-align:top;">
+            <td style="padding:8px 10px;">${spectraEmojis[sp]} <span class="spectrum-badge ${spectraBadgeClass[sp]}">${spectraNames[sp]}</span></td>
+            <td style="padding:8px 10px;font-weight:700;color:${lvColor};white-space:nowrap;">${lvText}</td>
+            <td style="padding:8px 10px;font-size:11px;color:#6b7280;">${allUsed.join(', ') || '—'}</td>
+            <td style="padding:8px 10px;font-size:11px;color:#374151;">${actionText}</td>
         </tr>`;
     }
     html += '</tbody></table>';
 
-    // p-factor box
-    if (pFactor !== null) {
-        const pfLv = parseFloat(pFactor) < 0.5 ? 0 : parseFloat(pFactor) < 1.0 ? 1 : parseFloat(pFactor) < 2.0 ? 2 : 3;
-        html += `<div class="synthesis-box" style="margin-bottom:16px;">
-            <div>
-                <div class="synthesis-label">Factor p — Carga psicopatológica general</div>
-                <div class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][pfLv] };">${lvlEmojis[pfLv]} ${pFactor} / 3.00</div>
-                <div class="synthesis-desc">Media de los niveles espectrales evaluados (0=Subclínico, 3=Grave). ${evaluatedCount} de 6 espectros evaluados.</div>
-            </div>
-        </div>`;
-    }
-
     // Functional deterioration
-    const funcSum = scores['func'] !== null && scores['func'] !== undefined ? scores['func'] : null;
     if (funcSum !== null) {
         const fLv = funcSum <= 2 ? 0 : funcSum <= 6 ? 1 : funcSum <= 11 ? 2 : 3;
         html += `<div class="synthesis-box" style="margin-bottom:16px;">
             <div>
                 <div class="synthesis-label">Deterioro funcional global</div>
-                <div class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][fLv] };">${funcSum} / 16</div>
-                <div class="synthesis-desc">Suma de las cuatro áreas vitales (0–4 c/u). 0–2=Mínimo · 3–6=Leve · 7–11=Moderado · 12–16=Grave.</div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0;">
+                    <span class="synthesis-level" style="color:${ ['#166534','#92400e','#c2410c','#991b1b'][fLv] };">${funcSum}</span>
+                    <span style="font-size:13px;color:#9ca3af;">/ 16</span>
+                </div>
+                <div class="synthesis-desc">Suma 4 áreas vitales (0–4 c/u). 0–2=Mínimo · 3–6=Leve · 7–11=Moderado · 12–16=Grave.</div>
             </div>
         </div>`;
     }
 
-    // Presumptive patterns
+    // Presumptive diagnosis
     const patterns = [];
-    if (spLevels[1] >= 2 && spLevels[2] >= 2)
-        patterns.push('Presentación internalizante-somática comórbida: evaluar T. de síntomas somáticos o T. conversión.');
-    if (spLevels[3] >= 2)
-        patterns.push('Carga en espectro T. del Pensamiento moderada/grave: descartar psicosis, T. esquizotípico o T. del pensamiento subclínico.');
-    if (spLevels[4] >= 2 && spLevels[3] >= 1)
-        patterns.push('Combinación Desapego + T. del Pensamiento: patrón compatible con Cluster A (esquizoide/esquizotípico).');
-    if (spLevels[4] >= 2 && spLevels[5] >= 2)
-        patterns.push('Combinación Desapego + Antagónico: patrón compatible con Trastorno Narcisista o Paranoide.');
+    if (spLevels[1] >= 2 && spLevels[2] < 1 && spLevels[3] < 1)
+        patterns.push({ dx: 'T. Depresivo Mayor / T. de Ansiedad', ev: 'Espectro Internalizante predominante sin carga somática ni psicótica.', lv: spLevels[1] });
+    if (spLevels[1] >= 2 && spLevels[2] >= 1)
+        patterns.push({ dx: 'T. Depresivo con síntomas somáticos / T. Síntomas Somáticos', ev: 'Carga internalizante + somatoforme. Descartar etiología médica.', lv: Math.max(spLevels[1], spLevels[2]) });
+    if (spLevels[3] >= 2 && spLevels[4] >= 1)
+        patterns.push({ dx: 'Espectro Esquizofrénico (Cluster A)', ev: 'T. del Pensamiento + Desapego. Evaluar T. Esquizotípico o Psicosis.', lv: Math.max(spLevels[3], spLevels[4]) });
+    if (spLevels[3] >= 2 && spLevels[4] < 1)
+        patterns.push({ dx: 'T. del Pensamiento subclínico / Psicosis de inicio', ev: 'Carga en espectro T. Pensamiento sin desapego marcado. Monitoreo estrecho.', lv: spLevels[3] });
     if (spLevels[5] >= 2 && spLevels[6] >= 2)
-        patterns.push('Combinación Antagónico + Desinhibido: patrón compatible con Trastorno Antisocial de la Personalidad.');
-    if (spLevels[1] >= 2 && spLevels[4] >= 2)
-        patterns.push('Combinación Internalizante + Desapego: evaluar T. depresivo mayor con rasgos anhedónicos o T. esquizoafectivo depresivo.');
+        patterns.push({ dx: 'T. Antisocial de la Personalidad', ev: 'Combinación Antagónico + Desinhibido. Alta especificidad para ASPD.', lv: Math.max(spLevels[5], spLevels[6]) });
+    if (spLevels[1] >= 2 && spLevels[5] >= 1 && spLevels[6] >= 1)
+        patterns.push({ dx: 'T. Límite de Personalidad (espectro)', ev: 'Internalizante + Antagónico + Desinhibido: patrón compatible con TLP.', lv: Math.max(spLevels[1], spLevels[5], spLevels[6]) });
+    if (spLevels[6] >= 2 && spLevels[5] < 1)
+        patterns.push({ dx: 'T. por Sustancias / TDAH', ev: 'Espectro Desinhibido predominante sin antagonismo. Evaluar AUDIT/DUDIT/ASRS.', lv: spLevels[6] });
+    if (spLevels[4] >= 2 && spLevels[5] < 1 && spLevels[6] < 1)
+        patterns.push({ dx: 'T. Esquizoide / T. Evitativo de Personalidad', ev: 'Desapego sin antagonismo ni desinhibición. Valorar introversión vs. evitación.', lv: spLevels[4] });
 
     if (patterns.length > 0) {
         html += `<div class="info-box" style="margin-bottom:16px;">
-            <strong>Patrones clínicos identificados:</strong><br>
-            <ul style="margin-top:6px;padding-left:16px;line-height:2;">`;
-        patterns.forEach(p => { html += `<li>${p}</li>`; });
-        html += `</ul></div>`;
+            <strong>Diagnóstico presuntivo HiTOP:</strong>
+            <div style="margin-top:8px;">`;
+        patterns.forEach(p => {
+            const dxColor = ['#166534','#92400e','#c2410c','#991b1b'][p.lv] || '#374151';
+            html += `<div style="border-left:3px solid ${dxColor};padding:6px 10px;margin-bottom:8px;background:#fff;border-radius:0 6px 6px 0;">
+                <div style="font-weight:700;color:${dxColor};font-size:13px;">${p.dx}</div>
+                <div style="font-size:12px;color:#6b7280;margin-top:2px;">${p.ev}</div>
+            </div>`;
+        });
+        html += `</div></div>`;
+    } else if (evaluatedCount > 0) {
+        const maxAny = Math.max(...Object.values(spLevels));
+        if (maxAny <= 0) {
+            html += `<div class="info-box" style="margin-bottom:16px;">
+                <strong>Perfil dentro de rangos normativos.</strong> Todos los espectros evaluados se encuentran en nivel Subclínico o inferior. No se identifican patrones clínicos de relevancia en este momento.
+            </div>`;
+        }
+    }
+
+    // Scores ingresados
+    const scoreLines = Object.keys(scores).filter(k => k !== 'func' && scores[k] !== undefined)
+        .map(k => `${k.toUpperCase()}: ${scores[k]}`).join(' · ');
+    if (scoreLines) {
+        html += `<div style="font-size:11px;color:#9ca3af;margin-bottom:14px;padding:8px 12px;background:#f9fafb;border-radius:6px;">
+            <strong style="color:#6b7280;">Scores ingresados:</strong> ${scoreLines}
+            ${ funcSum !== null ? ` · Deterioro funcional: ${funcSum}/16` : '' }
+        </div>`;
     }
 
     // Disclaimer
-    html += `<div class="disclaimer">⚠️ Este perfil es orientativo y no constituye un diagnóstico formal. Los niveles HiTOP son aproximaciones basadas en puntuaciones de escalas de cribado. El diagnóstico clínico requiere integración con historia clínica, entrevista y juicio profesional. Modelo HiTOP: Kotov et al. (2017).</div>`;
+    html += `<div class="disclaimer">⚠️ <strong>Uso exclusivo profesional.</strong> Este perfil es orientativo y no constituye un diagnóstico formal. Los niveles HiTOP se basan en puntuaciones de escalas de cribado. El diagnóstico clínico requiere integración con historia clínica, entrevista y juicio profesional. Modelo HiTOP: Kotov et al. (2017). <em>J Abnorm Psychol</em>, 126(4), 454–477.</div>`;
+
+    html += `<div style="font-size:10px;color:#c4b5fd;text-align:right;margin-top:10px;">HiTOP Navigator v1.0 · Sistema HiTOP — creación propia · Uso clínico orientativo</div>`;
 
     document.getElementById('results-content').innerHTML = html;
+
+    // Draw radar after DOM update
+    requestAnimationFrame(() => drawRadar('radar-canvas', spLevels));
 }
 
-/* ── PDF export ───────────────────────────────────────── */
+/* ── PDF export with radar image ─────────────────────── */
 function printResults() {
+    const canvas = document.getElementById('radar-canvas');
+    const radarImg = canvas ? canvas.toDataURL('image/png') : null;
+
     const content = document.getElementById('results-content').innerHTML;
+    // Replace canvas with img for PDF
+    const pdfContent = radarImg
+        ? content.replace(/<canvas[^>]*><\/canvas>/, `<img src="${radarImg}" style="max-width:380px;display:block;margin:0 auto;" alt="Radar HiTOP">`)
+        : content;
+
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`<!DOCTYPE html><html lang="es"><head>
         <meta charset="UTF-8">
-        <title>Perfil HiTOP</title>
+        <title>Perfil HiTOP — ${new Date().toLocaleDateString('es-CL')}</title>
         <style>
-            body { font-family: Arial, sans-serif; padding: 28px; color: #1a202c; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-            th { background: #ede9fe; color: #553c9a; padding: 8px; text-align: left; }
-            td { padding: 8px; border-bottom: 1px solid #e9d5ff; }
-            .synthesis-box { background: #f5f3ff; border: 2px solid #c4b5fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; }
-            .synthesis-label { font-size: 12px; font-weight: 600; color: #553c9a; }
+            body { font-family: Arial, sans-serif; padding: 28px; color: #1a202c; font-size: 13px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+            th { background: #ede9fe; color: #553c9a; padding: 7px 9px; text-align: left; font-size: 12px; }
+            td { padding: 7px 9px; border-bottom: 1px solid #e9d5ff; vertical-align: top; font-size: 12px; }
+            .synthesis-box { background: #f5f3ff; border: 2px solid #c4b5fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; display:flex; gap:18px; }
+            .synthesis-label { font-size: 11px; font-weight: 600; color: #553c9a; }
             .synthesis-level { font-size: 20px; font-weight: 800; color: #2d1b69; }
-            .synthesis-desc { font-size: 11px; color: #6b7280; }
-            .info-box { background: #f5f3ff; border-left: 4px solid #553c9a; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; }
-            .disclaimer { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #78350f; }
-            .spectrum-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+            .synthesis-desc { font-size: 10px; color: #6b7280; }
+            .info-box { background: #f5f3ff; border-left: 4px solid #553c9a; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+            .disclaimer { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 10px 12px; font-size: 10px; color: #78350f; }
+            .spectrum-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
             .sp-int { background: #dbeafe; color: #1e40af; }
             .sp-som { background: #d1fae5; color: #065f46; }
             .sp-pen { background: #fae8ff; color: #701a75; }
             .sp-det { background: #e0e7ff; color: #3730a3; }
             .sp-ant { background: #fee2e2; color: #991b1b; }
             .sp-des { background: #fef3c7; color: #92400e; }
-            @media print { body { padding: 0; } }
+            @media print { body { padding: 12px; } }
         </style>
-    </head><body>${content}</body></html>`);
+    </head><body>${pdfContent}</body></html>`);
     printWindow.document.close();
     printWindow.print();
 }
