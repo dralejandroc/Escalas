@@ -288,6 +288,50 @@
             padding: 30px 20px;
         }
 
+        /* Spectrum selector card */
+        .selector-tile {
+            border: 2px solid #e9d5ff;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+            transition: all .2s;
+            background: #fff;
+        }
+        .selector-tile:hover { border-color: #9f7aea; background: #faf8ff; }
+        .selector-tile.selected { border-color: #553c9a; background: #f5f3ff; }
+        .selector-tile-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+        .selector-tile-body { flex: 1; }
+        .selector-tile-name { font-size: 15px; font-weight: 800; color: #2d1b69; margin-bottom: 4px; }
+        .selector-tile-cues { font-size: 12px; color: #6b7280; line-height: 1.55; }
+        .selector-toggle {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 2px solid #c4b5fd; background: #fff; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; transition: all .2s;
+        }
+        .selector-tile.selected .selector-toggle { background: #553c9a; border-color: #553c9a; color: #fff; }
+        .selector-controls { display: flex; gap: 10px; margin-bottom: 16px; }
+        .btn-sel-all {
+            padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            cursor: pointer; border: 2px solid #553c9a; background: #553c9a; color: #fff; transition: all .2s;
+        }
+        .btn-sel-all:hover { background: #3d2a75; }
+        .btn-sel-clear {
+            padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            cursor: pointer; border: 2px solid #c4b5fd; background: #fff; color: #553c9a; transition: all .2s;
+        }
+        .btn-sel-clear:hover { background: #f5f3ff; }
+
+        /* Inline spectrum badge on scale rows */
+        .sir-spectrum-badge {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px; margin-bottom: 3px;
+        }
+
         @media (max-width: 600px) {
             .card-body { padding: 20px 18px 18px; }
             .func-grid { grid-template-columns: 1fr; }
@@ -441,7 +485,39 @@
             ⚠️ <strong>Uso exclusivo profesional.</strong> Este Navigator es una herramienta de apoyo clínico. No reemplaza la evaluación psicopatológica completa ni establece diagnósticos formales. Los resultados deben integrarse con la historia clínica, la entrevista y el juicio clínico del profesional tratante. Modelo HiTOP: Kotov et al. (2017). <em>Psychological Medicine</em>.
         </div>
 
-        <button class="btn-start" onclick="goTo(1)">Iniciar evaluación dimensional →</button>
+        <button class="btn-start" onclick="goTo('selector')">Seleccionar espectros →</button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ CARD SELECTOR: SELECCIÓN DE ESPECTROS -->
+<div class="card-wrap" id="card-selector">
+    <div class="card-header">
+        <span class="scale-name">Selección de Espectros</span>
+        <span class="card-badge">PASO 1 · CLÍNICO</span>
+    </div>
+    <div class="card-body">
+        <div class="nav-title" style="font-size:20px;">¿Qué espectros evaluar?</div>
+        <div class="nav-subtitle">Seleccione solo los espectros relevantes para la presentación clínica de su paciente</div>
+
+        <div class="info-box">
+            <strong>Orientación clínica:</strong> Seleccione los espectros que correspondan a los síntomas dominantes del paciente. Puede evaluar desde 1 hasta los 6 espectros. Los espectros no seleccionados aparecerán como «No seleccionado» en el perfil final y serán omitidos del flujo de evaluación.
+        </div>
+
+        <div class="selector-controls">
+            <button class="btn-sel-all" onclick="selAll()">Seleccionar todos</button>
+            <button class="btn-sel-clear" onclick="selNone()">Deseleccionar todos</button>
+        </div>
+
+        <div id="selector-tiles"></div>
+
+        <div id="sel-warning" style="display:none;background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#991b1b;margin-bottom:12px;">
+            ⚠️ Seleccione al menos un espectro para continuar.
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-back" onclick="goTo(0)">← Guía</button>
+            <button class="btn-next" onclick="buildFlow()">Continuar con evaluación →</button>
+        </div>
     </div>
 </div>
 
@@ -470,6 +546,7 @@
         <!-- PHQ-9 -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-int">Internalizante</span>
                 <div class="sir-scale-name">PHQ-9</div>
                 <div class="sir-scale-full">Patient Health Questionnaire-9</div>
                 <div class="sir-range">Rango: 0–27</div>
@@ -490,6 +567,7 @@
         <!-- HARS -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-int">Internalizante</span>
                 <div class="sir-scale-name">HARS</div>
                 <div class="sir-scale-full">Hamilton Anxiety Rating Scale</div>
                 <div class="sir-range">Rango: 0–56</div>
@@ -510,6 +588,7 @@
         <!-- PCL-5 -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-int">Internalizante</span>
                 <div class="sir-scale-name">PCL-5</div>
                 <div class="sir-scale-full">PTSD Checklist for DSM-5</div>
                 <div class="sir-range">Rango: 0–80</div>
@@ -530,6 +609,7 @@
         <!-- PAS -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-int">Internalizante</span>
                 <div class="sir-scale-name">PAS</div>
                 <div class="sir-scale-full">Panic and Agoraphobia Scale</div>
                 <div class="sir-range">Rango: 0–52</div>
@@ -557,8 +637,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(0)">← Guía</button>
-            <button class="btn-next" onclick="goTo(2)">Somatoforme →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -588,6 +668,7 @@
         <!-- PHQ-15 -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-som">Somatoforme</span>
                 <div class="sir-scale-name">PHQ-15</div>
                 <div class="sir-scale-full">Patient Health Questionnaire-15 (Síntomas Somáticos)</div>
                 <div class="sir-range">Rango: 0–30</div>
@@ -614,8 +695,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(1)">← Internalizante</button>
-            <button class="btn-next" onclick="goTo(3)">T. del Pensamiento →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -645,6 +726,7 @@
         <!-- CAPE-15 Positiva -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-pen">T. del Pensamiento</span>
                 <div class="sir-scale-name">CAPE-15 · Subescala Positiva</div>
                 <div class="sir-scale-full">Community Assessment of Psychic Experiences — 15 (media ítems 1–8)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -665,6 +747,7 @@
         <!-- PID-5 Psicoticismo -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-pen">T. del Pensamiento</span>
                 <div class="sir-scale-name">PID-5 Brief · Dominio Psicoticismo</div>
                 <div class="sir-scale-full">Personality Inventory for DSM-5 Brief Form — dominio Psicoticismo (media ítems 21–25)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -691,8 +774,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(2)">← Somatoforme</button>
-            <button class="btn-next" onclick="goTo(4)">Desapego →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -718,6 +801,7 @@
         <!-- CAPE-15 Negativa -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-det">Desapego</span>
                 <div class="sir-scale-name">CAPE-15 · Subescala Negativa</div>
                 <div class="sir-scale-full">Community Assessment of Psychic Experiences — 15 (media ítems 9–12)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -738,6 +822,7 @@
         <!-- PID-5 Desapego -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-det">Desapego</span>
                 <div class="sir-scale-name">PID-5 Brief · Dominio Desapego</div>
                 <div class="sir-scale-full">Personality Inventory for DSM-5 Brief Form — dominio Desapego (media ítems 6–10)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -764,8 +849,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(3)">← T. del Pensamiento</button>
-            <button class="btn-next" onclick="goTo(5)">Antagónico →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -791,6 +876,7 @@
         <!-- PID-5 Antagonismo -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-ant">Antagónico</span>
                 <div class="sir-scale-name">PID-5 Brief · Dominio Antagonismo</div>
                 <div class="sir-scale-full">Personality Inventory for DSM-5 Brief Form — dominio Antagonismo (media ítems 11–15)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -817,8 +903,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(4)">← Desapego</button>
-            <button class="btn-next" onclick="goTo(6)">Desinhibido →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -844,6 +930,7 @@
         <!-- PID-5 Desinhibición -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-des">Desinhibido</span>
                 <div class="sir-scale-name">PID-5 Brief · Dominio Desinhibición</div>
                 <div class="sir-scale-full">Personality Inventory for DSM-5 Brief Form — dominio Desinhibición (media ítems 16–20)</div>
                 <div class="sir-range">Rango: 0.00–3.00</div>
@@ -864,6 +951,7 @@
         <!-- AUDIT -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-des">Desinhibido</span>
                 <div class="sir-scale-name">AUDIT</div>
                 <div class="sir-scale-full">Alcohol Use Disorders Identification Test</div>
                 <div class="sir-range">Rango: 0–40</div>
@@ -884,6 +972,7 @@
         <!-- DUDIT -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-des">Desinhibido</span>
                 <div class="sir-scale-name">DUDIT</div>
                 <div class="sir-scale-full">Drug Use Disorders Identification Test</div>
                 <div class="sir-range">Rango: 0–44</div>
@@ -904,6 +993,7 @@
         <!-- ASRS -->
         <div class="scale-input-row">
             <div class="sir-left">
+                <span class="sir-spectrum-badge sp-des">Desinhibido</span>
                 <div class="sir-scale-name">ASRS / TDAH · Parte A</div>
                 <div class="sir-scale-full">Adult ADHD Self-Report Scale v1.1 — n.º de ítems positivos en Parte A (6 ítems)</div>
                 <div class="sir-range">Rango: 0–6 ítems positivos</div>
@@ -930,8 +1020,8 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(5)">← Antagónico</button>
-            <button class="btn-next" onclick="goTo(7)">Deterioro funcional →</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
+            <button class="btn-next" onclick="nextInFlow()">Siguiente →</button>
         </div>
     </div>
 </div>
@@ -994,7 +1084,7 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-back" onclick="goTo(6)">← Desinhibido</button>
+            <button class="btn-back" onclick="prevInFlow()">← Atrás</button>
             <button class="btn-next" onclick="buildResults()">Ver perfil HiTOP →</button>
         </div>
     </div>
@@ -1018,35 +1108,114 @@
 </div>
 
 <script>
+/* ── Spectra data ─────────────────────────────────────── */
+const spectraData = [
+    { id:1, icon:'🌧️', name:'Internalizante',    cls:'sp-int', cues:'Tristeza persistente · Ansiedad · Miedos · Trauma · Evitación · Rumiación' },
+    { id:2, icon:'🫀', name:'Somatoforme',       cls:'sp-som', cues:'Síntomas físicos sin causa médica · Hipocondría · Fatiga inexplicada' },
+    { id:3, icon:'🔮', name:'T. del Pensamiento',cls:'sp-pen', cues:'Ideas extrañas · Voces · Suspicacia · Pensamiento desorganizado' },
+    { id:4, icon:'🧊', name:'Desapego',          cls:'sp-det', cues:'Aplanamiento afectivo · Anhedonia · Aislamiento · Frialdad emocional' },
+    { id:5, icon:'⚔️', name:'Antagónico',        cls:'sp-ant', cues:'Hostilidad · Grandiosidad · Manipulación · Callousness' },
+    { id:6, icon:'⚡', name:'Desinhibido',       cls:'sp-des', cues:'Impulsividad · Alcohol/Drogas · TDAH · Conductas de riesgo' },
+];
+
+let selectedSpectra = new Set([1,2,3,4,5,6]);
+let flowSequence = ['selector',1,2,3,4,5,6,7];
+let flowIdx = 0;
+
 /* ── Navigation ───────────────────────────────────────── */
-const TOTAL_STEPS = 8;
 function goTo(n) {
     document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
     document.getElementById('card-' + n).classList.add('active');
-    buildStepper(n);
+    if (typeof n === 'number' && n >= 1 && n <= 7) buildDynamicStepper(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function buildStepper(current) {
-    const labels = ['G','1','2','3','4','5','6','7'];
+function nextInFlow() {
+    if (flowIdx < flowSequence.length - 1) { flowIdx++; goTo(flowSequence[flowIdx]); }
+}
+
+function prevInFlow() {
+    if (flowIdx > 0) { flowIdx--; goTo(flowSequence[flowIdx]); }
+}
+
+/* ── Stepper ──────────────────────────────────────────── */
+function buildDynamicStepper(current) {
+    const icons = { 1:'🌧️', 2:'🫀', 3:'🔮', 4:'🧊', 5:'⚔️', 6:'⚡' };
+    const steps = [...Array.from(selectedSpectra).sort((a,b)=>a-b), 7];
     for (let s = 1; s <= 7; s++) {
         const el = document.getElementById('stepper-' + s);
         if (!el) continue;
         el.innerHTML = '';
-        labels.forEach((lbl, i) => {
+        steps.forEach((stepNum, i) => {
             const dot = document.createElement('div');
             dot.className = 'step-dot';
-            if (i < current) dot.classList.add('done');
-            else if (i === current) dot.classList.add('current');
-            dot.textContent = lbl;
+            if (stepNum < current) dot.classList.add('done');
+            else if (stepNum === current) dot.classList.add('current');
+            dot.textContent = stepNum === 7 ? '⚖️' : (icons[stepNum] || stepNum);
             el.appendChild(dot);
-            if (i < labels.length - 1) {
+            if (i < steps.length - 1) {
                 const conn = document.createElement('div');
-                conn.className = 'step-connector' + (i < current ? ' done' : '');
+                conn.className = 'step-connector' + (stepNum < current ? ' done' : '');
                 el.appendChild(conn);
             }
         });
     }
+}
+
+/* ── Selector ─────────────────────────────────────────── */
+function buildSelectorTiles() {
+    const container = document.getElementById('selector-tiles');
+    if (!container) return;
+    container.innerHTML = spectraData.map(sp => `
+        <div class="selector-tile selected" id="tile-${sp.id}" onclick="toggleSpectrum(${sp.id})">
+            <span class="selector-tile-icon">${sp.icon}</span>
+            <div class="selector-tile-body">
+                <div class="selector-tile-name"><span class="spectrum-badge ${sp.cls}">${sp.name}</span></div>
+                <div class="selector-tile-cues">${sp.cues}</div>
+            </div>
+            <div class="selector-toggle" id="toggle-${sp.id}">✓</div>
+        </div>
+    `).join('');
+}
+
+function toggleSpectrum(id) {
+    if (selectedSpectra.has(id)) {
+        selectedSpectra.delete(id);
+        document.getElementById('tile-' + id).classList.remove('selected');
+        document.getElementById('toggle-' + id).textContent = '';
+    } else {
+        selectedSpectra.add(id);
+        document.getElementById('tile-' + id).classList.add('selected');
+        document.getElementById('toggle-' + id).textContent = '✓';
+    }
+}
+
+function selAll() {
+    spectraData.forEach(sp => {
+        selectedSpectra.add(sp.id);
+        document.getElementById('tile-' + sp.id).classList.add('selected');
+        document.getElementById('toggle-' + sp.id).textContent = '✓';
+    });
+}
+
+function selNone() {
+    spectraData.forEach(sp => {
+        selectedSpectra.delete(sp.id);
+        document.getElementById('tile-' + sp.id).classList.remove('selected');
+        document.getElementById('toggle-' + sp.id).textContent = '';
+    });
+}
+
+function buildFlow() {
+    if (selectedSpectra.size === 0) {
+        document.getElementById('sel-warning').style.display = 'block';
+        return;
+    }
+    document.getElementById('sel-warning').style.display = 'none';
+    const sorted = Array.from(selectedSpectra).sort((a,b) => a-b);
+    flowSequence = ['selector', ...sorted, 7];
+    flowIdx = 1;
+    goTo(sorted[0]);
 }
 
 /* ── Score store ──────────────────────────────────────── */
@@ -1198,28 +1367,19 @@ function drawRadar(canvasId, spLevels) {
         ctx.fillText(r.toFixed(1), lx + 3, cy - (r / 3) * maxR - 2);
     });
 
-    // Axes
-    for (let i = 0; i < n; i++) {
-        const angle = startAngle + i * step;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + maxR * Math.cos(angle), cy + maxR * Math.sin(angle));
-        ctx.strokeStyle = '#d8b4fe';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-    }
-
-    // Data polygon
+    // Data polygon (selected spectra only)
     const lvColors = ['rgba(22,101,52,', 'rgba(146,64,14,', 'rgba(194,65,12,', 'rgba(153,27,27,'];
-    const maxLv = Math.max(0, ...Object.values(spLevels).filter(v => v >= 0));
+    const evalLevels = Object.entries(spLevels).filter(([k,v]) => v >= 0 && selectedSpectra.has(parseInt(k))).map(([,v]) => v);
+    const maxLv = evalLevels.length > 0 ? Math.max(...evalLevels) : 0;
     const fillColor = lvColors[maxLv] || lvColors[0];
 
     ctx.beginPath();
     let anyData = false;
     for (let i = 0; i < n; i++) {
         const lv = spLevels[i + 1];
-        const val = lv >= 0 ? lv : 0;
-        if (lv >= 0) anyData = true;
+        const isSel = selectedSpectra.has(i + 1);
+        const val = (lv >= 0 && isSel) ? lv : 0;
+        if (lv >= 0 && isSel) anyData = true;
         const angle = startAngle + i * step;
         const r = (val / 3) * maxR;
         const px = cx + r * Math.cos(angle);
@@ -1235,10 +1395,10 @@ function drawRadar(canvasId, spLevels) {
         ctx.stroke();
     }
 
-    // Dots at data points
+    // Dots at data points (selected only)
     for (let i = 0; i < n; i++) {
         const lv = spLevels[i + 1];
-        if (lv < 0) continue;
+        if (lv < 0 || !selectedSpectra.has(i + 1)) continue;
         const angle = startAngle + i * step;
         const r = (lv / 3) * maxR;
         ctx.beginPath();
@@ -1247,22 +1407,34 @@ function drawRadar(canvasId, spLevels) {
         ctx.fill();
     }
 
-    // Axis labels
+    // Axes (grey for non-selected)
     for (let i = 0; i < n; i++) {
+        const angle = startAngle + i * step;
+        const isSel = selectedSpectra.has(i + 1);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + maxR * Math.cos(angle), cy + maxR * Math.sin(angle));
+        ctx.strokeStyle = isSel ? '#d8b4fe' : '#ececec';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    // Axis labels (grey for non-selected)
+    for (let i = 0; i < n; i++) {
+        const isSel = selectedSpectra.has(i + 1);
         const angle = startAngle + i * step;
         const lx = cx + (maxR + 26) * Math.cos(angle);
         const ly = cy + (maxR + 26) * Math.sin(angle);
-        ctx.fillStyle = '#553c9a';
+        ctx.fillStyle = isSel ? '#553c9a' : '#c4b5fd';
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(labels[i], lx, ly);
         ctx.font = '9px sans-serif';
-        ctx.fillStyle = '#9ca3af';
+        ctx.fillStyle = isSel ? '#9ca3af' : '#d8d8d8';
         ctx.fillText(fullLbl[i], lx, ly + 12);
     }
 
-    // Severity level marks on top axis
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
 }
@@ -1284,6 +1456,7 @@ function buildResults() {
     let totalWeight = 0;
 
     for (let sp = 1; sp <= 6; sp++) {
+        if (!selectedSpectra.has(sp)) { spLevels[sp] = -2; continue; }
         const keys = spectraKeys[sp];
         let maxLv = -1;
         keys.forEach(k => {
@@ -1304,7 +1477,7 @@ function buildResults() {
     // Header
     html += `<div style="margin-bottom:18px;">
         <div style="font-size:22px;font-weight:800;color:#2d1b69;margin-bottom:3px;">Perfil Dimensional HiTOP</div>
-        <div style="font-size:13px;color:#6b7280;">Síntesis espectral orientativa · ${new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</div>
+        <div style="font-size:13px;color:#6b7280;">Síntesis espectral orientativa · ${new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})} · ${selectedSpectra.size} de 6 espectros seleccionados</div>
     </div>`;
 
     // Radar canvas placeholder (will be drawn after innerHTML set)
@@ -1352,13 +1525,15 @@ function buildResults() {
 
     for (let sp = 1; sp <= 6; sp++) {
         const lv = spLevels[sp];
-        const lvText = lv >= 0 ? (lvlEmojis[lv] + ' ' + lvlNames[lv]) : '— No evaluado';
-        const lvColor = lv >= 0 ? ['#166534','#92400e','#c2410c','#991b1b'][lv] : '#9ca3af';
-        const keysUsed = (spectraKeys[sp] || []).filter(k => scores[k] !== undefined);
+        const isNotSelected = lv === -2;
+        const lvText = isNotSelected ? '— No seleccionado' : (lv >= 0 ? (lvlEmojis[lv] + ' ' + lvlNames[lv]) : '— No evaluado');
+        const lvColor = isNotSelected ? '#d1d5db' : (lv >= 0 ? ['#166534','#92400e','#c2410c','#991b1b'][lv] : '#9ca3af');
+        const keysUsed = isNotSelected ? [] : (spectraKeys[sp] || []).filter(k => scores[k] !== undefined);
         const allUsed = keysUsed.map(k => k.replace('cape15neg','CAPE-15 Neg').replace('cape15','CAPE-15').replace('pid5psic','PID-5 Psic').replace('pid5det','PID-5 Det').replace('pid5ant','PID-5 Ant').replace('pid5dis','PID-5 Dis').replace('phq9','PHQ-9').replace('phq15','PHQ-15').replace('hars','HARS').replace('pcl5','PCL-5').replace('pas','PAS').replace('audit','AUDIT').replace('dudit','DUDIT').replace('tdah','ASRS'));
-        const actionText = lv >= 2 ? actions[sp] : (lv === 1 ? 'Monitorear evolución. Re-evaluar en próxima consulta.' : (lv === 0 ? 'Sin acción inmediata.' : '—'));
+        const actionText = isNotSelected ? '—' : (lv >= 2 ? actions[sp] : (lv === 1 ? 'Monitorear evolución.' : (lv === 0 ? 'Sin acción inmediata.' : '—')));
+        const rowStyle = isNotSelected ? 'opacity:0.4;' : '';
 
-        html += `<tr style="border-bottom:1px solid #f3f0ff;vertical-align:top;">
+        html += `<tr style="border-bottom:1px solid #f3f0ff;vertical-align:top;${rowStyle}">
             <td style="padding:8px 10px;">${spectraEmojis[sp]} <span class="spectrum-badge ${spectraBadgeClass[sp]}">${spectraNames[sp]}</span></td>
             <td style="padding:8px 10px;font-weight:700;color:${lvColor};white-space:nowrap;">${lvText}</td>
             <td style="padding:8px 10px;font-size:11px;color:#6b7280;">${allUsed.join(', ') || '—'}</td>
@@ -1484,7 +1659,7 @@ function printResults() {
 }
 
 /* ── Init ─────────────────────────────────────────────── */
-buildStepper(0);
+buildSelectorTiles();
 </script>
 </body>
 </html>
