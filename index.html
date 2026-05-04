@@ -216,6 +216,104 @@
                 gap: 15px;
             }
         }
+
+        /* ── HiTOP Section ─────────────────────────────── */
+        .hitop-section {
+            background: linear-gradient(135deg, rgba(85,60,154,0.07) 0%, rgba(45,27,105,0.10) 100%);
+            border: 2px solid rgba(85,60,154,0.25);
+            border-radius: 16px;
+            padding: 22px 24px 18px;
+            margin-bottom: 28px;
+        }
+        .hitop-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .hitop-header-text { flex: 1; }
+        .hitop-beta {
+            display: inline-block;
+            background: #553c9a;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .hitop-header h2 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #2d1b69;
+            margin: 0 0 2px;
+        }
+        .hitop-header p {
+            font-size: 13px;
+            color: #553c9a;
+            margin: 0;
+        }
+        .hitop-note {
+            font-size: 11px;
+            color: #9ca3af;
+            font-style: italic;
+            margin-top: 4px;
+        }
+        .hitop-navigator-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .2s;
+            box-shadow: 0 4px 14px rgba(85,60,154,0.35);
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        .hitop-navigator-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(85,60,154,0.45); }
+        .hitop-nav-icon { font-size: 28px; }
+        .hitop-nav-title { font-size: 15px; font-weight: 800; }
+        .hitop-nav-desc { font-size: 12px; opacity: .85; }
+        .hitop-scales-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #7c3aed;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .hitop-scales-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+        }
+        .hitop-scale-chip {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(85,60,154,0.25);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            transition: all .15s;
+            font-size: 13px;
+        }
+        .hitop-scale-chip:hover { background: #f5f3ff; border-color: #9f7aea; }
+        .hitop-chip-name { font-weight: 600; color: #2d1b69; }
+        .hitop-chip-type { font-size: 11px; color: #9ca3af; }
+        @media (max-width: 600px) {
+            .hitop-scales-grid { grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -244,6 +342,56 @@
                 📝 ESCALAS AUTOAPLICADAS
                 <div class="subtitle">(Completadas por el paciente)</div>
             </div>
+
+            <!-- ══════════════ SECCIÓN HITOP ══════════════ -->
+            <div class="hitop-section">
+                <div class="hitop-header">
+                    <div class="hitop-header-text">
+                        <div class="hitop-beta">BETA</div>
+                        <h2>⬡ Sistema HiTOP</h2>
+                        <p>Herramienta de Apoyo al Diagnóstico Dimensional</p>
+                        <p class="hitop-note">Creación propia basada en Kotov et al. (2017) — No es una escala estandarizada · Uso clínico orientativo</p>
+                    </div>
+                </div>
+
+                <a href="hitop/hitop-navigator.html" target="_blank" class="hitop-navigator-btn">
+                    <span class="hitop-nav-icon">🧠</span>
+                    <div>
+                        <div class="hitop-nav-title">HiTOP Navigator</div>
+                        <div class="hitop-nav-desc">Perfil dimensional completo · 6 espectros · Radar chart · Diagnóstico presuntivo</div>
+                    </div>
+                    <span style="margin-left:auto;font-size:18px;opacity:.7;">→</span>
+                </a>
+
+                <div class="hitop-scales-title">Escalas del sistema HiTOP</div>
+                <div class="hitop-scales-grid">
+                    <a href="autoaplicadas/phq15-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">PHQ-15</div><div class="hitop-chip-type">Autoaplicada · Somatoforme</div></div>
+                    </a>
+                    <a href="autoaplicadas/audit-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">AUDIT</div><div class="hitop-chip-type">Autoaplicada · Alcohol</div></div>
+                    </a>
+                    <a href="autoaplicadas/dudit-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">DUDIT</div><div class="hitop-chip-type">Autoaplicada · Drogas</div></div>
+                    </a>
+                    <a href="autoaplicadas/cape15-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">CAPE-15</div><div class="hitop-chip-type">Autoaplicada · Psicosis</div></div>
+                    </a>
+                    <a href="autoaplicadas/pid5brief-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">PID-5 Brief</div><div class="hitop-chip-type">Autoaplicada · Personalidad</div></div>
+                    </a>
+                    <a href="autoaplicadas/tdah-assessment.html" target="_blank" class="hitop-scale-chip">
+                        <span>📋</span>
+                        <div><div class="hitop-chip-name">ASRS / TDAH</div><div class="hitop-chip-type">Autoaplicada · TDAH</div></div>
+                    </a>
+                </div>
+            </div>
+            <!-- ══════════════════════════════════════════ -->
 
             <div id="scalesContainer">
                 <!-- Las escalas se cargarán dinámicamente aquí -->
