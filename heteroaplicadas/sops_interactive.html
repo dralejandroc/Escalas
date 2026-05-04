@@ -199,34 +199,66 @@
             margin-top: 20px;
         }
 
-        .score-summary {
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
+        .score-card-item {
+            background: #f8f9fa;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .score-item {
+            padding: 16px 20px;
+            margin: 10px 0;
+            border-left: 5px solid #48bb78;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
+            gap: 12px;
         }
-
-        .score-label {
-            font-weight: bold;
+        .score-card-left { flex: 1; }
+        .score-card-name {
+            font-weight: 700;
+            color: #112F33;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .score-card-sub { font-size: 12px; color: #6b7280; }
+        .score-card-right { text-align: right; }
+        .score-num {
+            font-size: 22px;
+            font-weight: 800;
             color: #112F33;
         }
-
-        .score-value {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            padding: 6px 12px;
+        .score-max-label { font-size: 12px; color: #9ca3af; }
+        .severity-badge-pill {
+            display: inline-block;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .badge-min { background: #48bb78; color: white; }
+        .badge-leve { background: #f6ad55; color: white; }
+        .badge-mod { background: #ed8936; color: white; }
+        .badge-sev { background: #e53e3e; color: white; }
+        .total-score-card {
+            background: linear-gradient(135deg, #112F33 0%, #1a4a50 100%);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin: 18px 0 6px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-label { font-size: 15px; font-weight: 700; opacity: 0.9; }
+        .total-num-wrap { text-align: right; }
+        .total-num { font-size: 36px; font-weight: 900; line-height: 1; }
+        .total-denom { font-size: 13px; opacity: 0.65; margin-top: 2px; }
+        .total-sev-pill {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 6px;
+            display: inline-block;
         }
 
         .interpretation {
@@ -1083,29 +1115,9 @@
                 <h1>Resultados SOPS</h1>
                 <p>Interpretación Profesional</p>
             </div>
-            
-            <div class="score-summary">
-                <div class="score-item">
-                    <span class="score-label">Síntomas Positivos (P1-P5)</span>
-                    <span class="score-value" id="positive-score">0/30</span>
-                </div>
-                <div class="score-item">
-                    <span class="score-label">Síntomas Negativos (N1-N6)</span>
-                    <span class="score-value" id="negative-score">0/36</span>
-                </div>
-                <div class="score-item">
-                    <span class="score-label">Síntomas Desorganización (D1-D4)</span>
-                    <span class="score-value" id="disorg-score">0/24</span>
-                </div>
-                <div class="score-item">
-                    <span class="score-label">Síntomas Generales (G1-G4)</span>
-                    <span class="score-value" id="general-score">0/24</span>
-                </div>
-                <div class="score-item">
-                    <span class="score-label"><strong>Puntuación Total</strong></span>
-                    <span class="score-value" id="total-score">0/114</span>
-                </div>
-            </div>
+
+            <div id="subscale-cards"></div>
+            <div id="total-card-container"></div>
 
             <div class="interpretation">
                 <h3>🎯 Interpretación Clínica</h3>
@@ -1327,30 +1339,62 @@
             return itemNames[itemNumber] || `Ítem ${itemNumber}`;
         }
 
+        function getSeverityStyle(score, max) {
+            const pct = (score / max) * 100;
+            if (pct >= 70) return { border: '#e53e3e', bg: 'rgba(229,62,62,0.06)', badge: 'badge-sev', label: 'Severo' };
+            if (pct >= 50) return { border: '#ed8936', bg: 'rgba(237,137,54,0.06)', badge: 'badge-mod', label: 'Moderado' };
+            if (pct >= 30) return { border: '#f6ad55', bg: 'rgba(246,173,85,0.06)', badge: 'badge-leve', label: 'Leve' };
+            return { border: '#48bb78', bg: 'rgba(72,187,120,0.06)', badge: 'badge-min', label: 'Mínimo' };
+        }
+
+        function renderSubscaleCard(name, sub, score, max) {
+            const s = getSeverityStyle(score, max);
+            return `<div class="score-card-item" style="border-left-color:${s.border};background:${s.bg}">
+                <div class="score-card-left">
+                    <div class="score-card-name">${name}</div>
+                    <div class="score-card-sub">${sub}</div>
+                    <span class="severity-badge-pill ${s.badge}">${s.label}</span>
+                </div>
+                <div class="score-card-right">
+                    <div class="score-num">${score}</div>
+                    <div class="score-max-label">/ ${max}</div>
+                </div>
+            </div>`;
+        }
+
         function showResults() {
             currentCard = 'results';
             const scores = calculateScores();
             const interpretation = getInterpretation(scores);
 
-            // Actualizar puntuaciones
-            document.getElementById('positive-score').textContent = `${scores.positive}/30`;
-            document.getElementById('negative-score').textContent = `${scores.negative}/36`;
-            document.getElementById('disorg-score').textContent = `${scores.disorganization}/24`;
-            document.getElementById('general-score').textContent = `${scores.general}/24`;
-            document.getElementById('total-score').textContent = `${scores.total}/114`;
+            // Subscale color cards
+            document.getElementById('subscale-cards').innerHTML =
+                renderSubscaleCard('Síntomas Positivos', 'P1 – P5', scores.positive, 30) +
+                renderSubscaleCard('Síntomas Negativos', 'N1 – N6', scores.negative, 36) +
+                renderSubscaleCard('Desorganización', 'D1 – D4', scores.disorganization, 24) +
+                renderSubscaleCard('Síntomas Generales', 'G1 – G4', scores.general, 24);
 
-            // Actualizar interpretación
+            // Prominent total card
+            const ts = getSeverityStyle(scores.total, 114);
+            document.getElementById('total-card-container').innerHTML =
+                `<div class="total-score-card">
+                    <div class="total-label">Puntuación Total SOPS</div>
+                    <div class="total-num-wrap">
+                        <div class="total-num">${scores.total}</div>
+                        <div class="total-denom">de 114 puntos</div>
+                        <div class="total-sev-pill">${ts.label}</div>
+                    </div>
+                </div>`;
+
             document.getElementById('clinical-interpretation').innerHTML = interpretation.clinical;
-            
-            // Actualizar alertas
+
             const alertsSection = document.getElementById('alerts-section');
             if (interpretation.alerts.length > 0) {
-                alertsSection.innerHTML = '<ul>' + interpretation.alerts.map(alert => `<li>${alert}</li>`).join('') + '</ul>';
+                alertsSection.innerHTML = '<ul>' + interpretation.alerts.map(a => `<li>${a}</li>`).join('') + '</ul>';
             } else {
                 alertsSection.innerHTML = '<p>No se identificaron ítems con puntuaciones de alerta.</p>';
             }
 
-            // Actualizar criterios diagnósticos
             document.getElementById('diagnostic-criteria').innerHTML = interpretation.diagnostic;
 
             showCard('results');
