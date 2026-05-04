@@ -1248,21 +1248,24 @@
         const totalQuestions = 30;
 
         function updateDisplay() {
-            // Ocultar todas las tarjetas
             document.querySelectorAll('.card').forEach(card => {
                 card.classList.remove('active');
             });
 
-            // Mostrar tarjeta actual
+            if (currentCard === 'results') {
+                document.getElementById('card-results').classList.add('active');
+                document.getElementById('progress-bar').style.width = '100%';
+                document.getElementById('back-button').classList.remove('show');
+                return;
+            }
+
             document.getElementById(`card-${currentCard}`).classList.add('active');
 
-            // Actualizar barra de progreso
-            const progress = (currentCard / (totalQuestions + 1)) * 100;
+            const progress = (currentCard / totalQuestions) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
 
-            // Mostrar/ocultar botón de regresar
             const backButton = document.getElementById('back-button');
-            if (currentCard > 0 && currentCard <= totalQuestions) {
+            if (currentCard > 0) {
                 backButton.classList.add('show');
             } else {
                 backButton.classList.remove('show');
@@ -1271,15 +1274,14 @@
 
         function selectOption(questionNumber, value) {
             responses[questionNumber] = value;
-            
-            // Marcar opción seleccionada
+
             const currentCardElement = document.getElementById(`card-${currentCard}`);
             currentCardElement.querySelectorAll('.option').forEach(option => {
                 option.classList.remove('selected');
             });
-            event.target.classList.add('selected');
+            const opts = currentCardElement.querySelectorAll('.option');
+            if (opts[value - 1]) opts[value - 1].classList.add('selected');
 
-            // Auto-avance después de 150ms
             setTimeout(() => {
                 nextCard();
             }, 150);
@@ -1295,10 +1297,12 @@
         }
 
         function previousCard() {
-            if (currentCard > 0) {
+            if (currentCard === 'results') {
+                currentCard = totalQuestions;
+            } else if (currentCard > 0) {
                 currentCard--;
-                updateDisplay();
             }
+            updateDisplay();
         }
 
         function calculateScore() {
@@ -1357,7 +1361,7 @@
         }
 
         function showResults() {
-            currentCard = totalQuestions + 1;
+            currentCard = 'results';
             const scores = calculateScore();
             const interpretations = getInterpretation(scores);
 
