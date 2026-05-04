@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUDIT — Test de Identificación de Trastornos por Alcohol</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .card-wrap {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            display: none;
+        }
+        .card-wrap.active { display: block; }
+        .card-header {
+            background: linear-gradient(135deg, #553c9a 0%, #2d1b69 100%);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 12px; opacity: .8; text-align: right; }
+        .card-body { padding: 28px 32px 24px; }
+
+        /* Progress */
+        .progress-bar-wrap {
+            height: 6px; background: #e2e8f0; border-radius: 3px;
+            overflow: hidden; margin-bottom: 22px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #553c9a, #2d1b69);
+            border-radius: 3px; transition: width .3s;
+        }
+
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 12px; }
+        .instructions-box {
+            background: #f5f3ff;
+            border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .scale-badge {
+            display: inline-block;
+            background: rgba(85,60,154,0.12);
+            border: 1.5px solid #553c9a;
+            color: #553c9a;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 15px 40px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s; width: 100%;
+            font-family: inherit;
+        }
+        .btn-primary:hover { opacity: .9; }
+
+        /* Two-item card layout */
+        .item-section { margin-bottom: 22px; }
+        .item-section:last-child { margin-bottom: 0; }
+        .item-num-label {
+            font-size: 11px; font-weight: 700; color: #553c9a;
+            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px;
+        }
+        .item-question {
+            font-size: 16px; font-weight: 600; color: #1a202c;
+            line-height: 1.45; margin-bottom: 12px;
+        }
+        .opts-vertical { display: flex; flex-direction: column; gap: 7px; }
+        .opt-btn {
+            width: 100%;
+            padding: 11px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #2d3748;
+            text-align: left;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .opt-btn:hover { border-color: #553c9a; background: rgba(85,60,154,0.06); }
+        .opt-btn.selected {
+            border-color: #553c9a;
+            background: rgba(85,60,154,0.10);
+            color: #2d1b69;
+            font-weight: 600;
+        }
+        .item-divider {
+            height: 1px; background: #e2e8f0; margin: 22px 0;
+        }
+
+        /* Navigation */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+        }
+        .btn-back {
+            background: none;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            color: #718096;
+            padding: 7px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-back:hover { border-color: #553c9a; color: #553c9a; }
+        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+        .btn-next {
+            background: linear-gradient(135deg, #553c9a, #2d1b69);
+            color: white; border: none; border-radius: 8px;
+            padding: 9px 20px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s; font-family: inherit;
+        }
+        .btn-next:hover { opacity: .9; }
+
+        /* Results */
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin: 16px 0 8px;
+        }
+        .section-label:first-child { margin-top: 0; }
+        .score-area {
+            text-align: center; padding: 22px 20px 18px;
+            border-radius: 16px; border: 2px solid #e2e8f0; margin-bottom: 4px;
+        }
+        .score-num { font-size: 72px; font-weight: 900; line-height: 1; color: #2d3748; }
+        .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
+        .score-badge {
+            display: inline-block; margin-top: 10px;
+            padding: 5px 18px; border-radius: 20px; font-size: 14px; font-weight: 700;
+        }
+        .subscales-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px; margin-bottom: 4px;
+        }
+        .subscale-box {
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 12px 10px; text-align: center;
+        }
+        .sub-title { font-size: 10px; color: #718096; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing:.03em; line-height: 1.3; }
+        .sub-num   { font-size: 28px; font-weight: 900; line-height: 1; }
+        .sub-max   { font-size: 11px; color: #a0aec0; margin-top: 2px; }
+        .interp-box {
+            background: #f7fafc; border-left: 4px solid #553c9a;
+            border-radius: 0 10px 10px 0; padding: 14px 16px;
+            margin-bottom: 4px; font-size: 13px; color: #2d3748; line-height: 1.7;
+        }
+        .cutoff-table { width: 100%; border-collapse: collapse; }
+        .cutoff-table td {
+            padding: 8px 12px; font-size: 13px;
+            border-bottom: 1px solid #e2e8f0; color: #4a5568;
+        }
+        .cutoff-table tr:last-child td { border-bottom: none; }
+        .dot { font-size: 16px; font-weight: 700; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+        .action-btn {
+            padding: 12px 28px; background: white;
+            border: 2px solid #e2e8f0; border-radius: 12px;
+            font-size: 14px; color: #4a5568;
+            cursor: pointer; font-family: inherit; transition: border-color .2s;
+        }
+        .action-btn:hover { border-color: #553c9a; color: #553c9a; }
+
+        @media (max-width: 600px) {
+            .card-body { padding: 20px 18px 18px; }
+            .subscales-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARD 0: BIENVENIDA -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Trastornos por Consumo de Alcohol</span>
+        <span class="q-label">Autoaplicada · HiTOP</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Test de Identificación de Trastornos por Consumo de Alcohol (AUDIT)</div>
+        <div class="scale-badge">10 preguntas · Aprox. 3 minutos · Último año</div>
+        <div class="instructions-box">
+            <p>Las siguientes preguntas se refieren a su consumo de bebidas alcohólicas durante el <strong>último año</strong>. Por favor responda con sinceridad; sus respuestas son confidenciales y ayudan a planear una atención adecuada.</p>
+            <p style="margin-top:8px;">Una <strong>"bebida estándar"</strong> equivale a una cerveza de 355 ml, una copa de vino de 150 ml o una medida de licor de 45 ml.</p>
+        </div>
+        <button class="btn-primary" onclick="showCard('card-1')">Comenzar Evaluación</button>
+    </div>
+</div>
+
+<!-- CARD 1: ÍTEMS 1-2 (Consumo) -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Frecuencia y Cantidad</span>
+        <span class="q-label">Ítems 1–2 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 1</div>
+            <div class="item-question">¿Con qué frecuencia consume bebidas alcohólicas?</div>
+            <div class="opts-vertical" id="opts-1"></div>
+        </div>
+        <div class="item-divider"></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 2</div>
+            <div class="item-question">¿Cuántas bebidas alcohólicas suele tomar en un día de consumo normal?</div>
+            <div class="opts-vertical" id="opts-2"></div>
+        </div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-0')">← Anterior</button>
+            <span class="item-badge">1–2 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-2', [1,2])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 2: ÍTEMS 3-4 (Consumo/Dependencia) -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Consumo Excesivo</span>
+        <span class="q-label">Ítems 3–4 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 3</div>
+            <div class="item-question">¿Con qué frecuencia toma 6 o más bebidas alcohólicas en un solo día?</div>
+            <div class="opts-vertical" id="opts-3"></div>
+        </div>
+        <div class="item-divider"></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 4</div>
+            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo parar de beber una vez que había empezado?</div>
+            <div class="opts-vertical" id="opts-4"></div>
+        </div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-1')">← Anterior</button>
+            <span class="item-badge">3–4 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-3', [3,4])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 3: ÍTEMS 5-6 (Dependencia) -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Síntomas de Dependencia</span>
+        <span class="q-label">Ítems 5–6 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 5</div>
+            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo hacer lo que se esperaba de usted porque había bebido?</div>
+            <div class="opts-vertical" id="opts-5"></div>
+        </div>
+        <div class="item-divider"></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 6</div>
+            <div class="item-question">¿Con qué frecuencia, en el último año, necesitó beber en ayunas para recuperarse después de haber bebido mucho el día anterior?</div>
+            <div class="opts-vertical" id="opts-6"></div>
+        </div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-2')">← Anterior</button>
+            <span class="item-badge">5–6 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-4', [5,6])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 4: ÍTEMS 7-8 (Consecuencias) -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Consecuencias del Consumo</span>
+        <span class="q-label">Ítems 7–8 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 7</div>
+            <div class="item-question">¿Con qué frecuencia, en el último año, ha tenido remordimientos o sentimientos de culpa después de haber bebido?</div>
+            <div class="opts-vertical" id="opts-7"></div>
+        </div>
+        <div class="item-divider"></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 8</div>
+            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo recordar lo que sucedió la noche anterior porque había estado bebiendo?</div>
+            <div class="opts-vertical" id="opts-8"></div>
+        </div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-3')">← Anterior</button>
+            <span class="item-badge">7–8 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-5', [7,8])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 5: ÍTEMS 9-10 (Consecuencias sociales) -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Consecuencias Sociales</span>
+        <span class="q-label">Ítems 9–10 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 9</div>
+            <div class="item-question">¿Usted o alguna otra persona ha resultado herida porque usted había bebido?</div>
+            <div class="opts-vertical" id="opts-9"></div>
+        </div>
+        <div class="item-divider"></div>
+        <div class="item-section">
+            <div class="item-num-label">Ítem 10</div>
+            <div class="item-question">¿Algún familiar, amigo, médico o profesional de salud ha mostrado preocupación por su consumo de alcohol o le ha sugerido que deje de beber?</div>
+            <div class="opts-vertical" id="opts-10"></div>
+        </div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-4')">← Anterior</button>
+            <span class="item-badge">9–10 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-results', [9,10])">Ver resultados →</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTADOS -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Resultado</span>
+        <span class="q-label">Perfil de consumo</span>
+    </div>
+    <div class="card-body">
+        <div class="section-label">Puntuación total</div>
+        <div class="score-area">
+            <div class="score-num" id="res-score">—</div>
+            <div class="score-range">de 40 puntos posibles</div>
+            <div class="score-badge" id="res-badge">—</div>
+        </div>
+
+        <div class="section-label">Subescalas</div>
+        <div class="subscales-grid">
+            <div class="subscale-box">
+                <div class="sub-title">Consumo</div>
+                <div class="sub-num" id="sub-consumo">—</div>
+                <div class="sub-max">de 12 pts (íts. 1–3)</div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Dependencia</div>
+                <div class="sub-num" id="sub-dep">—</div>
+                <div class="sub-max">de 12 pts (íts. 4–6)</div>
+            </div>
+            <div class="subscale-box">
+                <div class="sub-title">Consecuencias</div>
+                <div class="sub-num" id="sub-cons">—</div>
+                <div class="sub-max">de 16 pts (íts. 7–10)</div>
+            </div>
+        </div>
+
+        <div class="section-label">Interpretación clínica</div>
+        <div class="interp-box" id="res-interp"></div>
+
+        <div class="section-label">Puntos de corte (referencia)</div>
+        <table class="cutoff-table">
+            <tr><td><strong>0–7</strong></td><td>Bajo riesgo — consumo de bajo riesgo o abstinencia</td><td class="dot" style="color:#48bb78;">●</td></tr>
+            <tr><td><strong>8–14</strong></td><td>Consumo peligroso — educación y consejo breve</td><td class="dot" style="color:#f6ad55;">●</td></tr>
+            <tr><td><strong>15–19</strong></td><td>Consumo perjudicial — intervención breve y seguimiento</td><td class="dot" style="color:#ed8936;">●</td></tr>
+            <tr><td><strong>≥ 20</strong></td><td>Probable dependencia al alcohol — derivación especializada</td><td class="dot" style="color:#f56565;">●</td></tr>
+        </table>
+        <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Babor TF, et al. (2001). <em>AUDIT: The Alcohol Use Disorders Identification Test</em>. WHO, Geneva. 2nd ed.</p>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="exportPDF()">Exportar como PDF</button>
+            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const answers = {};
+
+const itemDefs = {
+    1: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Una o menos veces al mes", score: 1 },
+            { text: "De 2 a 4 veces al mes", score: 2 },
+            { text: "De 2 a 3 veces por semana", score: 3 },
+            { text: "4 o más veces por semana", score: 4 }
+        ]
+    },
+    2: {
+        opts: [
+            { text: "1 o 2 bebidas", score: 0 },
+            { text: "3 o 4 bebidas", score: 1 },
+            { text: "5 o 6 bebidas", score: 2 },
+            { text: "7, 8 o 9 bebidas", score: 3 },
+            { text: "10 o más bebidas", score: 4 }
+        ]
+    },
+    3: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    4: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    5: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    6: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    7: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    8: {
+        opts: [
+            { text: "Nunca", score: 0 },
+            { text: "Menos de una vez al mes", score: 1 },
+            { text: "Mensualmente", score: 2 },
+            { text: "Semanalmente", score: 3 },
+            { text: "A diario o casi a diario", score: 4 }
+        ]
+    },
+    9: {
+        opts: [
+            { text: "No", score: 0 },
+            { text: "Sí, pero no en el último año", score: 2 },
+            { text: "Sí, en el último año", score: 4 }
+        ]
+    },
+    10: {
+        opts: [
+            { text: "No", score: 0 },
+            { text: "Sí, pero no en el último año", score: 2 },
+            { text: "Sí, en el último año", score: 4 }
+        ]
+    }
+};
+
+const cardItemMap = {
+    'card-1': [1, 2],
+    'card-2': [3, 4],
+    'card-3': [5, 6],
+    'card-4': [7, 8],
+    'card-5': [9, 10]
+};
+
+function buildCard(cardId) {
+    const nums = cardItemMap[cardId];
+    if (!nums) return;
+    nums.forEach(n => {
+        const container = document.getElementById('opts-' + n);
+        if (!container) return;
+        container.innerHTML = '';
+        itemDefs[n].opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn' + (answers[n] !== undefined && answers[n].idx === idx ? ' selected' : '');
+            btn.textContent = opt.text;
+            btn.onclick = () => selectItem(n, idx, opt.score);
+            container.appendChild(btn);
+        });
+    });
+}
+
+function selectItem(num, idx, score) {
+    answers[num] = { idx, score };
+    document.querySelectorAll('#opts-' + num + ' .opt-btn').forEach((btn, i) => {
+        btn.classList.toggle('selected', i === idx);
+    });
+}
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (cardItemMap[id]) buildCard(id);
+    if (id === 'card-results') buildResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextCard(toId, itemNums) {
+    for (const n of itemNums) {
+        if (answers[n] === undefined) {
+            alert('Por favor responda todos los ítems antes de continuar.');
+            return;
+        }
+    }
+    showCard(toId);
+}
+
+function buildResults() {
+    let total = 0;
+    for (let i = 1; i <= 10; i++) total += answers[i] ? answers[i].score : 0;
+
+    const consumo = [1,2,3].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+    const dep     = [4,5,6].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+    const cons    = [7,8,9,10].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+
+    document.getElementById('res-score').textContent   = total;
+    document.getElementById('sub-consumo').textContent = consumo;
+    document.getElementById('sub-dep').textContent     = dep;
+    document.getElementById('sub-cons').textContent    = cons;
+
+    let color, label, interp;
+    if (total <= 7) {
+        color = '#48bb78'; label = 'Bajo riesgo';
+        interp = 'Consumo de alcohol de bajo riesgo o abstinencia. No se identifican indicadores de uso problemático. Reforzar hábitos saludables en próximas consultas.';
+    } else if (total <= 14) {
+        color = '#f6ad55'; label = 'Consumo peligroso';
+        interp = 'Consumo peligroso de alcohol. El patrón actual puede derivar en daños a la salud. Se recomienda educación sobre consumo responsable y consejo breve estructurado.';
+    } else if (total <= 19) {
+        color = '#ed8936'; label = 'Consumo perjudicial';
+        interp = 'Consumo perjudicial de alcohol con daño ya presente. Se indica intervención breve motivacional y seguimiento estrecho. Evaluar derivación a servicio especializado.';
+    } else {
+        color = '#f56565'; label = 'Probable dependencia';
+        interp = 'Puntuación sugestiva de dependencia al alcohol. Se recomienda derivación a unidad especializada en adicciones para evaluación diagnóstica completa y plan de tratamiento.';
+    }
+
+    document.getElementById('res-score').style.color = color;
+    const badge = document.getElementById('res-badge');
+    badge.textContent = label;
+    badge.style.cssText = `color:${color}; background:${color}18; border:1.5px solid ${color}; border-radius:20px; padding:5px 18px;`;
+    document.getElementById('res-interp').textContent = interp;
+
+    [['sub-consumo', consumo, 12], ['sub-dep', dep, 12], ['sub-cons', cons, 16]].forEach(([id, val, max]) => {
+        const ratio = val / max;
+        const c = ratio < 0.25 ? '#48bb78' : ratio < 0.5 ? '#f6ad55' : ratio < 0.7 ? '#ed8936' : '#f56565';
+        document.getElementById(id).style.color = c;
+    });
+}
+
+function exportPDF() {
+    let total = 0;
+    for (let i = 1; i <= 10; i++) total += answers[i]?.score || 0;
+    const consumo = [1,2,3].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+    const dep     = [4,5,6].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+    const cons    = [7,8,9,10].reduce((s,i) => s + (answers[i]?.score || 0), 0);
+
+    const [label, color] = total <= 7 ? ['Bajo riesgo','#48bb78'] : total <= 14 ? ['Consumo peligroso','#f6ad55'] : total <= 19 ? ['Consumo perjudicial','#ed8936'] : ['Probable dependencia','#f56565'];
+
+    const questions = [
+        "¿Con qué frecuencia consume bebidas alcohólicas?",
+        "¿Cuántas bebidas alcohólicas suele tomar en un día de consumo normal?",
+        "¿Con qué frecuencia toma 6 o más bebidas en un solo día?",
+        "¿Con qué frecuencia no pudo parar de beber una vez que había empezado?",
+        "¿Con qué frecuencia no pudo cumplir obligaciones porque había bebido?",
+        "¿Con qué frecuencia necesitó beber en ayunas para recuperarse?",
+        "¿Con qué frecuencia tuvo remordimientos o culpa después de beber?",
+        "¿Con qué frecuencia no pudo recordar lo que sucedió la noche anterior?",
+        "¿Usted u otra persona resultó herida porque usted había bebido?",
+        "¿Algún familiar, amigo o profesional le ha sugerido que deje de beber?"
+    ];
+
+    let rows = '';
+    for (let i = 1; i <= 10; i++) {
+        const a = answers[i];
+        const optText = a !== undefined ? itemDefs[i].opts[a.idx].text : '—';
+        const sc = a !== undefined ? a.score : '—';
+        rows += `<tr><td>${i}</td><td>${questions[i-1]}</td><td style="text-align:center">${sc}</td><td>${optText}</td></tr>`;
+    }
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>AUDIT</title>
+<style>
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
+h1{color:#2d1b69;font-size:20px;margin-bottom:4px}
+.meta{font-size:12px;color:#718096;margin-bottom:20px}
+.score-box{margin:16px 0;padding:20px;background:#f7fafc;border-radius:10px;text-align:center}
+.score-num{font-size:52px;font-weight:800;color:${color};line-height:1}
+.score-lbl{font-size:15px;font-weight:700;color:${color};margin-top:4px}
+.subs{display:flex;gap:10px;margin:14px 0}
+.sub{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center}
+.sub-n{font-size:22px;font-weight:800;color:#553c9a}
+.sub-t{font-size:10px;color:#718096;text-transform:uppercase;margin-top:2px}
+table{width:100%;border-collapse:collapse;margin-top:16px}
+th{background:#f7fafc;padding:8px 10px;text-align:left;font-size:11px;color:#718096;text-transform:uppercase}
+td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12px}
+.footer{margin-top:24px;font-size:10px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:8px}
+</style></head><body>
+<h1>AUDIT — Test de Identificación de Trastornos por Consumo de Alcohol</h1>
+<div class="meta">Alcohol Use Disorders Identification Test · Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="score-box">
+<div class="score-num">${total}<span style="font-size:20px;color:#a0aec0"> / 40</span></div>
+<div class="score-lbl">${label}</div>
+</div>
+<div class="subs">
+<div class="sub"><div class="sub-n">${consumo}<small style="font-size:12px;color:#a0aec0">/12</small></div><div class="sub-t">Consumo (íts. 1–3)</div></div>
+<div class="sub"><div class="sub-n">${dep}<small style="font-size:12px;color:#a0aec0">/12</small></div><div class="sub-t">Dependencia (íts. 4–6)</div></div>
+<div class="sub"><div class="sub-n">${cons}<small style="font-size:12px;color:#a0aec0">/16</small></div><div class="sub-t">Consecuencias (íts. 7–10)</div></div>
+</div>
+<table>
+<tr><th>#</th><th>Pregunta</th><th>Pts.</th><th>Respuesta</th></tr>
+${rows}
+</table>
+<div class="footer">AUDIT · Babor TF, et al. (2001). The Alcohol Use Disorders Identification Test. WHO, Ginebra, 2ª ed. · Sistema HiTOP — Instrumento de apoyo diagnóstico.</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 600);
+}
+
+function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    showCard('card-0');
+}
+
+showCard('card-0');
+</script>
+</body>
+</html>
