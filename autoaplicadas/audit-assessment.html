@@ -34,11 +34,13 @@
         .card-header .q-label { font-size: 12px; opacity: .8; text-align: right; }
         .card-body { padding: 28px 32px 24px; }
 
-        /* Progress */
+        /* Progress bar — reutilizable arriba y abajo */
         .progress-bar-wrap {
             height: 6px; background: #e2e8f0; border-radius: 3px;
-            overflow: hidden; margin-bottom: 22px;
+            overflow: hidden;
         }
+        .progress-bar-wrap.top { margin-bottom: 22px; }
+        .progress-bar-wrap.bottom { margin-top: 16px; margin-bottom: 0; }
         .progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, #29A98C, #112F33);
@@ -52,11 +54,31 @@
             border-left: 4px solid #29A98C;
             border-radius: 0 10px 10px 0;
             padding: 14px 16px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: #2d3748;
             font-size: 14px;
             line-height: 1.7;
         }
+        .bebida-estandar-box {
+            background: #fff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+        .bebida-estandar-box .be-title {
+            font-size: 11px; font-weight: 700; color: #29A98C;
+            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
+        }
+        .bebida-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        }
+        .bebida-item {
+            background: #f0faf7; border-radius: 10px;
+            padding: 10px 8px; text-align: center;
+        }
+        .bebida-icon { font-size: 22px; line-height: 1; margin-bottom: 4px; }
+        .bebida-text { font-size: 11px; color: #2d3748; line-height: 1.3; font-weight: 500; }
         .scale-badge {
             display: inline-block;
             background: rgba(41,169,140,0.12);
@@ -77,21 +99,26 @@
         }
         .btn-primary:hover { opacity: .9; }
 
-        /* Two-item card layout */
-        .item-section { margin-bottom: 22px; }
-        .item-section:last-child { margin-bottom: 0; }
+        /* Item card */
+        .ultimo-anio-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(41,169,140,0.10); border: 1px solid rgba(41,169,140,0.3);
+            color: #29A98C; border-radius: 20px;
+            padding: 3px 10px; font-size: 11px; font-weight: 700;
+            margin-bottom: 14px; letter-spacing: .2px;
+        }
         .item-num-label {
             font-size: 11px; font-weight: 700; color: #29A98C;
-            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
         }
         .item-question {
-            font-size: 16px; font-weight: 600; color: #1a202c;
-            line-height: 1.45; margin-bottom: 12px;
+            font-size: 17px; font-weight: 600; color: #1a202c;
+            line-height: 1.5; margin-bottom: 18px;
         }
-        .opts-vertical { display: flex; flex-direction: column; gap: 7px; }
+        .opts-vertical { display: flex; flex-direction: column; gap: 8px; }
         .opt-btn {
             width: 100%;
-            padding: 11px 16px;
+            padding: 12px 16px;
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
@@ -110,16 +137,13 @@
             color: #112F33;
             font-weight: 600;
         }
-        .item-divider {
-            height: 1px; background: #e2e8f0; margin: 22px 0;
-        }
 
         /* Navigation */
         .nav-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 22px;
+            margin-top: 20px;
         }
         .btn-back {
             background: none;
@@ -202,6 +226,7 @@
         @media (max-width: 600px) {
             .card-body { padding: 20px 18px 18px; }
             .subscales-grid { grid-template-columns: 1fr; }
+            .bebida-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -215,146 +240,237 @@
     </div>
     <div class="card-body">
         <div class="welcome-title">Test de Identificación de Trastornos por Consumo de Alcohol (AUDIT)</div>
-        <div class="scale-badge">10 preguntas · Aprox. 3 minutos · Último año</div>
+        <div class="scale-badge">10 preguntas · Aprox. 3 minutos · 🗓️ Último año</div>
         <div class="instructions-box">
             <p>Las siguientes preguntas se refieren a su consumo de bebidas alcohólicas durante el <strong>último año</strong>. Por favor responda con sinceridad; sus respuestas son confidenciales y ayudan a planear una atención adecuada.</p>
-            <p style="margin-top:8px;">Una <strong>"bebida estándar"</strong> equivale a una cerveza de 355 ml, una copa de vino de 150 ml o una medida de licor de 45 ml.</p>
+        </div>
+        <div class="bebida-estandar-box">
+            <div class="be-title">¿Qué es una "bebida estándar"?</div>
+            <div class="bebida-grid">
+                <div class="bebida-item">
+                    <div class="bebida-icon">🍺</div>
+                    <div class="bebida-text">Una lata de cerveza convencional</div>
+                </div>
+                <div class="bebida-item">
+                    <div class="bebida-icon">🍷</div>
+                    <div class="bebida-text">Una copa de vino pequeña</div>
+                </div>
+                <div class="bebida-item">
+                    <div class="bebida-icon">🥃</div>
+                    <div class="bebida-text">1 oz · un caballito de licor</div>
+                </div>
+            </div>
         </div>
         <button class="btn-primary" onclick="showCard('card-1')">Comenzar Evaluación</button>
     </div>
 </div>
 
-<!-- CARD 1: ÍTEMS 1-2 (Consumo) -->
+<!-- CARD 1: ÍTEM 1 -->
 <div class="card-wrap" id="card-1">
     <div class="card-header">
-        <span class="scale-name">AUDIT — Frecuencia y Cantidad</span>
-        <span class="q-label">Ítems 1–2 de 10</span>
+        <span class="scale-name">AUDIT — Frecuencia de consumo</span>
+        <span class="q-label">Ítem 1 de 10</span>
     </div>
     <div class="card-body">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 1</div>
-            <div class="item-question">¿Con qué frecuencia consume bebidas alcohólicas?</div>
-            <div class="opts-vertical" id="opts-1"></div>
-        </div>
-        <div class="item-divider"></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 2</div>
-            <div class="item-question">¿Cuántas bebidas alcohólicas suele tomar en un día de consumo normal?</div>
-            <div class="opts-vertical" id="opts-2"></div>
-        </div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:10%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 1</div>
+        <div class="item-question">¿Con qué frecuencia consume bebidas alcohólicas?</div>
+        <div class="opts-vertical" id="opts-1"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:10%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-0')">← Anterior</button>
-            <span class="item-badge">1–2 / 10</span>
-            <button class="btn-next" onclick="nextCard('card-2', [1,2])">Siguiente →</button>
+            <span class="item-badge">1 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-2', [1])">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 2: ÍTEMS 3-4 (Consumo/Dependencia) -->
+<!-- CARD 2: ÍTEM 2 -->
 <div class="card-wrap" id="card-2">
     <div class="card-header">
-        <span class="scale-name">AUDIT — Consumo Excesivo</span>
-        <span class="q-label">Ítems 3–4 de 10</span>
+        <span class="scale-name">AUDIT — Cantidad por ocasión</span>
+        <span class="q-label">Ítem 2 de 10</span>
     </div>
     <div class="card-body">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 3</div>
-            <div class="item-question">¿Con qué frecuencia toma 6 o más bebidas alcohólicas en un solo día?</div>
-            <div class="opts-vertical" id="opts-3"></div>
-        </div>
-        <div class="item-divider"></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 4</div>
-            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo parar de beber una vez que había empezado?</div>
-            <div class="opts-vertical" id="opts-4"></div>
-        </div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 2</div>
+        <div class="item-question">¿Cuántas bebidas alcohólicas suele tomar en un día de consumo normal?</div>
+        <div class="opts-vertical" id="opts-2"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:20%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-1')">← Anterior</button>
-            <span class="item-badge">3–4 / 10</span>
-            <button class="btn-next" onclick="nextCard('card-3', [3,4])">Siguiente →</button>
+            <span class="item-badge">2 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-3', [2])">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 3: ÍTEMS 5-6 (Dependencia) -->
+<!-- CARD 3: ÍTEM 3 -->
 <div class="card-wrap" id="card-3">
     <div class="card-header">
-        <span class="scale-name">AUDIT — Síntomas de Dependencia</span>
-        <span class="q-label">Ítems 5–6 de 10</span>
+        <span class="scale-name">AUDIT — Consumo excesivo</span>
+        <span class="q-label">Ítem 3 de 10</span>
     </div>
     <div class="card-body">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 5</div>
-            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo hacer lo que se esperaba de usted porque había bebido?</div>
-            <div class="opts-vertical" id="opts-5"></div>
-        </div>
-        <div class="item-divider"></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 6</div>
-            <div class="item-question">¿Con qué frecuencia, en el último año, necesitó beber en ayunas para recuperarse después de haber bebido mucho el día anterior?</div>
-            <div class="opts-vertical" id="opts-6"></div>
-        </div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:30%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 3</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, toma 6 o más bebidas alcohólicas en un solo día?</div>
+        <div class="opts-vertical" id="opts-3"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:30%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-2')">← Anterior</button>
-            <span class="item-badge">5–6 / 10</span>
-            <button class="btn-next" onclick="nextCard('card-4', [5,6])">Siguiente →</button>
+            <span class="item-badge">3 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-4', [3])">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 4: ÍTEMS 7-8 (Consecuencias) -->
+<!-- CARD 4: ÍTEM 4 -->
 <div class="card-wrap" id="card-4">
     <div class="card-header">
-        <span class="scale-name">AUDIT — Consecuencias del Consumo</span>
-        <span class="q-label">Ítems 7–8 de 10</span>
+        <span class="scale-name">AUDIT — Control del consumo</span>
+        <span class="q-label">Ítem 4 de 10</span>
     </div>
     <div class="card-body">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 7</div>
-            <div class="item-question">¿Con qué frecuencia, en el último año, ha tenido remordimientos o sentimientos de culpa después de haber bebido?</div>
-            <div class="opts-vertical" id="opts-7"></div>
-        </div>
-        <div class="item-divider"></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 8</div>
-            <div class="item-question">¿Con qué frecuencia, en el último año, no pudo recordar lo que sucedió la noche anterior porque había estado bebiendo?</div>
-            <div class="opts-vertical" id="opts-8"></div>
-        </div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 4</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, no pudo parar de beber una vez que había empezado?</div>
+        <div class="opts-vertical" id="opts-4"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:40%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-3')">← Anterior</button>
-            <span class="item-badge">7–8 / 10</span>
-            <button class="btn-next" onclick="nextCard('card-5', [7,8])">Siguiente →</button>
+            <span class="item-badge">4 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-5', [4])">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 5: ÍTEMS 9-10 (Consecuencias sociales) -->
+<!-- CARD 5: ÍTEM 5 -->
 <div class="card-wrap" id="card-5">
     <div class="card-header">
-        <span class="scale-name">AUDIT — Consecuencias Sociales</span>
-        <span class="q-label">Ítems 9–10 de 10</span>
+        <span class="scale-name">AUDIT — Obligaciones y responsabilidades</span>
+        <span class="q-label">Ítem 5 de 10</span>
     </div>
     <div class="card-body">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 9</div>
-            <div class="item-question">¿Usted o alguna otra persona ha resultado herida porque usted había bebido?</div>
-            <div class="opts-vertical" id="opts-9"></div>
-        </div>
-        <div class="item-divider"></div>
-        <div class="item-section">
-            <div class="item-num-label">Ítem 10</div>
-            <div class="item-question">¿Algún familiar, amigo, médico o profesional de salud ha mostrado preocupación por su consumo de alcohol o le ha sugerido que deje de beber?</div>
-            <div class="opts-vertical" id="opts-10"></div>
-        </div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:50%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 5</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, no pudo hacer lo que se esperaba de usted porque había bebido?</div>
+        <div class="opts-vertical" id="opts-5"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:50%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-4')">← Anterior</button>
-            <span class="item-badge">9–10 / 10</span>
-            <button class="btn-next" onclick="nextCard('card-results', [9,10])">Ver resultados →</button>
+            <span class="item-badge">5 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-6', [5])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 6: ÍTEM 6 -->
+<div class="card-wrap" id="card-6">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Beber en ayunas</span>
+        <span class="q-label">Ítem 6 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 6</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, necesitó beber en ayunas para recuperarse después de haber bebido mucho el día anterior?</div>
+        <div class="opts-vertical" id="opts-6"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-5')">← Anterior</button>
+            <span class="item-badge">6 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-7', [6])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 7: ÍTEM 7 -->
+<div class="card-wrap" id="card-7">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Remordimiento o culpa</span>
+        <span class="q-label">Ítem 7 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:70%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 7</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, ha tenido remordimientos o sentimientos de culpa después de haber bebido?</div>
+        <div class="opts-vertical" id="opts-7"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:70%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-6')">← Anterior</button>
+            <span class="item-badge">7 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-8', [7])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 8: ÍTEM 8 -->
+<div class="card-wrap" id="card-8">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Memoria y alcohol</span>
+        <span class="q-label">Ítem 8 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 8</div>
+        <div class="item-question">¿Con qué frecuencia, en el último año, no pudo recordar lo que sucedió la noche anterior porque había estado bebiendo?</div>
+        <div class="opts-vertical" id="opts-8"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-7')">← Anterior</button>
+            <span class="item-badge">8 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-9', [8])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 9: ÍTEM 9 -->
+<div class="card-wrap" id="card-9">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Lesiones por alcohol</span>
+        <span class="q-label">Ítem 9 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:90%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 9</div>
+        <div class="item-question">¿Usted o alguna otra persona ha resultado herida porque usted había bebido?</div>
+        <div class="opts-vertical" id="opts-9"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:90%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-8')">← Anterior</button>
+            <span class="item-badge">9 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-10', [9])">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 10: ÍTEM 10 -->
+<div class="card-wrap" id="card-10">
+    <div class="card-header">
+        <span class="scale-name">AUDIT — Preocupación de otros</span>
+        <span class="q-label">Ítem 10 de 10</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="ultimo-anio-badge">🗓️ Último año</div>
+        <div class="item-num-label">Ítem 10</div>
+        <div class="item-question">¿Algún familiar, amigo, médico o profesional de salud ha mostrado preocupación por su consumo de alcohol o le ha sugerido que deje de beber?</div>
+        <div class="opts-vertical" id="opts-10"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-9')">← Anterior</button>
+            <span class="item-badge">10 / 10</span>
+            <button class="btn-next" onclick="nextCard('card-results', [10])">Ver resultados →</button>
         </div>
     </div>
 </div>
@@ -415,100 +531,77 @@
 const answers = {};
 
 const itemDefs = {
-    1: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Una o menos veces al mes", score: 1 },
-            { text: "De 2 a 4 veces al mes", score: 2 },
-            { text: "De 2 a 3 veces por semana", score: 3 },
-            { text: "4 o más veces por semana", score: 4 }
-        ]
-    },
-    2: {
-        opts: [
-            { text: "1 o 2 bebidas", score: 0 },
-            { text: "3 o 4 bebidas", score: 1 },
-            { text: "5 o 6 bebidas", score: 2 },
-            { text: "7, 8 o 9 bebidas", score: 3 },
-            { text: "10 o más bebidas", score: 4 }
-        ]
-    },
-    3: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    4: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    5: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    6: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    7: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    8: {
-        opts: [
-            { text: "Nunca", score: 0 },
-            { text: "Menos de una vez al mes", score: 1 },
-            { text: "Mensualmente", score: 2 },
-            { text: "Semanalmente", score: 3 },
-            { text: "A diario o casi a diario", score: 4 }
-        ]
-    },
-    9: {
-        opts: [
-            { text: "No", score: 0 },
-            { text: "Sí, pero no en el último año", score: 2 },
-            { text: "Sí, en el último año", score: 4 }
-        ]
-    },
-    10: {
-        opts: [
-            { text: "No", score: 0 },
-            { text: "Sí, pero no en el último año", score: 2 },
-            { text: "Sí, en el último año", score: 4 }
-        ]
-    }
+    1: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Una o menos veces al mes", score: 1 },
+        { text: "De 2 a 4 veces al mes", score: 2 },
+        { text: "De 2 a 3 veces por semana", score: 3 },
+        { text: "4 o más veces por semana", score: 4 }
+    ]},
+    2: { opts: [
+        { text: "1 o 2 bebidas", score: 0 },
+        { text: "3 o 4 bebidas", score: 1 },
+        { text: "5 o 6 bebidas", score: 2 },
+        { text: "7, 8 o 9 bebidas", score: 3 },
+        { text: "10 o más bebidas", score: 4 }
+    ]},
+    3: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    4: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    5: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    6: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    7: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    8: { opts: [
+        { text: "Nunca", score: 0 },
+        { text: "Menos de una vez al mes", score: 1 },
+        { text: "Mensualmente", score: 2 },
+        { text: "Semanalmente", score: 3 },
+        { text: "A diario o casi a diario", score: 4 }
+    ]},
+    9: { opts: [
+        { text: "No", score: 0 },
+        { text: "Sí, pero no en el último año", score: 2 },
+        { text: "Sí, en el último año", score: 4 }
+    ]},
+    10: { opts: [
+        { text: "No", score: 0 },
+        { text: "Sí, pero no en el último año", score: 2 },
+        { text: "Sí, en el último año", score: 4 }
+    ]}
 };
 
 const cardItemMap = {
-    'card-1': [1, 2],
-    'card-2': [3, 4],
-    'card-3': [5, 6],
-    'card-4': [7, 8],
-    'card-5': [9, 10]
+    'card-1': [1], 'card-2': [2], 'card-3': [3], 'card-4': [4], 'card-5': [5],
+    'card-6': [6], 'card-7': [7], 'card-8': [8], 'card-9': [9], 'card-10': [10]
 };
 
 function buildCard(cardId) {
@@ -546,7 +639,7 @@ function showCard(id) {
 function nextCard(toId, itemNums) {
     for (const n of itemNums) {
         if (answers[n] === undefined) {
-            alert('Por favor responda todos los ítems antes de continuar.');
+            alert('Por favor responda este ítem antes de continuar.');
             return;
         }
     }
@@ -608,12 +701,12 @@ function exportPDF() {
     const questions = [
         "¿Con qué frecuencia consume bebidas alcohólicas?",
         "¿Cuántas bebidas alcohólicas suele tomar en un día de consumo normal?",
-        "¿Con qué frecuencia toma 6 o más bebidas en un solo día?",
-        "¿Con qué frecuencia no pudo parar de beber una vez que había empezado?",
-        "¿Con qué frecuencia no pudo cumplir obligaciones porque había bebido?",
-        "¿Con qué frecuencia necesitó beber en ayunas para recuperarse?",
-        "¿Con qué frecuencia tuvo remordimientos o culpa después de beber?",
-        "¿Con qué frecuencia no pudo recordar lo que sucedió la noche anterior?",
+        "¿Con qué frecuencia, en el último año, toma 6 o más bebidas en un solo día?",
+        "¿Con qué frecuencia, en el último año, no pudo parar de beber una vez que había empezado?",
+        "¿Con qué frecuencia, en el último año, no pudo cumplir obligaciones porque había bebido?",
+        "¿Con qué frecuencia, en el último año, necesitó beber en ayunas para recuperarse?",
+        "¿Con qué frecuencia, en el último año, tuvo remordimientos o culpa después de beber?",
+        "¿Con qué frecuencia, en el último año, no pudo recordar lo que sucedió la noche anterior?",
         "¿Usted u otra persona resultó herida porque usted había bebido?",
         "¿Algún familiar, amigo o profesional le ha sugerido que deje de beber?"
     ];
@@ -644,7 +737,7 @@ td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12px}
 .footer{margin-top:24px;font-size:10px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:8px}
 </style></head><body>
 <h1>AUDIT — Test de Identificación de Trastornos por Consumo de Alcohol</h1>
-<div class="meta">Alcohol Use Disorders Identification Test · Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="meta">Alcohol Use Disorders Identification Test · Último año · Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
 <div class="score-box">
 <div class="score-num">${total}<span style="font-size:20px;color:#a0aec0"> / 40</span></div>
 <div class="score-lbl">${label}</div>
