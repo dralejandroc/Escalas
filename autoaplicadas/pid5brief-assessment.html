@@ -26,19 +26,22 @@
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
             color: #fff;
             padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .85; margin-bottom: 2px; }
-        .card-header .domain-name { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
-        .card-header .domain-meta { font-size: 12px; opacity: .75; }
+        .card-header .scale-name { font-size: 14px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 12px; opacity: .8; text-align: right; }
         .card-body { padding: 28px 32px 24px; }
 
         /* Progress */
-        .progress-bar-wrap {
-            height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px;
-            overflow: hidden; margin-top: 10px;
-        }
+        .progress-bar-wrap { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .progress-bar-wrap.top { margin-bottom: 20px; }
+        .progress-bar-wrap.bottom { margin-top: 16px; }
         .progress-bar-fill {
-            height: 100%; background: #fff; border-radius: 3px; transition: width .3s;
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px; transition: width .3s;
         }
 
         /* Welcome */
@@ -48,7 +51,7 @@
             border-left: 4px solid #29A98C;
             border-radius: 0 10px 10px 0;
             padding: 14px 16px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             color: #2d3748;
             font-size: 14px;
             line-height: 1.7;
@@ -62,25 +65,39 @@
             padding: 4px 14px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
+
+        /* Domain overview cards on welcome */
+        .domains-section-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin-bottom: 10px;
+        }
+        .domain-overview-grid {
+            display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;
+        }
+        .domain-overview-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; border-radius: 10px;
+            border: 1.5px solid;
+        }
+        .doi-icon { font-size: 20px; flex-shrink: 0; }
+        .doi-content { flex: 1; }
+        .doi-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+        .doi-desc { font-size: 12px; color: #718096; line-height: 1.4; }
+        .doi-items { font-size: 10px; font-weight: 600; opacity: .7; margin-top: 3px; }
+
+        /* Anchor legend */
         .anchor-legend {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px;
         }
         .legend-pill {
-            background: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px 8px;
-            text-align: center;
+            background: #f7fafc; border: 1px solid #e2e8f0;
+            border-radius: 10px; padding: 10px 8px; text-align: center;
         }
-        .legend-score {
-            font-size: 22px; font-weight: 900; color: #29A98C; line-height: 1;
-        }
+        .legend-score { font-size: 20px; font-weight: 900; color: #29A98C; line-height: 1; }
         .legend-text { font-size: 11px; color: #718096; margin-top: 4px; line-height: 1.3; }
+
         .btn-primary {
             background: linear-gradient(135deg, #29A98C, #112F33);
             color: #fff; border: none; border-radius: 12px;
@@ -90,49 +107,42 @@
         }
         .btn-primary:hover { opacity: .9; }
 
-        /* Domain progress dots */
-        .domain-dots {
-            display: flex; gap: 6px; margin-bottom: 20px;
+        /* Item card - domain badge */
+        .domain-badge-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; border-radius: 10px;
+            border: 1.5px solid; margin-bottom: 16px;
         }
-        .domain-dot {
-            flex: 1; height: 4px; border-radius: 2px; background: #e2e8f0;
-        }
-        .domain-dot.done { background: #29A98C; }
-        .domain-dot.current { background: #6ed8c5; }
+        .dbb-icon { font-size: 16px; }
+        .dbb-name { font-size: 12px; font-weight: 700; }
+        .dbb-desc { font-size: 11px; color: #718096; margin-left: 4px; }
 
-        /* Item list */
-        .card-instructions {
-            font-size: 13px; color: #29A98C; font-weight: 600;
-            margin-bottom: 14px; padding: 10px 14px;
-            background: rgba(41,169,140,0.06); border-radius: 8px;
+        /* Item */
+        .item-num-label {
+            font-size: 11px; font-weight: 700; color: #29A98C;
+            text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
         }
-        .item-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-        .item-row {
-            padding: 12px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            transition: border-color .2s, background .2s;
+        .item-question {
+            font-size: 17px; font-weight: 600; color: #1a202c;
+            line-height: 1.5; margin-bottom: 18px;
         }
-        .item-row.answered { border-color: #29A98C; background: rgba(41,169,140,0.04); }
-        .item-header { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
-        .item-num { font-size: 11px; font-weight: 700; color: #29A98C; min-width: 26px; padding-top: 1px; }
-        .item-text { font-size: 14px; color: #2d3748; font-weight: 500; line-height: 1.45; }
-        .item-opts { display: flex; gap: 6px; flex-wrap: wrap; }
-        .opt-compact {
-            flex: 1; min-width: 90px;
-            padding: 8px 6px;
+        .opts-vertical { display: flex; flex-direction: column; gap: 8px; }
+        .opt-btn {
+            width: 100%; padding: 12px 16px;
             background: white; border: 2px solid #e2e8f0; border-radius: 10px;
-            font-size: 12px; color: #4a5568; cursor: pointer;
-            text-align: center; transition: all .15s; font-family: inherit; line-height: 1.3;
+            font-size: 14px; color: #2d3748; text-align: left;
+            cursor: pointer; transition: all .15s; font-family: inherit; line-height: 1.4;
         }
-        .opt-compact:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
-        .opt-compact.selected {
-            border-color: #29A98C; background: rgba(41,169,140,0.12);
-            color: #112F33; font-weight: 700;
+        .opt-btn:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .opt-btn.selected {
+            border-color: #29A98C; background: rgba(41,169,140,0.10);
+            color: #112F33; font-weight: 600;
         }
 
         /* Navigation */
-        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .nav-row {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 20px;
+        }
         .btn-back {
             background: none; border: 1px solid #cbd5e0; border-radius: 8px;
             color: #718096; padding: 7px 16px; font-size: 13px;
@@ -154,11 +164,9 @@
             letter-spacing: .06em; color: #a0aec0; margin: 16px 0 10px;
         }
         .section-label:first-child { margin-top: 0; }
-
         .domain-card {
             border: 1.5px solid #e2e8f0; border-radius: 14px;
-            padding: 16px 18px; margin-bottom: 10px;
-            transition: border-color .3s;
+            padding: 16px 18px; margin-bottom: 10px; transition: border-color .3s;
         }
         .domain-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .domain-title { font-size: 15px; font-weight: 700; color: #1a202c; }
@@ -173,8 +181,6 @@
         .domain-facets { font-size: 11px; color: #718096; line-height: 1.4; }
         .domain-bar-wrap { height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
         .domain-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
-
-        /* Results table */
         .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .results-table th {
             background: #f7fafc; padding: 8px 12px; text-align: left;
@@ -183,7 +189,6 @@
         }
         .results-table td { padding: 9px 12px; border-bottom: 1px solid #e2e8f0; color: #2d3748; }
         .results-table tr:last-child td { border-bottom: none; }
-
         .interpretacion-section {
             display: none; background: #f7fafc; border-left: 4px solid #29A98C;
             border-radius: 0 10px 10px 0; padding: 14px 16px;
@@ -216,8 +221,6 @@
         @media (max-width: 600px) {
             .card-body { padding: 20px 18px 18px; }
             .anchor-legend { grid-template-columns: 1fr 1fr; }
-            .item-opts { flex-direction: column; }
-            .opt-compact { min-width: unset; }
         }
     </style>
 </head>
@@ -225,166 +228,693 @@
 
 <!-- CARD 0: BIENVENIDA -->
 <div class="card-wrap active" id="card-0">
-    <div class="card-header" style="padding: 22px 28px 18px;">
-        <div class="scale-name">PID-5 Brief — Inventario de Personalidad para el DSM-5</div>
-        <div class="domain-name" style="font-size:17px; margin-top:4px;">Versión Breve · 25 Ítems</div>
-        <div class="domain-meta">Autoaplicada · HiTOP · 5 Dominios de Personalidad</div>
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief — Inventario de Personalidad para el DSM-5</span>
+        <span class="q-label">Autoaplicada · DSM-5</span>
     </div>
     <div class="card-body">
         <div class="welcome-title">Inventario de Personalidad para el DSM-5 (PID-5 Brief)</div>
         <div class="scale-badge">25 afirmaciones · Aprox. 6 minutos · Forma de ser habitual</div>
         <div class="instructions-box">
-            <p>A continuación hay una serie de afirmaciones. Por favor indique <strong>en qué medida cada afirmación lo/la describe</strong>, basándose en cómo es usted <strong>generalmente</strong>, no solo en cómo se siente en este momento.</p>
+            <p>A continuación hay una serie de afirmaciones sobre su forma de ser. Indique <strong>en qué medida está de acuerdo con cada una</strong>, pensando en cómo es usted <strong>generalmente</strong>, no solo en cómo se siente ahora mismo.</p>
             <p style="margin-top:8px;">No hay respuestas correctas ni incorrectas. Sea honesto/a consigo mismo/a.</p>
+        </div>
+        <div class="domains-section-title">Dimensiones exploradas</div>
+        <div class="domain-overview-grid">
+            <div class="domain-overview-item" style="background:#EBF4FF; border-color:#3182CE">
+                <div class="doi-icon">🌊</div>
+                <div class="doi-content">
+                    <div class="doi-name" style="color:#2B6CB0">Afecto Negativo</div>
+                    <div class="doi-desc">Emociones intensas y difíciles de regular: ansiedad, miedo, inestabilidad emocional y preocupación persistente</div>
+                    <div class="doi-items" style="color:#3182CE">Ítems 1–5</div>
+                </div>
+            </div>
+            <div class="domain-overview-item" style="background:#EDF2F7; border-color:#718096">
+                <div class="doi-icon">🧊</div>
+                <div class="doi-content">
+                    <div class="doi-name" style="color:#4A5568">Desapego</div>
+                    <div class="doi-desc">Tendencia a evitar relaciones cercanas, mostrar poca emoción, anhedonia y aislamiento social o afectivo</div>
+                    <div class="doi-items" style="color:#718096">Ítems 6–10</div>
+                </div>
+            </div>
+            <div class="domain-overview-item" style="background:#FFF5F5; border-color:#C53030">
+                <div class="doi-icon">⚔️</div>
+                <div class="doi-content">
+                    <div class="doi-name" style="color:#C53030">Antagonismo</div>
+                    <div class="doi-desc">Manipulación, grandiosidad, falta de empatía y conductas que generan conflicto con los demás</div>
+                    <div class="doi-items" style="color:#C53030">Ítems 11–15</div>
+                </div>
+            </div>
+            <div class="domain-overview-item" style="background:#FFFAF0; border-color:#C05621">
+                <div class="doi-icon">⚡</div>
+                <div class="doi-content">
+                    <div class="doi-name" style="color:#C05621">Desinhibición</div>
+                    <div class="doi-desc">Impulsividad, toma de decisiones precipitadas y dificultad para considerar consecuencias futuras</div>
+                    <div class="doi-items" style="color:#C05621">Ítems 16–20</div>
+                </div>
+            </div>
+            <div class="domain-overview-item" style="background:#FAF5FF; border-color:#6B46C1">
+                <div class="doi-icon">🔮</div>
+                <div class="doi-content">
+                    <div class="doi-name" style="color:#6B46C1">Psicoticismo</div>
+                    <div class="doi-desc">Experiencias, pensamientos o percepciones extrañas o inusuales, difíciles de compartir con otros</div>
+                    <div class="doi-items" style="color:#6B46C1">Ítems 21–25</div>
+                </div>
+            </div>
         </div>
         <div class="anchor-legend">
             <div class="legend-pill">
                 <div class="legend-score">0</div>
-                <div class="legend-text">Muy falso o a menudo falso</div>
+                <div class="legend-text">Muy en desacuerdo</div>
             </div>
             <div class="legend-pill">
                 <div class="legend-score">1</div>
-                <div class="legend-text">Algo falso o a veces falso</div>
+                <div class="legend-text">Moderadamente en desacuerdo</div>
             </div>
             <div class="legend-pill">
                 <div class="legend-score">2</div>
-                <div class="legend-text">Algo verdadero o a veces verdadero</div>
+                <div class="legend-text">Moderadamente de acuerdo</div>
             </div>
             <div class="legend-pill">
                 <div class="legend-score">3</div>
-                <div class="legend-text">Muy verdadero o a menudo verdadero</div>
+                <div class="legend-text">Muy de acuerdo</div>
             </div>
         </div>
         <button class="btn-primary" onclick="showCard('card-1')">Comenzar Evaluación</button>
     </div>
 </div>
 
-<!-- CARD 1: DOMINIO 1 — AFECTO NEGATIVO -->
+<!-- ═══════════════════════════════════════ -->
+<!-- DOMINIO 1: AFECTO NEGATIVO (ítems 1-5) -->
+<!-- ═══════════════════════════════════════ -->
 <div class="card-wrap" id="card-1">
     <div class="card-header">
-        <div class="scale-name">PID-5 Brief · Dominio 1 de 5</div>
-        <div class="domain-name">Afecto Negativo</div>
-        <div class="domain-meta">Espectro HiTOP: Internalizante · Ítems 1–5</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <span class="scale-name">PID-5 Brief · Afecto Negativo</span>
+        <span class="q-label">Ítem 1 de 25</span>
     </div>
     <div class="card-body">
-        <div class="domain-dots">
-            <div class="domain-dot current"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:4%"></div></div>
+        <div class="domain-badge-bar" style="background:#EBF4FF; border-color:#3182CE">
+            <span class="dbb-icon">🌊</span>
+            <span class="dbb-name" style="color:#2B6CB0">Afecto Negativo</span>
+            <span class="dbb-desc">· emociones intensas y difíciles de regular</span>
         </div>
-        <div class="card-instructions">Indique en qué medida cada afirmación lo/la describe tal como es usted habitualmente:</div>
-        <div class="item-list" id="items-card-1"></div>
+        <div class="item-num-label">Ítem 1</div>
+        <div class="item-question">Las emociones cambian mucho de un momento a otro y reacciono de manera exagerada a las cosas.</div>
+        <div class="opts-vertical" id="opts-1"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:4%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-0')">← Anterior</button>
-            <span class="item-badge">1–5 / 25</span>
-            <button class="btn-next" onclick="nextCard('card-2', 1, 5)">Siguiente →</button>
+            <span class="item-badge">1 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-2', 1)">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 2: DOMINIO 2 — DESAPEGO -->
 <div class="card-wrap" id="card-2">
     <div class="card-header">
-        <div class="scale-name">PID-5 Brief · Dominio 2 de 5</div>
-        <div class="domain-name">Desapego</div>
-        <div class="domain-meta">Espectro HiTOP: Desapego · Ítems 6–10</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <span class="scale-name">PID-5 Brief · Afecto Negativo</span>
+        <span class="q-label">Ítem 2 de 25</span>
     </div>
     <div class="card-body">
-        <div class="domain-dots">
-            <div class="domain-dot done"></div>
-            <div class="domain-dot current"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:8%"></div></div>
+        <div class="domain-badge-bar" style="background:#EBF4FF; border-color:#3182CE">
+            <span class="dbb-icon">🌊</span>
+            <span class="dbb-name" style="color:#2B6CB0">Afecto Negativo</span>
+            <span class="dbb-desc">· emociones intensas y difíciles de regular</span>
         </div>
-        <div class="card-instructions">Indique en qué medida cada afirmación lo/la describe tal como es usted habitualmente:</div>
-        <div class="item-list" id="items-card-2"></div>
+        <div class="item-num-label">Ítem 2</div>
+        <div class="item-question">Me preocupo mucho por muchas cosas.</div>
+        <div class="opts-vertical" id="opts-2"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:8%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-1')">← Anterior</button>
-            <span class="item-badge">6–10 / 25</span>
-            <button class="btn-next" onclick="nextCard('card-3', 6, 10)">Siguiente →</button>
+            <span class="item-badge">2 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-3', 2)">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 3: DOMINIO 3 — ANTAGONISMO -->
 <div class="card-wrap" id="card-3">
     <div class="card-header">
-        <div class="scale-name">PID-5 Brief · Dominio 3 de 5</div>
-        <div class="domain-name">Antagonismo</div>
-        <div class="domain-meta">Espectro HiTOP: Antagónico · Ítems 11–15</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <span class="scale-name">PID-5 Brief · Afecto Negativo</span>
+        <span class="q-label">Ítem 3 de 25</span>
     </div>
     <div class="card-body">
-        <div class="domain-dots">
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot current"></div>
-            <div class="domain-dot"></div>
-            <div class="domain-dot"></div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:12%"></div></div>
+        <div class="domain-badge-bar" style="background:#EBF4FF; border-color:#3182CE">
+            <span class="dbb-icon">🌊</span>
+            <span class="dbb-name" style="color:#2B6CB0">Afecto Negativo</span>
+            <span class="dbb-desc">· emociones intensas y difíciles de regular</span>
         </div>
-        <div class="card-instructions">Indique en qué medida cada afirmación lo/la describe tal como es usted habitualmente:</div>
-        <div class="item-list" id="items-card-3"></div>
+        <div class="item-num-label">Ítem 3</div>
+        <div class="item-question">Tengo miedos intensos que parecen tontos pero que no puedo controlar.</div>
+        <div class="opts-vertical" id="opts-3"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:12%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-2')">← Anterior</button>
-            <span class="item-badge">11–15 / 25</span>
-            <button class="btn-next" onclick="nextCard('card-4', 11, 15)">Siguiente →</button>
+            <span class="item-badge">3 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-4', 3)">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 4: DOMINIO 4 — DESINHIBICIÓN -->
 <div class="card-wrap" id="card-4">
     <div class="card-header">
-        <div class="scale-name">PID-5 Brief · Dominio 4 de 5</div>
-        <div class="domain-name">Desinhibición</div>
-        <div class="domain-meta">Espectro HiTOP: Desinhibido · Ítems 16–20</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <span class="scale-name">PID-5 Brief · Afecto Negativo</span>
+        <span class="q-label">Ítem 4 de 25</span>
     </div>
     <div class="card-body">
-        <div class="domain-dots">
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot current"></div>
-            <div class="domain-dot"></div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:16%"></div></div>
+        <div class="domain-badge-bar" style="background:#EBF4FF; border-color:#3182CE">
+            <span class="dbb-icon">🌊</span>
+            <span class="dbb-name" style="color:#2B6CB0">Afecto Negativo</span>
+            <span class="dbb-desc">· emociones intensas y difíciles de regular</span>
         </div>
-        <div class="card-instructions">Indique en qué medida cada afirmación lo/la describe tal como es usted habitualmente:</div>
-        <div class="item-list" id="items-card-4"></div>
+        <div class="item-num-label">Ítem 4</div>
+        <div class="item-question">Me siento ansioso/a mucho tiempo.</div>
+        <div class="opts-vertical" id="opts-4"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:16%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-3')">← Anterior</button>
-            <span class="item-badge">16–20 / 25</span>
-            <button class="btn-next" onclick="nextCard('card-5', 16, 20)">Siguiente →</button>
+            <span class="item-badge">4 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-5', 4)">Siguiente →</button>
         </div>
     </div>
 </div>
 
-<!-- CARD 5: DOMINIO 5 — PSICOTICISMO -->
 <div class="card-wrap" id="card-5">
     <div class="card-header">
-        <div class="scale-name">PID-5 Brief · Dominio 5 de 5</div>
-        <div class="domain-name">Psicoticismo</div>
-        <div class="domain-meta">Espectro HiTOP: Trastorno del Pensamiento · Ítems 21–25</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <span class="scale-name">PID-5 Brief · Afecto Negativo</span>
+        <span class="q-label">Ítem 5 de 25</span>
     </div>
     <div class="card-body">
-        <div class="domain-dots">
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot done"></div>
-            <div class="domain-dot current"></div>
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="domain-badge-bar" style="background:#EBF4FF; border-color:#3182CE">
+            <span class="dbb-icon">🌊</span>
+            <span class="dbb-name" style="color:#2B6CB0">Afecto Negativo</span>
+            <span class="dbb-desc">· emociones intensas y difíciles de regular</span>
         </div>
-        <div class="card-instructions">Indique en qué medida cada afirmación lo/la describe tal como es usted habitualmente:</div>
-        <div class="item-list" id="items-card-5"></div>
+        <div class="item-num-label">Ítem 5</div>
+        <div class="item-question">Nada me parece divertido o interesante.</div>
+        <div class="opts-vertical" id="opts-5"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:20%"></div></div>
         <div class="nav-row">
             <button class="btn-back" onclick="showCard('card-4')">← Anterior</button>
-            <span class="item-badge">21–25 / 25</span>
-            <button class="btn-next" onclick="nextCard('card-results', 21, 25)">Ver resultados →</button>
+            <span class="item-badge">5 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-6', 5)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- DOMINIO 2: DESAPEGO (ítems 6-10)   -->
+<!-- ═══════════════════════════════════ -->
+<div class="card-wrap" id="card-6">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desapego</span>
+        <span class="q-label">Ítem 6 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:24%"></div></div>
+        <div class="domain-badge-bar" style="background:#EDF2F7; border-color:#718096">
+            <span class="dbb-icon">🧊</span>
+            <span class="dbb-name" style="color:#4A5568">Desapego</span>
+            <span class="dbb-desc">· evitación de relaciones y expresión emocional restringida</span>
+        </div>
+        <div class="item-num-label">Ítem 6</div>
+        <div class="item-question">Prefiero estar solo/a que con otras personas.</div>
+        <div class="opts-vertical" id="opts-6"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:24%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-5')">← Anterior</button>
+            <span class="item-badge">6 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-7', 6)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-7">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desapego</span>
+        <span class="q-label">Ítem 7 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:28%"></div></div>
+        <div class="domain-badge-bar" style="background:#EDF2F7; border-color:#718096">
+            <span class="dbb-icon">🧊</span>
+            <span class="dbb-name" style="color:#4A5568">Desapego</span>
+            <span class="dbb-desc">· evitación de relaciones y expresión emocional restringida</span>
+        </div>
+        <div class="item-num-label">Ítem 7</div>
+        <div class="item-question">No me importa mucho si lastimo los sentimientos de los demás.</div>
+        <div class="opts-vertical" id="opts-7"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:28%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-6')">← Anterior</button>
+            <span class="item-badge">7 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-8', 7)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-8">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desapego</span>
+        <span class="q-label">Ítem 8 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:32%"></div></div>
+        <div class="domain-badge-bar" style="background:#EDF2F7; border-color:#718096">
+            <span class="dbb-icon">🧊</span>
+            <span class="dbb-name" style="color:#4A5568">Desapego</span>
+            <span class="dbb-desc">· evitación de relaciones y expresión emocional restringida</span>
+        </div>
+        <div class="item-num-label">Ítem 8</div>
+        <div class="item-question">No me entusiasma mucho hacer cosas.</div>
+        <div class="opts-vertical" id="opts-8"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:32%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-7')">← Anterior</button>
+            <span class="item-badge">8 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-9', 8)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-9">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desapego</span>
+        <span class="q-label">Ítem 9 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:36%"></div></div>
+        <div class="domain-badge-bar" style="background:#EDF2F7; border-color:#718096">
+            <span class="dbb-icon">🧊</span>
+            <span class="dbb-name" style="color:#4A5568">Desapego</span>
+            <span class="dbb-desc">· evitación de relaciones y expresión emocional restringida</span>
+        </div>
+        <div class="item-num-label">Ítem 9</div>
+        <div class="item-question">Rara vez me emociono mucho con las cosas.</div>
+        <div class="opts-vertical" id="opts-9"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:36%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-8')">← Anterior</button>
+            <span class="item-badge">9 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-10', 9)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-10">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desapego</span>
+        <span class="q-label">Ítem 10 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="domain-badge-bar" style="background:#EDF2F7; border-color:#718096">
+            <span class="dbb-icon">🧊</span>
+            <span class="dbb-name" style="color:#4A5568">Desapego</span>
+            <span class="dbb-desc">· evitación de relaciones y expresión emocional restringida</span>
+        </div>
+        <div class="item-num-label">Ítem 10</div>
+        <div class="item-question">Me cuesta mucho conectarme emocionalmente con otras personas.</div>
+        <div class="opts-vertical" id="opts-10"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-9')">← Anterior</button>
+            <span class="item-badge">10 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-11', 10)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DOMINIO 3: ANTAGONISMO (ítems 11-15)    -->
+<!-- ════════════════════════════════════════ -->
+<div class="card-wrap" id="card-11">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Antagonismo</span>
+        <span class="q-label">Ítem 11 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:44%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFF5F5; border-color:#C53030">
+            <span class="dbb-icon">⚔️</span>
+            <span class="dbb-name" style="color:#C53030">Antagonismo</span>
+            <span class="dbb-desc">· manipulación, grandiosidad y falta de empatía</span>
+        </div>
+        <div class="item-num-label">Ítem 11</div>
+        <div class="item-question">Uso a las personas para obtener lo que quiero.</div>
+        <div class="opts-vertical" id="opts-11"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:44%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-10')">← Anterior</button>
+            <span class="item-badge">11 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-12', 11)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-12">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Antagonismo</span>
+        <span class="q-label">Ítem 12 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:48%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFF5F5; border-color:#C53030">
+            <span class="dbb-icon">⚔️</span>
+            <span class="dbb-name" style="color:#C53030">Antagonismo</span>
+            <span class="dbb-desc">· manipulación, grandiosidad y falta de empatía</span>
+        </div>
+        <div class="item-num-label">Ítem 12</div>
+        <div class="item-question">Exagero mis logros para que la gente me admire más.</div>
+        <div class="opts-vertical" id="opts-12"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:48%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-11')">← Anterior</button>
+            <span class="item-badge">12 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-13', 12)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-13">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Antagonismo</span>
+        <span class="q-label">Ítem 13 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:52%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFF5F5; border-color:#C53030">
+            <span class="dbb-icon">⚔️</span>
+            <span class="dbb-name" style="color:#C53030">Antagonismo</span>
+            <span class="dbb-desc">· manipulación, grandiosidad y falta de empatía</span>
+        </div>
+        <div class="item-num-label">Ítem 13</div>
+        <div class="item-question">Es fácil para mí aprovecharme de los demás.</div>
+        <div class="opts-vertical" id="opts-13"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:52%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-12')">← Anterior</button>
+            <span class="item-badge">13 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-14', 13)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-14">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Antagonismo</span>
+        <span class="q-label">Ítem 14 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:56%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFF5F5; border-color:#C53030">
+            <span class="dbb-icon">⚔️</span>
+            <span class="dbb-name" style="color:#C53030">Antagonismo</span>
+            <span class="dbb-desc">· manipulación, grandiosidad y falta de empatía</span>
+        </div>
+        <div class="item-num-label">Ítem 14</div>
+        <div class="item-question">Soy más importante que la mayoría de la gente.</div>
+        <div class="opts-vertical" id="opts-14"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:56%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-13')">← Anterior</button>
+            <span class="item-badge">14 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-15', 14)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-15">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Antagonismo</span>
+        <span class="q-label">Ítem 15 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFF5F5; border-color:#C53030">
+            <span class="dbb-icon">⚔️</span>
+            <span class="dbb-name" style="color:#C53030">Antagonismo</span>
+            <span class="dbb-desc">· manipulación, grandiosidad y falta de empatía</span>
+        </div>
+        <div class="item-num-label">Ítem 15</div>
+        <div class="item-question">Me guío por mis sentimientos del momento sin pensar en las consecuencias.</div>
+        <div class="opts-vertical" id="opts-15"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-14')">← Anterior</button>
+            <span class="item-badge">15 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-16', 15)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- DOMINIO 4: DESINHIBICIÓN (ítems 16-20) -->
+<!-- ═══════════════════════════════════════ -->
+<div class="card-wrap" id="card-16">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desinhibición</span>
+        <span class="q-label">Ítem 16 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:64%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFFAF0; border-color:#C05621">
+            <span class="dbb-icon">⚡</span>
+            <span class="dbb-name" style="color:#C05621">Desinhibición</span>
+            <span class="dbb-desc">· impulsividad y dificultad para considerar consecuencias</span>
+        </div>
+        <div class="item-num-label">Ítem 16</div>
+        <div class="item-question">Tomo decisiones impulsivamente.</div>
+        <div class="opts-vertical" id="opts-16"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:64%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-15')">← Anterior</button>
+            <span class="item-badge">16 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-17', 16)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-17">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desinhibición</span>
+        <span class="q-label">Ítem 17 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:68%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFFAF0; border-color:#C05621">
+            <span class="dbb-icon">⚡</span>
+            <span class="dbb-name" style="color:#C05621">Desinhibición</span>
+            <span class="dbb-desc">· impulsividad y dificultad para considerar consecuencias</span>
+        </div>
+        <div class="item-num-label">Ítem 17</div>
+        <div class="item-question">Me cuesta mucho mantenerme al día con lo que tengo que hacer.</div>
+        <div class="opts-vertical" id="opts-17"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:68%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-16')">← Anterior</button>
+            <span class="item-badge">17 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-18', 17)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-18">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desinhibición</span>
+        <span class="q-label">Ítem 18 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:72%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFFAF0; border-color:#C05621">
+            <span class="dbb-icon">⚡</span>
+            <span class="dbb-name" style="color:#C05621">Desinhibición</span>
+            <span class="dbb-desc">· impulsividad y dificultad para considerar consecuencias</span>
+        </div>
+        <div class="item-num-label">Ítem 18</div>
+        <div class="item-question">Digo las cosas sin pensar en cómo van a afectar a los demás.</div>
+        <div class="opts-vertical" id="opts-18"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:72%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-17')">← Anterior</button>
+            <span class="item-badge">18 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-19', 18)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-19">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desinhibición</span>
+        <span class="q-label">Ítem 19 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:76%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFFAF0; border-color:#C05621">
+            <span class="dbb-icon">⚡</span>
+            <span class="dbb-name" style="color:#C05621">Desinhibición</span>
+            <span class="dbb-desc">· impulsividad y dificultad para considerar consecuencias</span>
+        </div>
+        <div class="item-num-label">Ítem 19</div>
+        <div class="item-question">Actúo sin pensar en lo que podría pasar.</div>
+        <div class="opts-vertical" id="opts-19"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:76%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-18')">← Anterior</button>
+            <span class="item-badge">19 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-20', 19)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-20">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Desinhibición</span>
+        <span class="q-label">Ítem 20 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="domain-badge-bar" style="background:#FFFAF0; border-color:#C05621">
+            <span class="dbb-icon">⚡</span>
+            <span class="dbb-name" style="color:#C05621">Desinhibición</span>
+            <span class="dbb-desc">· impulsividad y dificultad para considerar consecuencias</span>
+        </div>
+        <div class="item-num-label">Ítem 20</div>
+        <div class="item-question">Me meto en situaciones peligrosas aunque sé que son peligrosas.</div>
+        <div class="opts-vertical" id="opts-20"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-19')">← Anterior</button>
+            <span class="item-badge">20 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-21', 20)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- DOMINIO 5: PSICOTICISMO (ítems 21-25) -->
+<!-- ══════════════════════════════════════ -->
+<div class="card-wrap" id="card-21">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Psicoticismo</span>
+        <span class="q-label">Ítem 21 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:84%"></div></div>
+        <div class="domain-badge-bar" style="background:#FAF5FF; border-color:#6B46C1">
+            <span class="dbb-icon">🔮</span>
+            <span class="dbb-name" style="color:#6B46C1">Psicoticismo</span>
+            <span class="dbb-desc">· pensamientos, percepciones o experiencias extrañas o inusuales</span>
+        </div>
+        <div class="item-num-label">Ítem 21</div>
+        <div class="item-question">Creo que tengo poderes especiales que la mayoría de las personas no tienen.</div>
+        <div class="opts-vertical" id="opts-21"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:84%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-20')">← Anterior</button>
+            <span class="item-badge">21 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-22', 21)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-22">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Psicoticismo</span>
+        <span class="q-label">Ítem 22 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:88%"></div></div>
+        <div class="domain-badge-bar" style="background:#FAF5FF; border-color:#6B46C1">
+            <span class="dbb-icon">🔮</span>
+            <span class="dbb-name" style="color:#6B46C1">Psicoticismo</span>
+            <span class="dbb-desc">· pensamientos, percepciones o experiencias extrañas o inusuales</span>
+        </div>
+        <div class="item-num-label">Ítem 22</div>
+        <div class="item-question">Tengo experiencias de cosas, personas o eventos que los demás no ven ni oyen.</div>
+        <div class="opts-vertical" id="opts-22"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:88%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-21')">← Anterior</button>
+            <span class="item-badge">22 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-23', 22)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-23">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Psicoticismo</span>
+        <span class="q-label">Ítem 23 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:92%"></div></div>
+        <div class="domain-badge-bar" style="background:#FAF5FF; border-color:#6B46C1">
+            <span class="dbb-icon">🔮</span>
+            <span class="dbb-name" style="color:#6B46C1">Psicoticismo</span>
+            <span class="dbb-desc">· pensamientos, percepciones o experiencias extrañas o inusuales</span>
+        </div>
+        <div class="item-num-label">Ítem 23</div>
+        <div class="item-question">Me pregunto si las personas que conozco son realmente quienes dicen ser.</div>
+        <div class="opts-vertical" id="opts-23"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:92%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-22')">← Anterior</button>
+            <span class="item-badge">23 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-24', 23)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-24">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Psicoticismo</span>
+        <span class="q-label">Ítem 24 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:96%"></div></div>
+        <div class="domain-badge-bar" style="background:#FAF5FF; border-color:#6B46C1">
+            <span class="dbb-icon">🔮</span>
+            <span class="dbb-name" style="color:#6B46C1">Psicoticismo</span>
+            <span class="dbb-desc">· pensamientos, percepciones o experiencias extrañas o inusuales</span>
+        </div>
+        <div class="item-num-label">Ítem 24</div>
+        <div class="item-question">Mi mente a veces piensa de maneras que son difíciles de explicar a otros.</div>
+        <div class="opts-vertical" id="opts-24"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:96%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-23')">← Anterior</button>
+            <span class="item-badge">24 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-25', 24)">Siguiente →</button>
+        </div>
+    </div>
+</div>
+
+<div class="card-wrap" id="card-25">
+    <div class="card-header">
+        <span class="scale-name">PID-5 Brief · Psicoticismo</span>
+        <span class="q-label">Ítem 25 de 25</span>
+    </div>
+    <div class="card-body">
+        <div class="progress-bar-wrap top"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="domain-badge-bar" style="background:#FAF5FF; border-color:#6B46C1">
+            <span class="dbb-icon">🔮</span>
+            <span class="dbb-name" style="color:#6B46C1">Psicoticismo</span>
+            <span class="dbb-desc">· pensamientos, percepciones o experiencias extrañas o inusuales</span>
+        </div>
+        <div class="item-num-label">Ítem 25</div>
+        <div class="item-question">Siento que hay fuerzas invisibles que afectan mis pensamientos o acciones.</div>
+        <div class="opts-vertical" id="opts-25"></div>
+        <div class="progress-bar-wrap bottom"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="nav-row">
+            <button class="btn-back" onclick="showCard('card-24')">← Anterior</button>
+            <span class="item-badge">25 / 25</span>
+            <button class="btn-next" onclick="nextCard('card-results', 25)">Ver resultados →</button>
         </div>
     </div>
 </div>
@@ -392,13 +922,11 @@
 <!-- RESULTADOS -->
 <div class="card-wrap" id="card-results">
     <div class="card-header" style="padding:18px 28px;">
-        <div class="scale-name">PID-5 Brief · Resultado</div>
-        <div class="domain-name" style="font-size:16px; margin-top:3px;">Perfil de 5 Dominios de Personalidad</div>
-        <div class="domain-meta">Mapeo HiTOP — 5 Espectros</div>
+        <span class="scale-name">PID-5 Brief · Resultado</span>
+        <span class="q-label">Perfil de 5 dominios</span>
     </div>
     <div class="card-body">
         <div class="section-label">Perfil dimensional</div>
-
         <div id="dc-afecto"      class="domain-card"></div>
         <div id="dc-desapego"    class="domain-card"></div>
         <div id="dc-antagonismo" class="domain-card"></div>
@@ -431,84 +959,43 @@
 <script>
 const answers = {};
 
-const items = {
-    1:  "Las emociones cambian mucho de un momento a otro y reacciono de manera exagerada a las cosas.",
-    2:  "Me preocupo mucho por muchas cosas.",
-    3:  "Tengo miedos intensos que parecen tontos pero que no puedo controlar.",
-    4:  "Me siento ansioso/a mucho tiempo.",
-    5:  "Nada me parece divertido o interesante.",
-    6:  "Prefiero estar solo/a que con otras personas.",
-    7:  "No me importa mucho si lastimo los sentimientos de los demás.",
-    8:  "No me entusiasma mucho hacer cosas.",
-    9:  "Rara vez me emociono mucho con las cosas.",
-    10: "Me cuesta mucho conectarme emocionalmente con otras personas.",
-    11: "Uso a las personas para obtener lo que quiero.",
-    12: "Exagero mis logros para que la gente me admire más.",
-    13: "Es fácil para mí aprovecharme de los demás.",
-    14: "Soy más importante que la mayoría de la gente.",
-    15: "Me guío por mis sentimientos del momento sin pensar en las consecuencias.",
-    16: "Tomo decisiones impulsivamente.",
-    17: "Me cuesta mucho mantenerme al día con lo que tengo que hacer.",
-    18: "Digo las cosas sin pensar en cómo van a afectar a los demás.",
-    19: "Actúo sin pensar en lo que podría pasar.",
-    20: "Me meto en situaciones peligrosas aunque sé que son peligrosas.",
-    21: "Creo que tengo poderes especiales que la mayoría de las personas no tienen.",
-    22: "Tengo experiencias de cosas, personas o eventos que los demás no ven ni oyen.",
-    23: "Me pregunto si las personas que conozco son realmente quienes dicen ser.",
-    24: "Mi mente a veces piensa de maneras que son difíciles de explicar a otros.",
-    25: "Siento que hay fuerzas invisibles que afectan mis pensamientos o acciones."
-};
-
-const optLabels = ['Muy falso', 'Algo falso', 'Algo verdadero', 'Muy verdadero'];
-
-const cardItems = {
-    'card-1': [1,2,3,4,5],
-    'card-2': [6,7,8,9,10],
-    'card-3': [11,12,13,14,15],
-    'card-4': [16,17,18,19,20],
-    'card-5': [21,22,23,24,25]
-};
+const optLabels = ['Muy en desacuerdo', 'Moderadamente en desacuerdo', 'Moderadamente de acuerdo', 'Muy de acuerdo'];
 
 const domains = [
     {
-        key: 'afecto',
-        elId: 'dc-afecto',
-        label: 'Afecto Negativo',
-        hitop: 'Espectro Internalizante',
+        key: 'afecto', elId: 'dc-afecto',
+        label: 'Afecto Negativo', hitop: 'Espectro Internalizante',
         items: [1,2,3,4,5],
-        facets: 'Labilidad emocional · Ansiedad · Inseguridad por separación'
+        facets: 'Labilidad emocional · Ansiedad · Inseguridad por separación · Hostilidad',
+        color: '#3182CE'
     },
     {
-        key: 'desapego',
-        elId: 'dc-desapego',
-        label: 'Desapego',
-        hitop: 'Espectro Desapego',
+        key: 'desapego', elId: 'dc-desapego',
+        label: 'Desapego', hitop: 'Espectro Desapego',
         items: [6,7,8,9,10],
-        facets: 'Retirada social · Anhedonia · Afecto restringido · Evitación de intimidad'
+        facets: 'Retirada social · Anhedonia · Afecto restringido · Evitación de intimidad',
+        color: '#4A5568'
     },
     {
-        key: 'antagonismo',
-        elId: 'dc-antagonismo',
-        label: 'Antagonismo',
-        hitop: 'Espectro Antagónico',
+        key: 'antagonismo', elId: 'dc-antagonismo',
+        label: 'Antagonismo', hitop: 'Espectro Antagónico',
         items: [11,12,13,14,15],
-        facets: 'Manipulativeness · Engaño · Grandiosidad · Búsqueda de atención · Insensibilidad'
+        facets: 'Manipulación · Grandiosidad · Búsqueda de atención · Insensibilidad',
+        color: '#C53030'
     },
     {
-        key: 'desinhib',
-        elId: 'dc-desinhib',
-        label: 'Desinhibición',
-        hitop: 'Espectro Desinhibido',
+        key: 'desinhib', elId: 'dc-desinhib',
+        label: 'Desinhibición', hitop: 'Espectro Desinhibido',
         items: [16,17,18,19,20],
-        facets: 'Irresponsabilidad · Impulsividad · Distractibilidad · Toma de riesgos'
+        facets: 'Impulsividad · Irresponsabilidad · Distractibilidad · Toma de riesgos',
+        color: '#C05621'
     },
     {
-        key: 'psicot',
-        elId: 'dc-psicot',
-        label: 'Psicoticismo',
-        hitop: 'Espectro T. del Pensamiento',
+        key: 'psicot', elId: 'dc-psicot',
+        label: 'Psicoticismo', hitop: 'Espectro T. del Pensamiento',
         items: [21,22,23,24,25],
-        facets: 'Creencias inusuales · Excentricidad · Desregulación cognitivo-perceptual'
+        facets: 'Creencias inusuales · Excentricidad · Desregulación cognitivo-perceptual',
+        color: '#6B46C1'
     }
 ];
 
@@ -519,54 +1006,37 @@ function getLevel(mean) {
     return                   ['Grave',      '#f56565'];
 }
 
-function buildCard(cardId) {
-    const container = document.getElementById('items-' + cardId);
-    if (!container) return;
-    container.innerHTML = '';
-    (cardItems[cardId] || []).forEach(n => {
-        const div = document.createElement('div');
-        div.className = 'item-row' + (answers[n] !== undefined ? ' answered' : '');
-        div.id = 'row-' + n;
-        div.innerHTML = `
-            <div class="item-header">
-                <span class="item-num">${n}.</span>
-                <span class="item-text">${items[n]}</span>
-            </div>
-            <div class="item-opts" id="opts-${n}"></div>`;
-        container.appendChild(div);
-
-        const optsEl = div.querySelector('#opts-' + n);
-        optLabels.forEach((label, val) => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-compact' + (answers[n] === val ? ' selected' : '');
-            btn.textContent = label;
-            btn.onclick = () => selectItem(n, val);
-            optsEl.appendChild(btn);
-        });
+function buildItemCard(n) {
+    const container = document.getElementById('opts-' + n);
+    if (!container || container.children.length > 0) return;
+    optLabels.forEach((label, val) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn' + (answers[n] === val ? ' selected' : '');
+        btn.textContent = label;
+        btn.onclick = () => {
+            answers[n] = val;
+            container.querySelectorAll('.opt-btn').forEach((b, i) => b.classList.toggle('selected', i === val));
+        };
+        container.appendChild(btn);
     });
-}
-
-function selectItem(num, val) {
-    answers[num] = val;
-    document.querySelectorAll('#opts-' + num + ' .opt-compact').forEach((b, i) => b.classList.toggle('selected', i === val));
-    const row = document.getElementById('row-' + num);
-    if (row) row.classList.add('answered');
 }
 
 function showCard(id) {
     document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if (cardItems[id]) buildCard(id);
+    const m = id.match(/^card-(\d+)$/);
+    if (m) {
+        const n = parseInt(m[1]);
+        if (n >= 1 && n <= 25) buildItemCard(n);
+    }
     if (id === 'card-results') buildResults();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function nextCard(toId, startItem, endItem) {
-    for (let i = startItem; i <= endItem; i++) {
-        if (answers[i] === undefined) {
-            alert('Por favor responda todos los ítems de este dominio antes de continuar.');
-            return;
-        }
+function nextCard(toId, itemNum) {
+    if (answers[itemNum] === undefined) {
+        alert('Por favor responda este ítem antes de continuar.');
+        return;
     }
     showCard(toId);
 }
@@ -574,9 +1044,8 @@ function nextCard(toId, startItem, endItem) {
 function buildDomainCard(d) {
     const vals = d.items.map(i => answers[i] ?? 0);
     const mean = vals.reduce((a,b) => a+b, 0) / d.items.length;
-    const [levelLabel, color] = getLevel(mean);
+    const [levelLabel, levelColor] = getLevel(mean);
     const barPct = (mean / 3) * 100;
-
     const el = document.getElementById(d.elId);
     el.innerHTML = `
         <div class="domain-header">
@@ -586,61 +1055,50 @@ function buildDomainCard(d) {
             </div>
         </div>
         <div class="domain-score-row">
-            <div class="domain-mean" style="color:${color}">${mean.toFixed(2)}</div>
+            <div class="domain-mean" style="color:${levelColor}">${mean.toFixed(2)}</div>
             <div class="domain-meta">
-                <div class="domain-level-badge" style="background:${color}18; color:${color}; border:1.5px solid ${color}">${levelLabel}</div>
+                <div class="domain-level-badge" style="background:${levelColor}18; color:${levelColor}; border:1.5px solid ${levelColor}">${levelLabel}</div>
                 <div class="domain-facets">${d.facets}</div>
             </div>
         </div>
         <div class="domain-bar-wrap">
-            <div class="domain-bar-fill" style="width:${barPct}%; background:${color}"></div>
+            <div class="domain-bar-fill" style="width:${barPct}%; background:${levelColor}"></div>
         </div>`;
-
-    el.style.borderColor = mean > 0.5 ? color : '#e2e8f0';
-    return { mean, levelLabel, color };
+    el.style.borderColor = mean > 0.5 ? levelColor : '#e2e8f0';
+    return { mean, levelLabel, levelColor };
 }
 
 function buildResults() {
     const results = domains.map(d => ({ ...d, ...buildDomainCard(d) }));
 
-    /* Summary table */
-    const table = document.getElementById('results-table');
-    table.innerHTML = `<tr>
-        <th>Dominio</th>
-        <th>Media</th>
-        <th>Nivel</th>
-        <th>Espectro HiTOP</th>
+    document.getElementById('results-table').innerHTML = `<tr>
+        <th>Dominio</th><th>Media</th><th>Nivel</th><th>Espectro HiTOP</th>
     </tr>` + results.map(r => `<tr>
         <td><strong>${r.label}</strong></td>
-        <td style="font-weight:700; color:${r.color}">${r.mean.toFixed(2)}</td>
-        <td><span style="color:${r.color}; font-weight:600">${r.levelLabel}</span></td>
+        <td style="font-weight:700; color:${r.levelColor}">${r.mean.toFixed(2)}</td>
+        <td><span style="color:${r.levelColor}; font-weight:600">${r.levelLabel}</span></td>
         <td style="font-size:12px; color:#718096">${r.hitop}</td>
     </tr>`).join('');
 
-    /* Clinical interpretation */
     const elevated = results.filter(r => r.mean > 0.5);
     let interp;
     if (elevated.length === 0) {
         interp = 'No se detectan dominios de personalidad elevados por encima del umbral subclínico. Perfil dentro de rangos normativos para los cinco espectros HiTOP evaluados.';
     } else {
-        const primary = results.filter(r => r.mean > 1.0).map(r => r.label);
+        const primary   = results.filter(r => r.mean > 1.0).map(r => r.label);
         const secondary = results.filter(r => r.mean > 0.5 && r.mean <= 1.0).map(r => r.label);
-
         let text = '';
-        if (primary.length > 0) text += `Dominios con elevación clínica: ${primary.join(', ')}. `;
+        if (primary.length > 0)   text += `Dominios con elevación clínica: ${primary.join(', ')}. `;
         if (secondary.length > 0) text += `Dominios subclínicos: ${secondary.join(', ')}. `;
-
         const hasDes = results.find(r => r.key === 'desapego').mean > 1.0;
         const hasAnt = results.find(r => r.key === 'antagonismo').mean > 1.0;
         const hasDis = results.find(r => r.key === 'desinhib').mean > 1.0;
         const hasAfe = results.find(r => r.key === 'afecto').mean > 1.0;
         const hasPsi = results.find(r => r.key === 'psicot').mean > 1.0;
-
         if (hasAfe && hasAnt) text += 'La combinación de Afecto Negativo y Antagonismo elevados es consistente con el espectro límite de personalidad. ';
         if (hasAnt && hasDis) text += 'Antagonismo y Desinhibición elevados sugieren rasgos del espectro antisocial. ';
         if (hasDes && hasPsi) text += 'La elevación conjunta de Desapego y Psicoticismo orienta hacia espectros del Cluster A (esquizoide/esquizotípico). ';
         if (hasAfe && !hasAnt && !hasDes) text += 'El perfil internalizante aislado puede asociarse a trastornos de ansiedad o depresivos con componente de personalidad. ';
-
         text += 'Los resultados deben interpretarse en contexto clínico completo. Este instrumento es orientativo, no diagnóstico.';
         interp = text;
     }
@@ -653,13 +1111,33 @@ function exportPDF() {
     const results = domains.map(d => {
         const vals = d.items.map(i => answers[i] ?? 0);
         const mean = vals.reduce((a,b) => a+b, 0) / d.items.length;
-        const [levelLabel, color] = getLevel(mean);
-        return { ...d, mean, levelLabel, color };
+        const [levelLabel, levelColor] = getLevel(mean);
+        return { ...d, mean, levelLabel, levelColor };
     });
 
     const subRows = results.map(r =>
-        `<tr><td><strong>${r.label}</strong></td><td>${r.hitop}</td><td style="text-align:center;font-weight:700;color:${r.color}">${r.mean.toFixed(2)}</td><td style="color:${r.color};font-weight:600">${r.levelLabel}</td></tr>`
+        `<tr><td><strong>${r.label}</strong></td><td>${r.hitop}</td><td style="text-align:center;font-weight:700;color:${r.levelColor}">${r.mean.toFixed(2)}</td><td style="color:${r.levelColor};font-weight:600">${r.levelLabel}</td></tr>`
     ).join('');
+
+    const items = {
+        1:"Las emociones cambian mucho de un momento a otro y reacciono de manera exagerada a las cosas.",
+        2:"Me preocupo mucho por muchas cosas.",3:"Tengo miedos intensos que parecen tontos pero que no puedo controlar.",
+        4:"Me siento ansioso/a mucho tiempo.",5:"Nada me parece divertido o interesante.",
+        6:"Prefiero estar solo/a que con otras personas.",7:"No me importa mucho si lastimo los sentimientos de los demás.",
+        8:"No me entusiasma mucho hacer cosas.",9:"Rara vez me emociono mucho con las cosas.",
+        10:"Me cuesta mucho conectarme emocionalmente con otras personas.",
+        11:"Uso a las personas para obtener lo que quiero.",12:"Exagero mis logros para que la gente me admire más.",
+        13:"Es fácil para mí aprovecharme de los demás.",14:"Soy más importante que la mayoría de la gente.",
+        15:"Me guío por mis sentimientos del momento sin pensar en las consecuencias.",
+        16:"Tomo decisiones impulsivamente.",17:"Me cuesta mucho mantenerme al día con lo que tengo que hacer.",
+        18:"Digo las cosas sin pensar en cómo van a afectar a los demás.",
+        19:"Actúo sin pensar en lo que podría pasar.",20:"Me meto en situaciones peligrosas aunque sé que son peligrosas.",
+        21:"Creo que tengo poderes especiales que la mayoría de las personas no tienen.",
+        22:"Tengo experiencias de cosas, personas o eventos que los demás no ven ni oyen.",
+        23:"Me pregunto si las personas que conozco son realmente quienes dicen ser.",
+        24:"Mi mente a veces piensa de maneras que son difíciles de explicar a otros.",
+        25:"Siento que hay fuerzas invisibles que afectan mis pensamientos o acciones."
+    };
 
     let itemRows = '';
     for (let i = 1; i <= 25; i++) {
