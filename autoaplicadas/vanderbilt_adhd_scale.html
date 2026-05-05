@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -700,15 +693,15 @@
                     <div class="interpretation">
                         <h4 style="color: #112F33; margin-bottom: 15px;">Hallazgos Específicos de la Escala</h4>
                         <ul style="line-height: 1.6;">
-                            ${scores.scores.inattention >= 12 ? '<li><strong>⚠️ Predominio Inatentivo Severo:</strong> Puntuación elevada sugiere dificultades significativas en atención sostenida, organización y seguimiento de instrucciones.</li>' : ''}
-                            ${scores.scores.hyperactivity >= 12 ? '<li><strong>⚠️ Alto Impacto en Hiperactividad:</strong> Patrón intenso de inquietud motora, impulsividad y dificultad para autocontrol que puede afectar múltiples contextos.</li>' : ''}
-                            ${interpretation.odd ? '<li><strong>⚠️ Posible Trastorno Oposicional Desafiante (TOD):</strong> Patrón consistente de comportamiento desafiante, argumentativo y negativista hacia figuras de autoridad.</li>' : ''}
-                            ${interpretation.conduct ? '<li><strong>🚨 Indicadores de Trastorno de Conducta:</strong> Presencia de comportamientos que violan normas sociales y derechos de otros. Requiere intervención inmediata.</li>' : ''}
-                            ${interpretation.anxietyDepression ? '<li><strong>⚠️ Comorbilidad Ansiosa-Depresiva:</strong> Síntomas internalizantes significativos que pueden complicar el tratamiento del TDAH y requerir abordaje dual.</li>' : ''}
-                            ${responses[7] >= 2 ? '<li><strong>🔍 Observar Enuresis:</strong> Ítem 7 elevado (pérdida de cosas) puede correlacionar con problemas de control de esfínteres, especialmente nocturno.</li>' : ''}
-                            ${responses[20] >= 2 || responses[21] >= 2 ? '<li><strong>⚠️ Riesgo de Escalamiento Conductual:</strong> Patrones de pérdida de control y desafío activo pueden evolucionar hacia comportamientos más disruptivos.</li>' : ''}
-                            ${scores.scores.total >= 25 ? '<li><strong>🚨 Puntuación Total Elevada:</strong> Múltiples dominios afectados sugieren presentación compleja que requiere plan terapéutico integral.</li>' : ''}
-                            <li><strong>📊 Validación Escolar:</strong> Completar evaluación con escala Vanderbilt-Maestros para confirmar síntomas en ambiente académico.</li>
+                            ${scores.scores.inattention >= 12 ? '<li><strong>️ Predominio Inatentivo Severo:</strong> Puntuación elevada sugiere dificultades significativas en atención sostenida, organización y seguimiento de instrucciones.</li>' : ''}
+                            ${scores.scores.hyperactivity >= 12 ? '<li><strong>️ Alto Impacto en Hiperactividad:</strong> Patrón intenso de inquietud motora, impulsividad y dificultad para autocontrol que puede afectar múltiples contextos.</li>' : ''}
+                            ${interpretation.odd ? '<li><strong>️ Posible Trastorno Oposicional Desafiante (TOD):</strong> Patrón consistente de comportamiento desafiante, argumentativo y negativista hacia figuras de autoridad.</li>' : ''}
+                            ${interpretation.conduct ? '<li><strong> Indicadores de Trastorno de Conducta:</strong> Presencia de comportamientos que violan normas sociales y derechos de otros. Requiere intervención inmediata.</li>' : ''}
+                            ${interpretation.anxietyDepression ? '<li><strong>️ Comorbilidad Ansiosa-Depresiva:</strong> Síntomas internalizantes significativos que pueden complicar el tratamiento del TDAH y requerir abordaje dual.</li>' : ''}
+                            ${responses[7] >= 2 ? '<li><strong> Observar Enuresis:</strong> Ítem 7 elevado (pérdida de cosas) puede correlacionar con problemas de control de esfínteres, especialmente nocturno.</li>' : ''}
+                            ${responses[20] >= 2 || responses[21] >= 2 ? '<li><strong>️ Riesgo de Escalamiento Conductual:</strong> Patrones de pérdida de control y desafío activo pueden evolucionar hacia comportamientos más disruptivos.</li>' : ''}
+                            ${scores.scores.total >= 25 ? '<li><strong> Puntuación Total Elevada:</strong> Múltiples dominios afectados sugieren presentación compleja que requiere plan terapéutico integral.</li>' : ''}
+                            <li><strong> Validación Escolar:</strong> Completar evaluación con escala Vanderbilt-Maestros para confirmar síntomas en ambiente académico.</li>
                         </ul>
                         
                         <h4 style="color: #112F33; margin: 20px 0 15px 0;">Información Técnica</h4>
@@ -719,9 +712,9 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                    <button class="btn" onclick="exportToImage()">📸 Capturar Imagen</button>
-                    <button class="btn btn-secondary" onclick="newAssessment()">🔄 Nueva Evaluación</button>
+                    <button class="btn" onclick="exportToPDF()"> Exportar PDF</button>
+                    <button class="btn" onclick="exportToImage()"> Capturar Imagen</button>
+                    <button class="btn btn-secondary" onclick="newAssessment()"> Nueva Evaluación</button>
                 </div>
             `;
 

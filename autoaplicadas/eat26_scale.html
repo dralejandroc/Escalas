@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -647,9 +640,9 @@
             </div>
             
             <div class="export-section">
-                <button class="btn" onclick="exportToPDF()">📄 Exportar a PDF</button>
-                <button class="btn" onclick="exportToImage()">🖼️ Captura de pantalla</button>
-                <button class="btn" onclick="startNewAssessment()">🔄 Nueva evaluación</button>
+                <button class="btn" onclick="exportToPDF()"> Exportar a PDF</button>
+                <button class="btn" onclick="exportToImage()">️ Captura de pantalla</button>
+                <button class="btn" onclick="startNewAssessment()"> Nueva evaluación</button>
             </div>
         </div>
     </div>
@@ -915,26 +908,26 @@
                             <div class="subscale-name">Dieta/Restricción (13 ítems)</div>
                             <div class="subscale-score">${subscaleScores.dieting} puntos</div>
                             <div style="font-size: 0.9em; color: #666;">Evalúa conductas evitativas de alimentos calóricos y preocupaciones por la delgadez</div>
-                            ${subscaleScores.dieting >= 8 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>⚠️ Puntuación elevada: Sugiere patrón restrictivo significativo</strong></div>' : ''}
+                            ${subscaleScores.dieting >= 8 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>️ Puntuación elevada: Sugiere patrón restrictivo significativo</strong></div>' : ''}
                         </div>
                         <div class="subscale">
                             <div class="subscale-name">Bulimia y Preocupación por la Comida (5 ítems)</div>
                             <div class="subscale-score">${subscaleScores.bulimia} puntos</div>
                             <div style="font-size: 0.9em; color: #666;">Evalúa conductas bulímicas y pensamientos obsesivos sobre la comida</div>
-                            ${subscaleScores.bulimia >= 3 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>⚠️ Puntuación elevada: Sugiere conductas bulímicas o preocupación excesiva</strong></div>' : ''}
+                            ${subscaleScores.bulimia >= 3 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>️ Puntuación elevada: Sugiere conductas bulímicas o preocupación excesiva</strong></div>' : ''}
                         </div>
                         <div class="subscale">
                             <div class="subscale-name">Control Oral (8 ítems)</div>
                             <div class="subscale-score">${subscaleScores.oralControl} puntos</div>
                             <div style="font-size: 0.9em; color: #666;">Evalúa autocontrol sobre la ingesta y presión externa para comer</div>
-                            ${subscaleScores.oralControl >= 5 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>⚠️ Puntuación elevada: Sugiere alteraciones en el control alimentario</strong></div>' : ''}
+                            ${subscaleScores.oralControl >= 5 ? '<div style="font-size: 0.85em; color: #f56565; margin-top: 5px;"><strong>️ Puntuación elevada: Sugiere alteraciones en el control alimentario</strong></div>' : ''}
                         </div>
                     </div>
                 </div>
 
                 ${highRiskItems.length > 0 ? `
                 <div class="alert-items">
-                    <h2 style="margin-bottom: 15px;">⚠️ Ítems de Alerta (Puntuación ≥2)</h2>
+                    <h2 style="margin-bottom: 15px;">️ Ítems de Alerta (Puntuación ≥2)</h2>
                     <p style="margin-bottom: 15px;"><strong>Los siguientes ítems requieren atención especial:</strong></p>
                     ${highRiskItems.map(item => 
                         `<div class="alert-item">

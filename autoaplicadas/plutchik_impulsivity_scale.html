@@ -47,21 +47,6 @@
             line-height: 1.7;
         }
         .instructions-box ul { margin: 8px 0 0 18px; }
-        .scale-options-preview {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 12px 0 20px;
-        }
-        .preview-opt {
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px 6px;
-            text-align: center;
-            font-size: 13px;
-            color: #112F33;
-        }
-        .preview-opt strong { display: block; font-size: 11px; color: #a0aec0; margin-top: 2px; }
 
         /* Question */
         .question-text {
@@ -214,7 +199,6 @@
 
         @media (max-width: 600px) {
             .card-body { padding: 20px 18px 18px; }
-            .scale-options-preview { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -238,13 +222,7 @@
                 <li><strong>CASI SIEMPRE</strong> — Me pasa todo el tiempo</li>
             </ul>
         </div>
-        <div class="scale-options-preview">
-            <div class="preview-opt">Nunca<strong>0</strong></div>
-            <div class="preview-opt">A veces<strong>1</strong></div>
-            <div class="preview-opt">A menudo<strong>2</strong></div>
-            <div class="preview-opt">Casi siempre<strong>3</strong></div>
-        </div>
-        <div style="text-align:center;">
+<div style="text-align:center;">
             <button class="btn-primary" onclick="showCard(1)">Comenzar Evaluación</button>
         </div>
     </div>
@@ -557,7 +535,7 @@
         <span class="q-number">Completado</span>
     </div>
     <div class="card-body">
-        <div class="final-icon">✅</div>
+        <div class="final-icon"></div>
         <div class="final-title">Evaluación Completada</div>
         <div class="final-msg">Muchas gracias por completar la Escala de Impulsividad de Plutchik.</div>
         <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de la salud para la revisión de los resultados.</div>
@@ -703,7 +681,7 @@
             itemsEl.innerHTML = `
                 <div class="section-label">Ítems con Puntuación Elevada</div>
                 <div class="items-box">
-                    <strong>⚠ Los siguientes ítems obtuvieron puntuaciones altas (A menudo / Casi siempre):</strong>
+                    <strong> Los siguientes ítems obtuvieron puntuaciones altas (A menudo / Casi siempre):</strong>
                     <ul>${highItems.map(it => `<li><strong>Ítem ${it.n}</strong>: ${questionTexts[it.n]} — <em>${freqs[it.raw]}</em></li>`).join('')}</ul>
                 </div>`;
         } else {

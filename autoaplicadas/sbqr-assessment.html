@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
+            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
             font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             align-items: flex-start;
@@ -26,18 +26,13 @@
         .card-header {
             background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
             color: white;
-            padding: 22px 28px 18px;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .scale-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.8;
-            margin-bottom: 4px;
-        }
-        .card-header h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
-        .card-header .subtitle { font-size: 12px; opacity: 0.72; }
+        .scale-name { font-size: 15px; font-weight: 600; opacity: .9; }
+        .q-label { font-size: 13px; opacity: .8; }
         .card-body { padding: 28px 32px 24px; }
         .progress-bar-wrap {
             height: 6px;
@@ -217,9 +212,8 @@
     <!-- BIENVENIDA -->
     <div id="card-0">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Autoaplicada · Riesgo Suicida</div>
-            <h2>Cuestionario de Conductas Suicidas</h2>
-            <div class="subtitle">Suicidal Behaviors Questionnaire — Revised (Osman et al., 2001)</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Riesgo Suicida · Autoaplicada</span>
         </div>
         <div class="card-body">
             <p class="welcome-desc">Este cuestionario tiene <strong>4 preguntas</strong> sobre pensamientos relacionados con el suicidio. Por favor responda con sinceridad. Sus respuestas son confidenciales y ayudan a brindarle una mejor atención.</p>
@@ -231,7 +225,9 @@
     <!-- PREGUNTA 1 -->
     <div id="card-1" class="hidden">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Pregunta 1 de 4</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Pregunta 1 de 4</span>
+        </div>
             <h2>A lo largo de su vida</h2>
         </div>
         <div class="card-body">
@@ -249,7 +245,9 @@
     <!-- PREGUNTA 2 -->
     <div id="card-2" class="hidden">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Pregunta 2 de 4</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Pregunta 2 de 4</span>
+        </div>
             <h2>En el último año</h2>
         </div>
         <div class="card-body">
@@ -267,7 +265,9 @@
     <!-- PREGUNTA 3 -->
     <div id="card-3" class="hidden">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Pregunta 3 de 4</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Pregunta 3 de 4</span>
+        </div>
             <h2>Comunicación de intención</h2>
         </div>
         <div class="card-body">
@@ -285,7 +285,9 @@
     <!-- PREGUNTA 4 -->
     <div id="card-4" class="hidden">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Pregunta 4 de 4</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Pregunta 4 de 4</span>
+        </div>
             <h2>Perspectiva futura</h2>
         </div>
         <div class="card-body">
@@ -303,9 +305,8 @@
     <!-- RESULTADOS -->
     <div id="card-results" class="hidden">
         <div class="card-header">
-            <div class="scale-label">SBQ-R · Resultado</div>
-            <h2>Cuestionario de Conductas Suicidas</h2>
-            <div class="subtitle">Suicidal Behaviors Questionnaire — Revised</div>
+            <span class="scale-name">SBQ-R</span>
+            <span class="q-label">Resultados</span>
         </div>
         <div class="card-body">
             <div class="result-center">

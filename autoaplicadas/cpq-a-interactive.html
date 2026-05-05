@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -581,7 +574,7 @@
         <!-- Card Final -->
         <div class="card" id="card-final">
             <div class="completion-message">
-                <h2>✓ Evaluación Completada</h2>
+                <h2> Evaluación Completada</h2>
                 <p>Has completado exitosamente el Cuestionario de Problemas con el Cannabis para Adolescentes (CPQ-A).</p>
                 <p><strong>Muchas gracias por tu tiempo y honestidad.</strong></p>
                 <p>Por favor, pasa el dispositivo a tu médico o profesional de salud mental para la revisión de los resultados.</p>
@@ -618,8 +611,8 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="btn btn-secondary" onclick="resetEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="btn btn-primary" onclick="exportToPDF()"> Exportar PDF</button>
+                <button class="btn btn-secondary" onclick="resetEvaluation()"> Nueva Evaluación</button>
             </div>
         </div>
     </div>
@@ -797,7 +790,7 @@
             if (alerts.length > 0) {
                 alertsContainer.innerHTML = `
                     <div class="clinical-info">
-                        <h4>⚠️ Alertas Clínicas</h4>
+                        <h4>️ Alertas Clínicas</h4>
                         ${alerts.join('')}
                     </div>
                 `;

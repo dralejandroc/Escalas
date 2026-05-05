@@ -693,7 +693,7 @@
         <div class="card-title">Cuestionario Completado</div>
     </div>
     <div class="final-body">
-        <div class="final-icon">✅</div>
+        <div class="final-icon"></div>
         <h2>¡Gracias por completar el cuestionario!</h2>
         <p>Por favor, pase el dispositivo a su médico o profesional de salud mental para la revisión de los resultados.</p>
         <button class="btn" onclick="showResults()">Ver Resultados (Profesional) →</button>
@@ -739,8 +739,8 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn-action" onclick="exportToPDF()">📄 Exportar PDF</button>
-            <button class="btn-action" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+            <button class="btn-action" onclick="exportToPDF()"> Exportar PDF</button>
+            <button class="btn-action" onclick="newEvaluation()"> Nueva Evaluación</button>
         </div>
     </div>
 </div>
@@ -850,12 +850,12 @@
         const summaryEl = document.getElementById('results-summary');
         if (elevated.length > 0) {
             summaryEl.innerHTML = `<div class="summary-box summary-alert">
-                <h4 style="color:#c53030">⚠️ Subescalas que superan el punto de corte (≥ 2)</h4>
+                <h4 style="color:#c53030">️ Subescalas que superan el punto de corte (≥ 2)</h4>
                 <p style="color:#742a2a;font-size:0.9em;margin-top:4px">${elevated.join(' · ')}</p>
             </div>`;
         } else {
             summaryEl.innerHTML = `<div class="summary-box summary-ok">
-                <h4 style="color:#276749">✓ Perfil de screening negativo</h4>
+                <h4 style="color:#276749"> Perfil de screening negativo</h4>
                 <p style="color:#2f855a;font-size:0.9em;margin-top:4px">No se identifican patrones significativos en ninguna subescala.</p>
             </div>`;
         }
@@ -903,7 +903,7 @@
                             <div style="width:${pct}%;height:100%;background:${color};border-radius:5px"></div>
                         </div>
                     </td>
-                    <td style="padding:8px 12px;color:${color};font-weight:600;font-size:0.85em">${level}${s>=2?' ⚠️':''}</td>
+                    <td style="padding:8px 12px;color:${color};font-weight:600;font-size:0.85em">${level}${s>=2?' ️':''}</td>
                 </tr>`;
             }
         });
@@ -922,8 +922,8 @@
         </style></head><body>
         <h1>Cuestionario Salamanca — Resultados</h1>
         ${elevated.length>0
-            ? `<div class="alert"><strong>⚠️ Subescalas que superan punto de corte (≥2):</strong><br>${elevated.join(' · ')}</div>`
-            : `<div class="ok"><strong>✓ Perfil de screening negativo</strong><br>No se identifican patrones significativos.</div>`}
+            ? `<div class="alert"><strong>️ Subescalas que superan punto de corte (≥2):</strong><br>${elevated.join(' · ')}</div>`
+            : `<div class="ok"><strong> Perfil de screening negativo</strong><br>No se identifican patrones significativos.</div>`}
         <table><tbody>${rowsHTML}</tbody></table>
         <div class="footer">
             <p>Fecha: ${date}</p>

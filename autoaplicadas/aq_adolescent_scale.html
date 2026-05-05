@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -280,10 +273,10 @@
             <div class="question-number">1</div>
             <div class="question-text">Prefiere hacer cosas con otras personas más que solo/a</div>
             <div class="options-container">
-                <button class="option-button" onclick="selectOption(1, 'definitely_agree')">✅ Definitivamente de acuerdo</button>
-                <button class="option-button" onclick="selectOption(1, 'slightly_agree')">☑️ Ligeramente de acuerdo</button>
-                <button class="option-button" onclick="selectOption(1, 'slightly_disagree')">🤔 Ligeramente en desacuerdo</button>
-                <button class="option-button" onclick="selectOption(1, 'definitely_disagree')">❌ Definitivamente en desacuerdo</button>
+                <button class="option-button" onclick="selectOption(1, 'definitely_agree')"> Definitivamente de acuerdo</button>
+                <button class="option-button" onclick="selectOption(1, 'slightly_agree')">️ Ligeramente de acuerdo</button>
+                <button class="option-button" onclick="selectOption(1, 'slightly_disagree')"> Ligeramente en desacuerdo</button>
+                <button class="option-button" onclick="selectOption(1, 'definitely_disagree')"> Definitivamente en desacuerdo</button>
             </div>
         </div>
 
@@ -305,9 +298,9 @@
             </div>
             
             <div class="export-buttons">
-                <button class="primary-button" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="primary-button" onclick="exportToImage()">📷 Capturar Imagen</button>
-                <button class="primary-button" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="primary-button" onclick="exportToPDF()"> Exportar PDF</button>
+                <button class="primary-button" onclick="exportToImage()"> Capturar Imagen</button>
+                <button class="primary-button" onclick="newEvaluation()"> Nueva Evaluación</button>
             </div>
         </div>
 
@@ -403,10 +396,10 @@
                         <div class="question-number">${questionIndex}</div>
                         <div class="question-text">${questions[questionIndex - 1]}</div>
                         <div class="options-container">
-                            <button class="option-button" onclick="selectOption(${questionIndex}, 'definitely_agree')">✅ Definitivamente de acuerdo</button>
-                            <button class="option-button" onclick="selectOption(${questionIndex}, 'slightly_agree')">☑️ Ligeramente de acuerdo</button>
-                            <button class="option-button" onclick="selectOption(${questionIndex}, 'slightly_disagree')">🤔 Ligeramente en desacuerdo</button>
-                            <button class="option-button" onclick="selectOption(${questionIndex}, 'definitely_disagree')">❌ Definitivamente en desacuerdo</button>
+                            <button class="option-button" onclick="selectOption(${questionIndex}, 'definitely_agree')"> Definitivamente de acuerdo</button>
+                            <button class="option-button" onclick="selectOption(${questionIndex}, 'slightly_agree')">️ Ligeramente de acuerdo</button>
+                            <button class="option-button" onclick="selectOption(${questionIndex}, 'slightly_disagree')"> Ligeramente en desacuerdo</button>
+                            <button class="option-button" onclick="selectOption(${questionIndex}, 'definitely_disagree')"> Definitivamente en desacuerdo</button>
                         </div>
                     </div>
                 `;

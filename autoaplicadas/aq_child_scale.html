@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -298,7 +291,7 @@
 
         <!-- Card Final -->
         <div class="card" id="card-final">
-            <h1>✅ Evaluación Completada</h1>
+            <h1> Evaluación Completada</h1>
             <h2>¡Muchas gracias!</h2>
             
             <div class="instructions">
@@ -312,7 +305,7 @@
 
         <!-- Card Results -->
         <div class="card" id="card-results">
-            <h1>📊 Resultados AQ-Child</h1>
+            <h1> Resultados AQ-Child</h1>
             
             <div class="score-display" id="score-display">
                 <!-- Se llenará dinámicamente -->
@@ -323,7 +316,7 @@
                     <!-- Se llenará dinámicamente -->
                 </div>
 
-                <h3>🎯 Resultados por Subescala:</h3>
+                <h3> Resultados por Subescala:</h3>
                 <div class="subscale-results" id="subscale-results">
                     <!-- Se llenará dinámicamente -->
                 </div>
@@ -333,7 +326,7 @@
                 </div>
 
                 <div class="interpretation">
-                    <h4>📝 Información Clínica:</h4>
+                    <h4> Información Clínica:</h4>
                     <p><strong>Punto de corte:</strong> 76 puntos (sensibilidad y especificidad del 95%)</p>
                     <p><strong>Rango de puntuación:</strong> 0-150 puntos</p>
                     <p><strong>Propósito:</strong> Cuantificar rasgos autistas en niños de 4-11 años mediante reporte parental</p>
@@ -342,9 +335,9 @@
             </div>
 
             <div class="export-buttons">
-                <button class="btn-export" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="btn-export" onclick="exportToJPG()">🖼️ Capturar Imagen</button>
-                <button class="btn-export" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="btn-export" onclick="exportToPDF()"> Exportar PDF</button>
+                <button class="btn-export" onclick="exportToJPG()">️ Capturar Imagen</button>
+                <button class="btn-export" onclick="newEvaluation()"> Nueva Evaluación</button>
             </div>
         </div>
     </div>
@@ -415,10 +408,10 @@
 
         // Opciones de respuesta
         const options = [
-            { value: 0, text: "Muy de acuerdo", emoji: "😊", class: "green" },
-            { value: 1, text: "Medianamente de acuerdo", emoji: "🙂", class: "light-green" },
-            { value: 2, text: "Medianamente en desacuerdo", emoji: "😐", class: "light-red" },
-            { value: 3, text: "Muy en desacuerdo", emoji: "🙁", class: "red" }
+            { value: 0, text: "Muy de acuerdo", emoji: "", class: "green" },
+            { value: 1, text: "Medianamente de acuerdo", emoji: "", class: "light-green" },
+            { value: 2, text: "Medianamente en desacuerdo", emoji: "", class: "light-red" },
+            { value: 3, text: "Muy en desacuerdo", emoji: "", class: "red" }
         ];
 
         // Inicializar la aplicación
@@ -650,7 +643,7 @@
             const interpretationDiv = document.getElementById('interpretation');
             if (interpretationDiv) {
                 interpretationDiv.innerHTML = `
-                    <h4 style="color: ${interpretation.color};">🎯 Interpretación Clínica:</h4>
+                    <h4 style="color: ${interpretation.color};"> Interpretación Clínica:</h4>
                     <p><strong>${interpretation.description}</strong></p>
                     <p><em>Recomendación:</em> ${interpretation.recommendation}</p>
                 `;
@@ -683,7 +676,7 @@
                 if (isHigh) {
                     alerts += `
                         <div class="alert">
-                            <strong>⚠️ Atención:</strong> Puntuación elevada en ${subscaleNames[key]} (${score}/30). 
+                            <strong>️ Atención:</strong> Puntuación elevada en ${subscaleNames[key]} (${score}/30). 
                             Considerar evaluación detallada de esta área.
                         </div>
                     `;

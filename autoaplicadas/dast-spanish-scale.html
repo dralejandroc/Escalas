@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -460,7 +453,7 @@
 
         <!-- Card Final -->
         <div class="card" id="card-final">
-            <h1>✓ Escala Completada</h1>
+            <h1> Escala Completada</h1>
             <p style="color: #112F33; font-size: 1.1rem; margin: 30px 0;">
                 Muchas gracias por completar el cuestionario.<br><br>
                 Por favor pase el dispositivo a su médico o profesional para su revisión.
@@ -476,9 +469,9 @@
             </div>
             
             <div class="export-buttons">
-                <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="btn" onclick="captureResults()">📸 Capturar Imagen</button>
-                <button class="btn btn-secondary" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="btn" onclick="exportToPDF()"> Exportar PDF</button>
+                <button class="btn" onclick="captureResults()"> Capturar Imagen</button>
+                <button class="btn btn-secondary" onclick="newEvaluation()"> Nueva Evaluación</button>
             </div>
         </div>
     </div>
@@ -828,7 +821,7 @@
                     
                     ${highRiskItems.length > 0 ? `
                     <div class="alert-high">
-                        <h4>⚠️ Elementos de alto riesgo identificados:</h4>
+                        <h4>️ Elementos de alto riesgo identificados:</h4>
                         <ul>
                             ${highRiskItems.map(item => `<li>${item}</li>`).join('')}
                         </ul>

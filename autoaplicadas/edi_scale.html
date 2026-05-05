@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -1291,7 +1284,7 @@
 
             // Resumen ejecutivo
             resultsHTML += '<div class="result-section">';
-            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;">📋 Resumen Ejecutivo</h3>';
+            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;"> Resumen Ejecutivo</h3>';
             
             const highScores = Object.entries(scores).filter(([name, score]) => {
                 return score >= percentiles[name].p75;
@@ -1306,7 +1299,7 @@
 
             // Resultados por subescala
             resultsHTML += '<div class="result-section">';
-            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;">📊 Resultados por Subescala</h3>';
+            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;"> Resultados por Subescala</h3>';
             
             for (const [subscaleName, score] of Object.entries(scores)) {
                 const interpretation = getInterpretation(subscaleName, score);
@@ -1326,7 +1319,7 @@
             // Alertas clínicas
             if (alerts.length > 0) {
                 resultsHTML += '<div class="alert-box">';
-                resultsHTML += '<h3 style="color: #742a2a; margin-bottom: 15px;">⚠️ Alertas Clínicas</h3>';
+                resultsHTML += '<h3 style="color: #742a2a; margin-bottom: 15px;">️ Alertas Clínicas</h3>';
                 
                 for (const alert of alerts) {
                     const title = getSubscaleTitle(alert.subscale);
@@ -1342,7 +1335,7 @@
 
             // Recomendaciones profesionales
             resultsHTML += '<div class="result-section">';
-            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;">💡 Recomendaciones Profesionales</h3>';
+            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;"> Recomendaciones Profesionales</h3>';
             
             const clinicalConcerns = Object.entries(scores).filter(([name, score]) => 
                 score >= percentiles[name].p75
@@ -1366,7 +1359,7 @@
 
             // Información técnica
             resultsHTML += '<div class="result-section">';
-            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;">📋 Información Técnica</h3>';
+            resultsHTML += '<h3 style="color: #29A98C; margin-bottom: 15px;"> Información Técnica</h3>';
             resultsHTML += '<p><strong>Instrumento:</strong> Inventario de Trastornos de la Alimentación (EDI)</p>';
             resultsHTML += '<p><strong>Fecha de aplicación:</strong> ' + new Date().toLocaleDateString('es-ES') + '</p>';
             resultsHTML += '<p><strong>Ítems completados:</strong> 64/64 (100%)</p>';

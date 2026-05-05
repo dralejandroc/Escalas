@@ -94,28 +94,21 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected, .option.active { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             display: flex;
@@ -259,25 +252,25 @@
                 <p><strong>Instrucciones para el paciente:</strong></p>
                 <p>Cada una de las siguientes preguntas se refiere a un síntoma específico. Considere, para cada pregunta, cuántas veces le ha molestado el síntoma y con cuánta intensidad, durante la <strong>última semana</strong>.</p>
                 <p>Para cada pregunta, deberá seleccionar dos respuestas:</p>
-                <p><strong>🔢 FRECUENCIA:</strong> ¿Con qué frecuencia le ha molestado este síntoma?</p>
-                <p><strong>⚡ GRAVEDAD:</strong> ¿Qué tan intenso o grave ha sido este síntoma?</p>
+                <p><strong> FRECUENCIA:</strong> ¿Con qué frecuencia le ha molestado este síntoma?</p>
+                <p><strong> GRAVEDAD:</strong> ¿Qué tan intenso o grave ha sido este síntoma?</p>
                 
                 <div class="scale-legend">
                     <div class="legend-section">
-                        <h4>🔢 FRECUENCIA</h4>
-                        <p>⚪ NUNCA</p>
-                        <p>🔵 A VECES</p>
-                        <p>🟡 2-3 VECES</p>
-                        <p>🟠 4 a 6 VECES</p>
-                        <p>🔴 A DIARIO</p>
+                        <h4> FRECUENCIA</h4>
+                        <p> NUNCA</p>
+                        <p> A VECES</p>
+                        <p> 2-3 VECES</p>
+                        <p> 4 a 6 VECES</p>
+                        <p> A DIARIO</p>
                     </div>
                     <div class="legend-section">
-                        <h4>⚡ GRAVEDAD</h4>
-                        <p>⚪ NADA</p>
-                        <p>🟢 LEVE</p>
-                        <p>🟡 MODERADO</p>
-                        <p>🟠 MARCADO</p>
-                        <p>🔴 EXTREMA</p>
+                        <h4> GRAVEDAD</h4>
+                        <p> NADA</p>
+                        <p> LEVE</p>
+                        <p> MODERADO</p>
+                        <p> MARCADO</p>
+                        <p> EXTREMA</p>
                     </div>
                 </div>
             </div>
@@ -781,7 +774,7 @@
         <!-- Card Final -->
         <div class="card" id="card-final">
             <div class="completion-message">
-                <h2>✓ Escala Completada</h2>
+                <h2> Escala Completada</h2>
                 <p>Muchas gracias por completar la evaluación.</p>
                 <p><strong>Por favor, pase el dispositivo a su médico o profesional de salud mental para la revisión de los resultados.</strong></p>
             </div>
@@ -794,7 +787,7 @@
                 <h1>Resultados de la Escala DTS</h1>
                 
                 <div class="test-info">
-                    <h3>📋 Información de la Aplicación</h3>
+                    <h3> Información de la Aplicación</h3>
                     <p><strong>Fecha y hora de aplicación:</strong> <span id="test-datetime"></span></p>
                 </div>
 
@@ -823,7 +816,7 @@
                 </div>
 
                 <div class="subscales-section">
-                    <h3>📊 Subescalas DSM-IV</h3>
+                    <h3> Subescalas DSM-IV</h3>
                     <div class="subscale-grid">
                         <div class="subscale-item">
                             <div class="subscale-name">Reexperimentación (Cluster B)</div>
@@ -855,9 +848,9 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="action-button" onclick="exportToPDF()">📄 Exportar PDF</button>
-                    <button class="action-button" onclick="exportToImage()">📸 Capturar Imagen</button>
-                    <button class="action-button secondary" onclick="startNewEvaluation()">🔄 Nueva Evaluación</button>
+                    <button class="action-button" onclick="exportToPDF()"> Exportar PDF</button>
+                    <button class="action-button" onclick="exportToImage()"> Capturar Imagen</button>
+                    <button class="action-button secondary" onclick="startNewEvaluation()"> Nueva Evaluación</button>
                 </div>
             </div>
         </div>
@@ -1072,7 +1065,7 @@
             if (alerts.length > 0) {
                 let alertsHTML = `
                     <div class="alerts-section">
-                        <h3>⚠️ Ítems de Alta Puntuación (Requieren Atención)</h3>
+                        <h3>️ Ítems de Alta Puntuación (Requieren Atención)</h3>
                         <p>Los siguientes síntomas obtuvieron puntuaciones elevadas (≥5 puntos):</p>
                 `;
                 
