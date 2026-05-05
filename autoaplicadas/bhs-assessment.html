@@ -7,687 +7,943 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
             padding: 24px 16px;
         }
         .card-wrap {
-            width: 100%;
             max-width: 800px;
-            background: white;
+            margin: 0 auto 24px;
+            background: #fff;
             border-radius: 20px;
             box-shadow: 0 8px 40px rgba(0,0,0,0.18);
             overflow: hidden;
+            display: none;
         }
+        .card-wrap.active { display: block; }
         .card-header {
-            background: linear-gradient(135deg, #c53030 0%, #63171b 100%);
-            color: white;
-            padding: 22px 28px 18px;
+            background: linear-gradient(135deg, #c53030, #63171b);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .scale-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.8;
-            margin-bottom: 4px;
-        }
-        .card-header h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
-        .card-header .subtitle { font-size: 12px; opacity: 0.72; }
+        .card-header .scale-name { font-size: 15px; font-weight: 600; opacity: .9; }
+        .card-header .q-label { font-size: 13px; opacity: .8; }
         .card-body { padding: 28px 32px 24px; }
+
+        /* Welcome */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #63171b; margin-bottom: 16px; }
+        .instructions-box {
+            background: #fff5f5;
+            border-left: 4px solid #c53030;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+            color: #63171b;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+        .instructions-box p { margin-bottom: 6px; }
+        .instructions-box p:last-child { margin-bottom: 0; }
+        .scale-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 0 0 28px;
+        }
+        .preview-opt {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 6px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #63171b;
+        }
+        .start-wrap { text-align: center; }
+
+        /* Question */
+        .question-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: #63171b;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            width: 100%;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #63171b;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s;
+        }
+        .option:hover { border-color: #c53030; background: rgba(197,48,48,0.06); }
+        .option.selected { border-color: #c53030; background: rgba(197,48,48,0.13); font-weight: 600; color: #63171b; }
+
+        /* Progress */
+        .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
         .progress-bar-wrap {
             height: 6px;
             background: #e2e8f0;
             border-radius: 3px;
-            margin-bottom: 24px;
+            overflow: hidden;
+            margin-bottom: 14px;
         }
-        .progress-bar {
-            height: 6px;
-            border-radius: 3px;
+        .progress-bar-fill {
+            height: 100%;
             background: linear-gradient(90deg, #c53030, #63171b);
-            transition: width 0.4s ease;
+            border-radius: 3px;
+            transition: width .3s;
         }
 
-        /* Welcome */
-        .welcome-desc {
-            font-size: 15px;
-            color: #4a5568;
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-        .instr-box {
-            background: #fff5f5;
-            border-left: 3px solid #c53030;
-            border-radius: 0 8px 8px 0;
-            padding: 12px 16px;
-            font-size: 13px;
-            color: #742a2a;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .tf-example {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .example-btn {
-            padding: 8px 18px;
+        /* Bottom nav */
+        .bottom-nav { display: flex; justify-content: space-between; align-items: center; }
+        .btn-back {
+            background: none;
+            border: 1px solid #cbd5e0;
             border-radius: 8px;
+            color: #718096;
+            padding: 7px 16px;
             font-size: 13px;
-            font-weight: 700;
-            border: 2px solid #c53030;
-            color: #c53030;
-            background: white;
+            cursor: pointer;
+            transition: all .2s;
         }
-        .start-btn {
+        .btn-back:hover { border-color: #c53030; color: #c53030; }
+        .item-number-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+
+        /* Buttons */
+        .btn-primary {
             background: linear-gradient(135deg, #c53030, #63171b);
-            color: white;
+            color: #fff;
             border: none;
-            padding: 14px 32px;
             border-radius: 12px;
+            padding: 15px 40px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            font-family: inherit;
-            width: 100%;
-            transition: opacity 0.2s;
+            transition: all .2s;
         }
-        .start-btn:hover { opacity: 0.9; }
-
-        /* Items */
-        .items-container { display: flex; flex-direction: column; gap: 14px; }
-        .item-row {
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #2d3748);
+            color: #fff;
+            border: none;
             border-radius: 12px;
-            transition: all 0.2s;
-        }
-        .item-row.answered { border-color: #c53030; background: rgba(197,48,48,0.04); }
-        .item-content {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 14px;
-        }
-        .item-text-wrap { flex: 1; }
-        .item-num {
-            font-size: 10px;
-            font-weight: 700;
-            color: #a0aec0;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        .item-text {
+            padding: 13px 28px;
             font-size: 15px;
-            color: #1a202c;
-            line-height: 1.5;
-            font-weight: 500;
-        }
-        .tf-btns {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-        .tf-btn {
-            width: 90px;
-            padding: 9px 6px;
-            border-radius: 8px;
-            border: 2px solid #e2e8f0;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            font-family: inherit;
-            transition: all 0.15s;
-            background: white;
-            color: #718096;
-            letter-spacing: 0.5px;
-        }
-        .tf-btn:hover { border-color: #c53030; color: #c53030; }
-        .tf-btn.selected {
-            border-color: #c53030;
-            background: #c53030;
-            color: white;
-        }
-
-        /* Nav */
-        .nav-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-        }
-        .back-btn {
-            background: none;
-            border: none;
-            color: #a0aec0;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 6px 0;
-            font-family: inherit;
-            transition: color 0.15s;
-        }
-        .back-btn:hover { color: #c53030; }
-        .next-btn {
-            background: linear-gradient(135deg, #c53030, #63171b);
-            color: white;
-            border: none;
-            padding: 11px 26px;
-            border-radius: 10px;
-            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.2s;
+            transition: all .2s;
         }
-        .next-btn:hover { opacity: 0.9; }
-        .next-btn:disabled {
-            background: #e2e8f0;
-            color: #a0aec0;
-            cursor: not-allowed;
-            opacity: 1;
+        .btn-secondary:hover { opacity: .9; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+        /* Final */
+        .final-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
+        .final-title { font-size: 22px; font-weight: 700; color: #63171b; text-align: center; margin-bottom: 10px; }
+        .final-msg { font-size: 15px; color: #4a5568; text-align: center; margin-bottom: 20px; line-height: 1.6; }
+        .handoff-box {
+            background: #fff5f5;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #742a2a;
+            font-size: 14px;
         }
-        .item-badge { font-size: 11px; color: #cbd5e0; font-weight: 600; }
-        .progress-counter {
-            font-size: 11px;
-            color: #a0aec0;
-            text-align: right;
-            margin-bottom: 12px;
-        }
-        .progress-counter span { color: #c53030; font-weight: 700; }
 
         /* Results */
-        .result-center { text-align: center; margin-bottom: 24px; }
-        .result-score-label { font-size: 13px; color: #718096; margin-bottom: 4px; }
-        .result-score-num {
-            font-size: 72px;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 6px;
+        .score-area {
+            text-align: center;
+            padding: 24px 20px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
         }
-        .result-score-max { font-size: 14px; color: #a0aec0; margin-bottom: 16px; }
-        .severity-badge {
+        .score-num { font-size: 72px; font-weight: 900; line-height: 1; }
+        .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
+        .score-badge {
             display: inline-block;
-            padding: 7px 22px;
+            margin-top: 10px;
+            padding: 5px 16px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            border: 2px solid;
         }
-        .risk-alert {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
+        .risk-alert-box {
             background: #fff5f5;
             border: 2px solid #f56565;
             border-radius: 10px;
             padding: 14px 18px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #742a2a;
+            line-height: 1.6;
+            display: none;
+        }
+        .subscales-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        .risk-alert-icon { font-size: 20px; flex-shrink: 0; }
-        .risk-alert-text { font-size: 13px; color: #742a2a; line-height: 1.6; }
-        .result-section { margin-bottom: 20px; }
-        .result-section-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #718096;
-            margin-bottom: 10px;
+        .subscale-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center; }
+        .subscale-title { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 6px; }
+        .subscale-num { font-size: 32px; font-weight: 700; line-height: 1; }
+        .subscale-max { font-size: 11px; color: #a0aec0; margin-top: 2px; }
+        .subscale-interp { font-size: 11px; color: #718096; margin-top: 5px; line-height: 1.4; }
+        .section-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: #a0aec0; margin-bottom: 8px;
         }
         .interp-box {
             background: #f7fafc;
-            border-radius: 10px;
-            padding: 14px 18px;
-            font-size: 14px;
-            color: #2d3748;
-            line-height: 1.6;
-        }
-        .subscale-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 4px;
-        }
-        .subscale-pill {
-            background: #f7fafc;
-            border-radius: 10px;
-            padding: 12px 14px;
-            text-align: center;
-        }
-        .subscale-name {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #718096;
-            margin-bottom: 6px;
-        }
-        .subscale-score {
-            font-size: 28px;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-        .subscale-max { font-size: 11px; color: #a0aec0; }
-        .cutoff-table { width: 100%; border-collapse: collapse; }
-        .cutoff-table td {
-            padding: 8px 12px;
+            border-left: 4px solid #c53030;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
             font-size: 13px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #4a5568;
+            color: #2d3748;
+            line-height: 1.7;
         }
-        .cutoff-table tr:last-child td { border-bottom: none; }
-        .dot { font-size: 18px; font-weight: 700; }
-        .action-btn {
-            width: 100%;
-            padding: 13px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 14px;
-            color: #4a5568;
-            cursor: pointer;
-            font-family: inherit;
-            margin-top: 10px;
-            transition: border-color 0.2s;
+        .cutoff-ref {
+            font-size: 11px;
+            color: #a0aec0;
+            margin-top: 8px;
+            line-height: 1.5;
         }
-        .action-btn:hover { border-color: #c53030; }
-        .hidden { display: none; }
 
         @media (max-width: 600px) {
-            .card-body { padding: 20px 16px; }
-            .subscale-grid { grid-template-columns: 1fr; }
-            .tf-btn { width: 76px; font-size: 11px; }
+            .card-body { padding: 20px 18px 18px; }
+            .subscales-grid { grid-template-columns: 1fr; }
+            .question-text { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-<div class="card-wrap">
 
-    <!-- BIENVENIDA -->
-    <div id="card-0">
-        <div class="card-header">
-            <div class="scale-label">BHS · Autoaplicada · Riesgo Suicida</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Beck Hopelessness Scale — Beck, Weissman, Lester &amp; Trexler (1974)</div>
+<!-- card-0: Bienvenida -->
+<div class="card-wrap active" id="card-0">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Bienvenida</span>
+    </div>
+    <div class="card-body">
+        <div class="welcome-title">Escala de Desesperanza de Beck</div>
+        <div class="instructions-box">
+            <p>Este cuestionario contiene <strong>20 afirmaciones</strong> sobre cómo usted se siente respecto a su futuro.</p>
+            <p>Lea cada afirmación y decida si describe la manera en que usted se ha sentido durante <strong>la última semana</strong>.</p>
+            <p>• Seleccione <strong>VERDADERO</strong> si la afirmación describe cómo se ha sentido.</p>
+            <p>• Seleccione <strong>FALSO</strong> si la afirmación no describe cómo se ha sentido.</p>
+            <p>No hay respuestas correctas ni incorrectas. Responda con honestidad todas las frases.</p>
         </div>
-        <div class="card-body">
-            <p class="welcome-desc">Este cuestionario contiene <strong>20 afirmaciones</strong> sobre cómo se siente respecto a su futuro. Lea cada una y decida si describe la manera en que usted se ha sentido durante <strong>la última semana</strong>.</p>
-            <div class="instr-box">
-                <strong>Instrucciones:</strong> Para cada afirmación, elija <em>VERDADERO</em> si describe cómo se ha sentido, o <em>FALSO</em> si no lo describe. No hay respuestas correctas ni incorrectas. Por favor responda todas las frases.
-                <div class="tf-example">
-                    <button class="example-btn">VERDADERO</button>
-                    <button class="example-btn">FALSO</button>
-                </div>
-            </div>
-            <button class="start-btn" onclick="showCard('card-1')">Comenzar cuestionario</button>
+        <div class="scale-preview">
+            <div class="preview-opt">VERDADERO</div>
+            <div class="preview-opt">FALSO</div>
+        </div>
+        <div class="start-wrap">
+            <button class="btn-primary" onclick="showCard(1)">Comenzar Evaluación</button>
         </div>
     </div>
-
-    <!-- CARD 1: Ítems 1–5 -->
-    <div id="card-1" class="hidden">
-        <div class="card-header">
-            <div class="scale-label">BHS · Parte 1 de 4</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Ítems 1 al 5</div>
-        </div>
-        <div class="card-body">
-            <div class="progress-bar-wrap"><div class="progress-bar" style="width:25%"></div></div>
-            <div class="progress-counter" id="cnt-1">Respondidas: <span id="c1">0</span> de 5</div>
-            <div class="items-container" id="block-1"></div>
-            <div class="nav-row">
-                <button class="back-btn" onclick="showCard('card-0')">← Anterior</button>
-                <button class="next-btn" id="next-1" onclick="showCard('card-2')" disabled>Continuar →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CARD 2: Ítems 6–10 -->
-    <div id="card-2" class="hidden">
-        <div class="card-header">
-            <div class="scale-label">BHS · Parte 2 de 4</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Ítems 6 al 10</div>
-        </div>
-        <div class="card-body">
-            <div class="progress-bar-wrap"><div class="progress-bar" style="width:50%"></div></div>
-            <div class="progress-counter" id="cnt-2">Respondidas: <span id="c2">0</span> de 5</div>
-            <div class="items-container" id="block-2"></div>
-            <div class="nav-row">
-                <button class="back-btn" onclick="showCard('card-1')">← Anterior</button>
-                <button class="next-btn" id="next-2" onclick="showCard('card-3')" disabled>Continuar →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CARD 3: Ítems 11–15 -->
-    <div id="card-3" class="hidden">
-        <div class="card-header">
-            <div class="scale-label">BHS · Parte 3 de 4</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Ítems 11 al 15</div>
-        </div>
-        <div class="card-body">
-            <div class="progress-bar-wrap"><div class="progress-bar" style="width:75%"></div></div>
-            <div class="progress-counter" id="cnt-3">Respondidas: <span id="c3">0</span> de 5</div>
-            <div class="items-container" id="block-3"></div>
-            <div class="nav-row">
-                <button class="back-btn" onclick="showCard('card-2')">← Anterior</button>
-                <button class="next-btn" id="next-3" onclick="showCard('card-4')" disabled>Continuar →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CARD 4: Ítems 16–20 -->
-    <div id="card-4" class="hidden">
-        <div class="card-header">
-            <div class="scale-label">BHS · Parte 4 de 4</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Ítems 16 al 20</div>
-        </div>
-        <div class="card-body">
-            <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
-            <div class="progress-counter" id="cnt-4">Respondidas: <span id="c4">0</span> de 5</div>
-            <div class="items-container" id="block-4"></div>
-            <div class="nav-row">
-                <button class="back-btn" onclick="showCard('card-3')">← Anterior</button>
-                <button class="next-btn" id="next-4" onclick="showCard('card-results')" disabled>Ver resultados →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RESULTADOS -->
-    <div id="card-results" class="hidden">
-        <div class="card-header">
-            <div class="scale-label">BHS · Resultado</div>
-            <h2>Escala de Desesperanza de Beck</h2>
-            <div class="subtitle">Beck Hopelessness Scale</div>
-        </div>
-        <div class="card-body">
-            <div class="result-center">
-                <div class="result-score-label">Puntuación total</div>
-                <div class="result-score-num" id="res-score">—</div>
-                <div class="result-score-max">de 20 puntos posibles</div>
-                <span class="severity-badge" id="res-badge">—</span>
-            </div>
-
-            <div id="risk-alert" class="risk-alert hidden">
-                <span class="risk-alert-icon">⚠</span>
-                <div class="risk-alert-text">
-                    <strong>Umbral de riesgo suicida:</strong> Puntuación ≥9 — En el estudio prospectivo de Beck et al. (1990), este corte identificó el 94.2% de pacientes que posteriormente murieron por suicidio. Se recomienda evaluación inmediata de ideación suicida y factores de riesgo.
-                </div>
-            </div>
-
-            <div class="result-section">
-                <div class="result-section-title">Subescalas</div>
-                <div class="subscale-grid">
-                    <div class="subscale-pill">
-                        <div class="subscale-name">Afectiva</div>
-                        <div class="subscale-score" id="sub-afectiva" style="color:#c53030">—</div>
-                        <div class="subscale-max">de 6 pts</div>
-                        <div style="font-size:11px;color:#718096;margin-top:4px;">Tono emocional sobre el futuro</div>
-                    </div>
-                    <div class="subscale-pill">
-                        <div class="subscale-name">Motivacional</div>
-                        <div class="subscale-score" id="sub-motivacional" style="color:#c53030">—</div>
-                        <div class="subscale-max">de 7 pts</div>
-                        <div style="font-size:11px;color:#718096;margin-top:4px;">Pérdida de motivación y dirección</div>
-                    </div>
-                    <div class="subscale-pill">
-                        <div class="subscale-name">Cognitiva</div>
-                        <div class="subscale-score" id="sub-cognitiva" style="color:#c53030">—</div>
-                        <div class="subscale-max">de 7 pts</div>
-                        <div style="font-size:11px;color:#718096;margin-top:4px;">Expectativas sobre el futuro</div>
-                    </div>
-                </div>
-                <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Subescalas de Beck et al. (1974). Nota: evidencia posterior apoya uso unidimensional (Hermosillo-de la Torre et al., 2020).</p>
-            </div>
-
-            <div class="result-section">
-                <div class="result-section-title">Interpretación clínica</div>
-                <div class="interp-box" id="res-interp"></div>
-            </div>
-
-            <div class="result-section">
-                <div class="result-section-title">Puntos de corte (referencia)</div>
-                <table class="cutoff-table">
-                    <tr>
-                        <td><strong>0 – 3</strong></td>
-                        <td>Mínima / Sin desesperanza significativa</td>
-                        <td class="dot" style="color:#48bb78;">●</td>
-                    </tr>
-                    <tr>
-                        <td><strong>4 – 8</strong></td>
-                        <td>Leve — monitorear en seguimiento</td>
-                        <td class="dot" style="color:#f6ad55;">●</td>
-                    </tr>
-                    <tr>
-                        <td><strong>9 – 14</strong></td>
-                        <td>Moderada — umbral de riesgo suicida</td>
-                        <td class="dot" style="color:#ed8936;">●</td>
-                    </tr>
-                    <tr>
-                        <td><strong>15 – 20</strong></td>
-                        <td>Grave — intervención clínica urgente</td>
-                        <td class="dot" style="color:#c53030;">●</td>
-                    </tr>
-                </table>
-                <p style="font-size:11px;color:#a0aec0;margin-top:8px;">Beck AT &amp; Steer RA (1988). BHS Manual. Corte de riesgo suicida ≥9: sensibilidad 94.2% (Beck et al., 1990, Am J Psychiatry).</p>
-            </div>
-
-            <button class="action-btn" onclick="exportPDF()" style="margin-top:6px;">Exportar como PDF</button>
-            <button class="action-btn" onclick="restart()">Nueva evaluación</button>
-        </div>
-    </div>
-
 </div>
+
+<!-- card-1 -->
+<div class="card-wrap" id="card-1">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Miro el futuro con esperanza y entusiasmo.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(1,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(1,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 1 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 1 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-2 -->
+<div class="card-wrap" id="card-2">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Bien puedo darme por vencido ya que no puedo hacer nada para mejorar las cosas en mi vida.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(2,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(2,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 2 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 2 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-3 -->
+<div class="card-wrap" id="card-3">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Cuando las cosas van mal me ayuda saber que no puede durar para siempre.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(3,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(3,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 3 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 3 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-4 -->
+<div class="card-wrap" id="card-4">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">No puedo imaginar cómo será mi vida dentro de diez años.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(4,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(4,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 4 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 4 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-5 -->
+<div class="card-wrap" id="card-5">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Tengo tiempo suficiente para lograr las cosas que quisiera hacer.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(5,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(5,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 5 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 5 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-6 -->
+<div class="card-wrap" id="card-6">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">En el futuro espero tener éxito en lo que más me importa.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(6,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(6,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 6 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 6 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-7 -->
+<div class="card-wrap" id="card-7">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Mi futuro se me presenta oscuro.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(7,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(7,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 7 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:35%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 7 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-8 -->
+<div class="card-wrap" id="card-8">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Espero obtener más cosas buenas en la vida que la mayoría de las personas.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(8,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(8,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 8 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 8 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-9 -->
+<div class="card-wrap" id="card-9">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Simplemente no tengo suerte y no hay razón para pensar que la tendré en el futuro.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(9,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(9,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 9 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 9 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-10 -->
+<div class="card-wrap" id="card-10">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Mis experiencias pasadas me han preparado bien para el futuro.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(10,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(10,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 10 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 10 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-11 -->
+<div class="card-wrap" id="card-11">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Todo lo que veo por delante es más desagradable que agradable.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(11,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(11,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 11 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:55%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 11 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-12 -->
+<div class="card-wrap" id="card-12">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">No espero conseguir lo que realmente quiero.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(12,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(12,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 12 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 12 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-13 -->
+<div class="card-wrap" id="card-13">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Cuando miro hacia el futuro, espero ser más feliz de lo que soy ahora.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(13,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(13,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 13 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:65%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 13 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-14 -->
+<div class="card-wrap" id="card-14">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Las cosas no van como yo quisiera que fueran.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(14,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(14,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 14 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 14 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-15 -->
+<div class="card-wrap" id="card-15">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Confío plenamente en el futuro.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(15,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(15,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 15 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:75%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 15 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-16 -->
+<div class="card-wrap" id="card-16">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Nunca consigo lo que quiero, por lo que no tiene sentido desearlo.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(16,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(16,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 16 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 16 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-17 -->
+<div class="card-wrap" id="card-17">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Es muy improbable que en el futuro logre una satisfacción real.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(17,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(17,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 17 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:85%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 17 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-18 -->
+<div class="card-wrap" id="card-18">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Cognitivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">El futuro me parece vago e incierto.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(18,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(18,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 18 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 18 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-19 -->
+<div class="card-wrap" id="card-19">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Afectivo</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">Puedo esperar que habrá más momentos buenos que malos en mi vida.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(19,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(19,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 19 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:95%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 19 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-20 -->
+<div class="card-wrap" id="card-20">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Componente Motivacional</span>
+    </div>
+    <div class="card-body">
+        <div class="question-text">No tiene sentido intentar conseguir lo que quiero porque probablemente no lo lograré.</div>
+        <div class="options">
+            <button class="option" onclick="selectOption(20,'T',this)">VERDADERO</button>
+            <button class="option" onclick="selectOption(20,'F',this)">FALSO</button>
+        </div>
+        <div class="q-progress-label">Afirmación 20 de 20</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="previousCard()">← Regresar</button>
+            <span class="item-number-badge">Ítem 20 / 20</span>
+        </div>
+    </div>
+</div>
+
+<!-- card-final -->
+<div class="card-wrap" id="card-final">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Completado</span>
+    </div>
+    <div class="card-body">
+        <div class="final-icon">✅</div>
+        <div class="final-title">Evaluación Completada</div>
+        <div class="final-msg">Ha respondido todas las afirmaciones de la Escala de Desesperanza de Beck.</div>
+        <div class="handoff-box">Por favor, pase el dispositivo a su médico o profesional de la salud mental para la revisión de los resultados.</div>
+        <div style="text-align:center;">
+            <button class="btn-primary" onclick="showResults()">Revisar Resultados (Médico)</button>
+        </div>
+    </div>
+</div>
+
+<!-- card-results -->
+<div class="card-wrap" id="card-results">
+    <div class="card-header">
+        <span class="scale-name">BHS — Escala de Desesperanza de Beck</span>
+        <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+
+        <div class="score-area">
+            <div class="score-num" id="total-score">—</div>
+            <div class="score-range">/ 20 puntos totales</div>
+            <div class="score-badge" id="total-severity-badge">—</div>
+        </div>
+
+        <div class="risk-alert-box" id="risk-alert">
+            <strong>⚠ Umbral de riesgo suicida (≥9):</strong> En el estudio prospectivo de Beck et al. (1990), este corte identificó el 94.2% de pacientes que posteriormente murieron por suicidio. Se recomienda evaluación inmediata de ideación suicida y plan de seguridad.
+        </div>
+
+        <div class="section-label">Subescalas</div>
+        <div class="subscales-grid">
+            <div class="subscale-box">
+                <div class="subscale-title">Afectiva</div>
+                <div class="subscale-num" id="afectiva-score">—</div>
+                <div class="subscale-max">/ 6 pts</div>
+                <div class="subscale-interp" id="afectiva-interp"></div>
+            </div>
+            <div class="subscale-box">
+                <div class="subscale-title">Motivacional</div>
+                <div class="subscale-num" id="motivacional-score">—</div>
+                <div class="subscale-max">/ 7 pts</div>
+                <div class="subscale-interp" id="motivacional-interp"></div>
+            </div>
+            <div class="subscale-box">
+                <div class="subscale-title">Cognitiva</div>
+                <div class="subscale-num" id="cognitiva-score">—</div>
+                <div class="subscale-max">/ 7 pts</div>
+                <div class="subscale-interp" id="cognitiva-interp"></div>
+            </div>
+        </div>
+
+        <div class="section-label">Interpretación Clínica</div>
+        <div class="interp-box" id="clinical-box"></div>
+
+        <div class="section-label">Puntos de Corte</div>
+        <div class="interp-box" style="padding:0; overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;"><strong>0 – 3</strong></td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;">Mínima — sin desesperanza significativa</td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:18px;color:#48bb78;">●</td></tr>
+                <tr><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;"><strong>4 – 8</strong></td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;">Leve — monitorear en seguimiento</td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:18px;color:#f6ad55;">●</td></tr>
+                <tr><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;"><strong>9 – 14</strong></td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#4a5568;">Moderada — umbral de riesgo suicida ⚠</td><td style="padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:18px;color:#ed8936;">●</td></tr>
+                <tr><td style="padding:9px 14px;font-size:13px;color:#4a5568;"><strong>15 – 20</strong></td><td style="padding:9px 14px;font-size:13px;color:#4a5568;">Grave — intervención urgente</td><td style="padding:9px 14px;font-size:18px;color:#c53030;">●</td></tr>
+            </table>
+        </div>
+        <p class="cutoff-ref">Beck AT &amp; Steer RA (1988). BHS Manual. Corte ≥9: Beck AT et al. (1990). Am J Psychiatry, 147(2), 190-195. Validación mexicana: Hermosillo-de la Torre et al. (2020).</p>
+
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="exportToPDF()">Generar PDF</button>
+            <button class="btn-secondary" onclick="newEvaluation()">Nueva Evaluación</button>
+        </div>
+    </div>
+</div>
+
 <script>
-/* ── Datos de los ítems ──────────────────────────────── */
-const items = [
-    { n:1,  text:"Miro el futuro con esperanza y entusiasmo.",                                                          key:'F', sub:'afectiva' },
-    { n:2,  text:"Bien puedo darme por vencido ya que no puedo hacer nada para mejorar las cosas en mi vida.",         key:'T', sub:'motivacional' },
-    { n:3,  text:"Cuando las cosas van mal me ayuda saber que no puede durar para siempre.",                            key:'F', sub:'motivacional' },
-    { n:4,  text:"No puedo imaginar cómo será mi vida dentro de diez años.",                                           key:'T', sub:'cognitiva' },
-    { n:5,  text:"Tengo tiempo suficiente para lograr las cosas que quisiera hacer.",                                   key:'F', sub:'afectiva' },
-    { n:6,  text:"En el futuro espero tener éxito en lo que más me importa.",                                          key:'F', sub:'afectiva' },
-    { n:7,  text:"Mi futuro se me presenta oscuro.",                                                                   key:'T', sub:'cognitiva' },
-    { n:8,  text:"Espero obtener más cosas buenas en la vida que la mayoría de las personas.",                         key:'F', sub:'cognitiva' },
-    { n:9,  text:"Simplemente no tengo suerte y no hay razón para pensar que la tendré en el futuro.",                 key:'T', sub:'motivacional' },
-    { n:10, text:"Mis experiencias pasadas me han preparado bien para el futuro.",                                     key:'F', sub:'cognitiva' },
-    { n:11, text:"Todo lo que veo por delante es más desagradable que agradable.",                                     key:'T', sub:'motivacional' },
-    { n:12, text:"No espero conseguir lo que realmente quiero.",                                                       key:'T', sub:'motivacional' },
-    { n:13, text:"Cuando miro hacia el futuro, espero ser más feliz de lo que soy ahora.",                             key:'F', sub:'afectiva' },
-    { n:14, text:"Las cosas no van como yo quisiera que fueran.",                                                      key:'T', sub:'cognitiva' },
-    { n:15, text:"Confío plenamente en el futuro.",                                                                    key:'F', sub:'afectiva' },
-    { n:16, text:"Nunca consigo lo que quiero, por lo que no tiene sentido desearlo.",                                 key:'T', sub:'motivacional' },
-    { n:17, text:"Es muy improbable que en el futuro logre una satisfacción real.",                                    key:'T', sub:'cognitiva' },
-    { n:18, text:"El futuro me parece vago e incierto.",                                                               key:'T', sub:'cognitiva' },
-    { n:19, text:"Puedo esperar que habrá más momentos buenos que malos en mi vida.",                                  key:'F', sub:'afectiva' },
-    { n:20, text:"No tiene sentido intentar conseguir lo que quiero porque probablemente no lo lograré.",              key:'T', sub:'motivacional' }
-];
+    const totalItems = 20;
+    let currentCardId = 'card-0';
+    let responses = {};
 
-// responses[n] = 'T' | 'F'
-const responses = {};
-
-// Ítems por card (grupos de 5)
-const blocks = {
-    1: items.slice(0,5),
-    2: items.slice(5,10),
-    3: items.slice(10,15),
-    4: items.slice(15,20)
-};
-
-/* ── Scoring ─────────────────────────────────────────── */
-function getItemScore(item) {
-    const resp = responses[item.n];
-    if (resp === undefined) return 0;
-    return (item.key === 'T' && resp === 'T') || (item.key === 'F' && resp === 'F') ? 1 : 0;
-}
-
-/* ── Construir bloque de ítems ───────────────────────── */
-function buildBlock(blockNum) {
-    const container = document.getElementById(`block-${blockNum}`);
-    container.innerHTML = '';
-    blocks[blockNum].forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'item-row' + (responses[item.n] !== undefined ? ' answered' : '');
-        row.id = `row-${item.n}`;
-
-        const tActive = responses[item.n] === 'T' ? ' selected' : '';
-        const fActive = responses[item.n] === 'F' ? ' selected' : '';
-
-        row.innerHTML = `
-            <div class="item-content">
-                <div class="item-text-wrap">
-                    <div class="item-num">ÍTEM ${item.n}</div>
-                    <div class="item-text">${item.text}</div>
-                </div>
-                <div class="tf-btns">
-                    <button class="tf-btn${tActive}" onclick="setResponse(${item.n}, 'T', ${blockNum})">VERDADERO</button>
-                    <button class="tf-btn${fActive}" onclick="setResponse(${item.n}, 'F', ${blockNum})">FALSO</button>
-                </div>
-            </div>`;
-        container.appendChild(row);
-    });
-    updateCounter(blockNum);
-}
-
-function setResponse(itemNum, val, blockNum) {
-    responses[itemNum] = val;
-
-    // Update button states
-    const row = document.getElementById(`row-${itemNum}`);
-    row.classList.add('answered');
-    const btns = row.querySelectorAll('.tf-btn');
-    btns[0].classList.toggle('selected', val === 'T');
-    btns[1].classList.toggle('selected', val === 'F');
-
-    updateCounter(blockNum);
-}
-
-function updateCounter(blockNum) {
-    const answered = blocks[blockNum].filter(it => responses[it.n] !== undefined).length;
-    const span = document.getElementById(`c${blockNum}`);
-    if (span) span.textContent = answered;
-    const btn = document.getElementById(`next-${blockNum}`);
-    if (btn) btn.disabled = answered < 5;
-
-    // Auto-advance when all 5 answered
-    if (answered === 5) {
-        setTimeout(() => {
-            const nextCard = blockNum < 4 ? `card-${blockNum + 1}` : 'card-results';
-            showCard(nextCard);
-        }, 320);
-    }
-}
-
-/* ── Navegación ──────────────────────────────────────── */
-function showCard(id) {
-    document.querySelectorAll('.card-wrap > div').forEach(d => d.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    const m = id.match(/card-(\d)$/);
-    if (m && +m[1] >= 1 && +m[1] <= 4) buildBlock(+m[1]);
-    if (id === 'card-results') buildResults();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ── Resultados ──────────────────────────────────────── */
-function buildResults() {
-    const total = items.reduce((sum, it) => sum + getItemScore(it), 0);
-
-    document.getElementById('res-score').textContent = total;
-
-    let color, label, interp;
-    if (total <= 3) {
-        color = '#48bb78'; label = 'Mínima';
-        interp = 'No se detecta desesperanza clínicamente significativa. Continuar seguimiento de rutina y factores protectores.';
-    } else if (total <= 8) {
-        color = '#f6ad55'; label = 'Leve';
-        interp = 'Desesperanza leve. Explorar áreas de pérdida de expectativas y motivación. Monitorear en consultas siguientes, especialmente si existe sintomatología depresiva o ansiosa concomitante.';
-    } else if (total <= 14) {
-        color = '#ed8936'; label = 'Moderada';
-        interp = 'Desesperanza moderada. Por encima del umbral de riesgo suicida (≥9). Se recomienda evaluación directa de ideación suicida (SBQ-R, C-SSRS), identificar factores de riesgo y protectores, y considerar intervención psicoterapéutica enfocada en reestructuración cognitiva y perspectivas de futuro.';
-    } else {
-        color = '#c53030'; label = 'Grave';
-        interp = 'Desesperanza grave. Alto riesgo clínico. Requiere evaluación de ideación suicida de manera inmediata, plan de seguridad estructurado, soporte intensivo y posible derivación urgente. La puntuación grave en BHS es un predictor independiente de suicidio incluso controlando por severidad depresiva.';
-    }
-
-    document.getElementById('res-score').style.color = color;
-    const badge = document.getElementById('res-badge');
-    badge.textContent = label;
-    badge.style.color = color;
-    badge.style.borderColor = color;
-    badge.style.background = color + '15';
-
-    if (total >= 9) document.getElementById('risk-alert').classList.remove('hidden');
-
-    document.getElementById('res-interp').textContent = interp;
-
-    // Subescalas
-    const subScales = {
-        afectiva:     items.filter(it => it.sub === 'afectiva'),     // 6 ítems
-        motivacional: items.filter(it => it.sub === 'motivacional'), // 7 ítems
-        cognitiva:    items.filter(it => it.sub === 'cognitiva')     // 7 ítems
+    // Clave de corrección: T=verdadero puntúa, F=falso puntúa
+    const itemKeys = {
+        1:'F', 2:'T', 3:'F', 4:'T', 5:'F',
+        6:'F', 7:'T', 8:'F', 9:'T', 10:'F',
+        11:'T',12:'T',13:'F',14:'T',15:'F',
+        16:'T',17:'T',18:'T',19:'F',20:'T'
+    };
+    const itemSub = {
+        1:'a', 2:'m', 3:'m', 4:'c', 5:'a',
+        6:'a', 7:'c', 8:'c', 9:'m', 10:'c',
+        11:'m',12:'m',13:'a',14:'c',15:'a',
+        16:'m',17:'c',18:'c',19:'a',20:'m'
+    };
+    const itemTexts = {
+        1:'Miro el futuro con esperanza y entusiasmo',
+        2:'Bien puedo darme por vencido...',
+        3:'Cuando las cosas van mal me ayuda saber...',
+        4:'No puedo imaginar cómo será mi vida en 10 años',
+        5:'Tengo tiempo suficiente para lograr mis metas',
+        6:'Espero tener éxito en lo que más me importa',
+        7:'Mi futuro se me presenta oscuro',
+        8:'Espero obtener más cosas buenas que la mayoría',
+        9:'No tengo suerte y no hay razón para pensar...',
+        10:'Mis experiencias pasadas me prepararon bien',
+        11:'Todo lo que veo por delante es desagradable',
+        12:'No espero conseguir lo que realmente quiero',
+        13:'Espero ser más feliz en el futuro',
+        14:'Las cosas no van como yo quisiera',
+        15:'Confío plenamente en el futuro',
+        16:'Nunca consigo lo que quiero...',
+        17:'Es improbable que logre satisfacción real',
+        18:'El futuro me parece vago e incierto',
+        19:'Habrá más momentos buenos que malos en mi vida',
+        20:'No tiene sentido intentar conseguir lo que quiero'
     };
 
-    ['afectiva', 'motivacional', 'cognitiva'].forEach(sub => {
-        const sc = subScales[sub].reduce((s, it) => s + getItemScore(it), 0);
-        const el = document.getElementById(`sub-${sub}`);
-        el.textContent = sc;
-        const max = subScales[sub].length;
-        const pct = sc / max;
-        el.style.color = pct < 0.35 ? '#48bb78' : pct < 0.60 ? '#f6ad55' : pct < 0.80 ? '#ed8936' : '#c53030';
-    });
-}
+    function showCard(id) {
+        document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+        const key = (typeof id === 'number') ? 'card-' + id : id;
+        document.getElementById(key).classList.add('active');
+        currentCardId = key;
+        window.scrollTo(0, 0);
+        if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+    }
 
-/* ── PDF ─────────────────────────────────────────────── */
-function exportPDF() {
-    const total = items.reduce((sum, it) => sum + getItemScore(it), 0);
-    let level = total <= 3 ? 'Mínima' : total <= 8 ? 'Leve' : total <= 14 ? 'Moderada' : 'Grave';
-    let color = total <= 3 ? '#48bb78' : total <= 8 ? '#f6ad55' : total <= 14 ? '#ed8936' : '#c53030';
+    function restoreSelections(n) {
+        if (responses[n] === undefined) return;
+        const card = document.getElementById('card-' + n);
+        if (!card) return;
+        card.querySelectorAll('.option').forEach(btn => {
+            const val = btn.getAttribute('onclick').match(/'([TF])'/)[1];
+            btn.classList.toggle('selected', val === responses[n]);
+        });
+    }
 
-    const subScores = { afectiva: 0, motivacional: 0, cognitiva: 0 };
-    const subMax    = { afectiva: 6, motivacional: 7, cognitiva: 7 };
-    items.forEach(it => { subScores[it.sub] += getItemScore(it); });
+    function selectOption(qNum, value, btn) {
+        btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        responses[qNum] = value;
+        setTimeout(() => {
+            if (qNum < totalItems) showCard(qNum + 1);
+            else showCard('card-final');
+        }, 150);
+    }
 
-    let itemRows = '';
-    items.forEach(it => {
-        const resp = responses[it.n] === 'T' ? 'Verdadero' : responses[it.n] === 'F' ? 'Falso' : '—';
-        const sc = getItemScore(it);
-        const star = sc === 1 ? '●' : '○';
-        itemRows += `<tr>
-            <td style="color:#718096;width:30px">${it.n}</td>
-            <td>${it.text}</td>
-            <td style="text-align:center">${resp}</td>
-            <td style="text-align:center;font-weight:700;color:${sc ? '#c53030':'#a0aec0'}">${star}</td>
-        </tr>`;
-    });
+    function previousCard() {
+        const match = currentCardId.match(/card-(\d+)/);
+        if (!match) return;
+        const n = parseInt(match[1]);
+        if (n <= 1) showCard(0);
+        else showCard(n - 1);
+    }
 
-    const riskNote = total >= 9 ? `<div style="background:#fff5f5;border:2px solid #f56565;border-radius:8px;padding:12px 16px;margin:16px 0;font-size:13px;color:#742a2a">
-        <strong>⚠ Umbral de riesgo suicida (≥9):</strong> Sensibilidad 94.2% para suicidio consumado (Beck et al., 1990). Evaluar ideación suicida de manera inmediata.
-    </div>` : '';
+    function getItemScore(n) {
+        const r = responses[n];
+        if (r === undefined) return 0;
+        return (itemKeys[n] === r) ? 1 : 0;
+    }
 
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>BHS</title>
+    function calculateScore() {
+        let total = 0, afectiva = 0, motivacional = 0, cognitiva = 0;
+        for (let i = 1; i <= totalItems; i++) {
+            const s = getItemScore(i);
+            total += s;
+            if (itemSub[i] === 'a') afectiva += s;
+            else if (itemSub[i] === 'm') motivacional += s;
+            else cognitiva += s;
+        }
+        return { total, afectiva, motivacional, cognitiva };
+    }
+
+    function getLevel(score) {
+        if (score <= 3)  return { label:'Mínima',  color:'#48bb78', bgColor:'rgba(72,187,120,0.12)' };
+        if (score <= 8)  return { label:'Leve',    color:'#f6ad55', bgColor:'rgba(246,173,85,0.12)' };
+        if (score <= 14) return { label:'Moderada',color:'#ed8936', bgColor:'rgba(237,137,54,0.12)' };
+        return               { label:'Grave',   color:'#c53030', bgColor:'rgba(197,48,48,0.12)' };
+    }
+
+    function getSubLevel(score, max) {
+        const pct = score / max;
+        if (pct < 0.35) return { label:'Sin alteración', color:'#48bb78' };
+        if (pct < 0.60) return { label:'Leve',           color:'#f6ad55' };
+        if (pct < 0.80) return { label:'Moderada',       color:'#ed8936' };
+        return               { label:'Elevada',          color:'#c53030' };
+    }
+
+    function showResults() {
+        const s = calculateScore();
+        const lv = getLevel(s.total);
+
+        const numEl = document.getElementById('total-score');
+        numEl.textContent = s.total;
+        numEl.style.color = lv.color;
+
+        const badge = document.getElementById('total-severity-badge');
+        badge.textContent = lv.label;
+        badge.style.color = lv.color;
+        badge.style.background = lv.bgColor;
+        badge.style.border = `1.5px solid ${lv.color}`;
+
+        // Riesgo
+        if (s.total >= 9) document.getElementById('risk-alert').style.display = 'block';
+
+        // Subescalas
+        [
+            { id:'afectiva',     val:s.afectiva,     max:6 },
+            { id:'motivacional', val:s.motivacional, max:7 },
+            { id:'cognitiva',    val:s.cognitiva,    max:7 }
+        ].forEach(sub => {
+            const slv = getSubLevel(sub.val, sub.max);
+            const el = document.getElementById(`${sub.id}-score`);
+            el.textContent = sub.val;
+            el.style.color = slv.color;
+            document.getElementById(`${sub.id}-interp`).textContent = slv.label;
+        });
+
+        // Interpretación
+        const interps = {
+            'Mínima':   'No se detecta desesperanza clínicamente significativa. Continuar seguimiento de rutina y reforzar factores protectores.',
+            'Leve':     'Desesperanza leve. Explorar áreas de pérdida de expectativas y motivación. Monitorear en consultas siguientes, especialmente si existe sintomatología depresiva concomitante.',
+            'Moderada': 'Desesperanza moderada — por encima del umbral de riesgo suicida (≥9). Evaluar directamente ideación suicida con SBQ-R o C-SSRS. Identificar factores de riesgo y protectores. Considerar intervención cognitivo-conductual orientada a perspectivas de futuro.',
+            'Grave':    'Desesperanza grave. Alto riesgo clínico. Requiere evaluación de ideación suicida de forma inmediata, plan de seguridad estructurado y soporte intensivo. La BHS grave es predictor independiente de suicidio incluso controlando por severidad depresiva (Beck et al., 1990).'
+        };
+        document.getElementById('clinical-box').textContent = interps[lv.label];
+
+        showCard('card-results');
+    }
+
+    function exportToPDF() {
+        const s = calculateScore();
+        const lv = getLevel(s.total);
+        const fecha = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'long', year:'numeric' });
+
+        const subLvA = getSubLevel(s.afectiva, 6);
+        const subLvM = getSubLevel(s.motivacional, 7);
+        const subLvC = getSubLevel(s.cognitiva, 7);
+
+        let itemRows = '';
+        for (let i = 1; i <= totalItems; i++) {
+            const resp = responses[i] === 'T' ? 'Verdadero' : responses[i] === 'F' ? 'Falso' : '—';
+            const sc = getItemScore(i);
+            itemRows += `<tr><td style="color:#718096;width:30px">${i}</td><td>${itemTexts[i]}</td><td style="text-align:center">${resp}</td><td style="text-align:center;font-weight:700;color:${sc?'#c53030':'#a0aec0'}">${sc?'●':'○'}</td></tr>`;
+        }
+
+        const riskHtml = s.total >= 9 ? `<div style="background:#fff5f5;border:2px solid #f56565;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#742a2a;"><strong>⚠ Umbral de riesgo suicida (≥9):</strong> Sensibilidad 94.2% para suicidio consumado (Beck et al., 1990). Evaluar ideación suicida inmediatamente.</div>` : '';
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>BHS</title>
 <style>
-body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:700px;margin:0 auto}
+body{font-family:Arial,sans-serif;padding:40px;color:#2d3748;max-width:720px;margin:0 auto}
 h1{color:#63171b;font-size:20px;margin-bottom:4px}
 .meta{font-size:13px;color:#718096;margin-bottom:20px}
-.score-box{padding:16px 20px;background:#f7fafc;border-radius:10px;margin-bottom:4px;display:flex;align-items:center;gap:24px}
-.score-num{font-size:52px;font-weight:800;color:${color};line-height:1}
-.score-info .level{font-size:17px;font-weight:700;color:${color}}
-.score-info .range{font-size:13px;color:#718096}
+.score-box{padding:16px 20px;background:#f7fafc;border:2px solid #e2e8f0;border-radius:12px;margin-bottom:4px;display:flex;align-items:center;gap:24px}
+.score-num{font-size:52px;font-weight:900;color:${lv.color};line-height:1}
+.level{font-size:17px;font-weight:700;color:${lv.color}}
+.range{font-size:13px;color:#718096}
 .sub-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
 .sub-cell{background:#f7fafc;border-radius:8px;padding:10px;text-align:center}
-.sub-cell .sn{font-size:10px;text-transform:uppercase;color:#718096;font-weight:700;margin-bottom:4px}
-.sub-cell .sv{font-size:24px;font-weight:800}
+.sn{font-size:10px;text-transform:uppercase;color:#718096;font-weight:700;margin-bottom:4px}
+.sv{font-size:24px;font-weight:800}
 h2{font-size:13px;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 8px}
 table{width:100%;border-collapse:collapse}
 th{background:#f7fafc;padding:8px 10px;font-size:11px;text-align:left;color:#718096;text-transform:uppercase}
@@ -695,39 +951,34 @@ td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:12px}
 .footer{margin-top:28px;font-size:11px;color:#a0aec0;border-top:1px solid #e2e8f0;padding-top:12px}
 </style></head><body>
 <h1>BHS — Escala de Desesperanza de Beck</h1>
-<div class="meta">Fecha: ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+<div class="meta">Fecha: ${fecha}</div>
 <div class="score-box">
-    <div class="score-num">${total}</div>
-    <div class="score-info">
-        <div class="level">${level}</div>
-        <div class="range">Puntuación / 20 puntos</div>
-    </div>
+  <div class="score-num">${s.total}</div>
+  <div><div class="level">${lv.label}</div><div class="range">Puntuación / 20 puntos</div></div>
 </div>
-${riskNote}
+${riskHtml}
 <div class="sub-grid">
-    <div class="sub-cell"><div class="sn">Afectiva</div><div class="sv" style="color:#c53030">${subScores.afectiva}<span style="font-size:14px;color:#a0aec0"> /${subMax.afectiva}</span></div></div>
-    <div class="sub-cell"><div class="sn">Motivacional</div><div class="sv" style="color:#c53030">${subScores.motivacional}<span style="font-size:14px;color:#a0aec0"> /${subMax.motivacional}</span></div></div>
-    <div class="sub-cell"><div class="sn">Cognitiva</div><div class="sv" style="color:#c53030">${subScores.cognitiva}<span style="font-size:14px;color:#a0aec0"> /${subMax.cognitiva}</span></div></div>
+  <div class="sub-cell"><div class="sn">Afectiva</div><div class="sv" style="color:${subLvA.color}">${s.afectiva}<span style="font-size:14px;color:#a0aec0"> /6</span></div><div style="font-size:11px;color:${subLvA.color}">${subLvA.label}</div></div>
+  <div class="sub-cell"><div class="sn">Motivacional</div><div class="sv" style="color:${subLvM.color}">${s.motivacional}<span style="font-size:14px;color:#a0aec0"> /7</span></div><div style="font-size:11px;color:${subLvM.color}">${subLvM.label}</div></div>
+  <div class="sub-cell"><div class="sn">Cognitiva</div><div class="sv" style="color:${subLvC.color}">${s.cognitiva}<span style="font-size:14px;color:#a0aec0"> /7</span></div><div style="font-size:11px;color:${subLvC.color}">${subLvC.label}</div></div>
 </div>
 <h2>Respuestas por ítem</h2>
 <table><tr><th>#</th><th>Afirmación</th><th>Respuesta</th><th>Puntúa</th></tr>${itemRows}</table>
-<div class="footer">BHS · Beck AT, Weissman A, Lester D, Trexler L (1974) · Corte de riesgo suicida ≥9: Beck AT et al. (1990). Am J Psychiatry, 147(2), 190-195.<br>Validación mexicana: Córdova-Osnaya &amp; Rosales-Pérez (2011); Quiñonez-Tapia et al. (2019); Hermosillo-de la Torre et al. (2020).</div>
+<div class="footer">Beck AT, Weissman A, Lester D, Trexler L (1974). Measurement of Pessimism. J Consulting and Clinical Psychology, 42(6), 861-865.<br>Corte ≥9 riesgo suicida: Beck AT et al. (1990). Am J Psychiatry, 147(2), 190-195. Validación mexicana: Hermosillo-de la Torre et al. (2020).</div>
 </body></html>`;
 
-    const win = window.open('', '_blank');
-    win.document.write(html);
-    win.document.close();
-    setTimeout(() => win.print(), 600);
-}
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        setTimeout(() => w.print(), 500);
+    }
 
-/* ── Reinicio ────────────────────────────────────────── */
-function restart() {
-    Object.keys(responses).forEach(k => delete responses[k]);
-    document.getElementById('risk-alert').classList.add('hidden');
-    showCard('card-0');
-}
-
-showCard('card-0');
+    function newEvaluation() {
+        responses = {};
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('risk-alert').style.display = 'none';
+        showCard(0);
+    }
 </script>
 </body>
 </html>
