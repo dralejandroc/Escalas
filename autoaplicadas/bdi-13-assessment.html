@@ -3,799 +3,719 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BECK 13 - Inventario de Depresión de Beck (Versión Abreviada)</title>
+    <title>BDI-13 — Inventario de Depresión de Beck (Versión Abreviada)</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            padding: 24px 16px;
         }
 
-        .container {
+        .card-wrap {
             max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            margin: 0 auto 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
             overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
-
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
-        }
-
-        .card {
-            padding: 50px;
             display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
         }
 
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
+        .card-wrap.active { display: block; }
+
+        .card-header {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.2em;
+        .scale-name { font-size: 15px; font-weight: 600; opacity: .9; }
+        .q-label { font-size: 13px; opacity: .8; }
+
+        .card-body { padding: 28px 32px 24px; }
+
+        .question-text {
+            font-size: 22px;
             font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
+            color: #112F33;
+            line-height: 1.5;
+            margin-bottom: 28px;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin-bottom: 28px;
         }
 
         .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
             text-align: left;
-        }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
+            transition: all .2s;
+            font-family: inherit;
         }
 
-        .navigation {
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; }
+
+        .q-progress-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+
+        .progress-bar-wrap {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #29A98C, #112F33);
+            border-radius: 3px;
+            transition: width .3s;
+        }
+
+        .bottom-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 40px;
         }
 
         .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
+            background: none;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            color: #718096;
+            padding: 7px 16px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
-
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
+            font-family: inherit;
         }
 
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
+
+        .item-number-badge { font-size: 11px; color: #cbd5e0; font-weight: 500; }
+
+        /* Welcome card */
+        .welcome-title { font-size: 22px; font-weight: 700; color: #112F33; margin-bottom: 16px; }
+
+        .instructions-box {
+            background: #f0faf7;
             border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            margin-bottom: 24px;
             color: #112F33;
+            font-size: 14px;
+            line-height: 1.75;
         }
 
-        .welcome-text {
+        .btn-start {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Results */
+        .score-area {
             text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 30px;
+            padding: 24px 20px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
         }
 
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
+        .score-num { font-size: 72px; font-weight: 900; line-height: 1; }
+        .score-range { font-size: 14px; color: #a0aec0; margin-top: 2px; }
 
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
-            background: white;
-            padding: 20px;
+        .score-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 16px;
             border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
         }
 
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
-            color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
+        .interp-box {
+            background: #f7fafc;
+            border-left: 4px solid #29A98C;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #2d3748;
+            line-height: 1.7;
         }
 
-        .export-buttons, .action-buttons {
+        .alerts-box {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #742a2a;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+
+        .action-row {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            margin-top: 20px;
             flex-wrap: wrap;
+            margin-top: 8px;
         }
 
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
+        .btn-action {
+            background: linear-gradient(135deg, #29A98C, #112F33);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
         }
 
-        h1, h2 { color: #29A98C; }
-        h3 { color: #112F33; }
+        /* Final card */
+        .final-title { font-size: 22px; font-weight: 700; color: #112F33; margin-bottom: 12px; }
+        .final-text { font-size: 14px; color: #718096; line-height: 1.7; margin-bottom: 24px; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media(max-width: 600px) {
+            body { padding: 12px 10px; }
+            .card-body { padding: 20px 18px 18px; }
+            .question-text { font-size: 18px; }
         }
 
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .card-wrap { display: none !important; box-shadow: none; }
+            #card-results { display: block !important; }
+            .action-row { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>BECK 13</h1>
-            <p>Inventario de Depresión de Beck - Versión Abreviada</p>
+
+    <!-- card-0: Welcome -->
+    <div class="card-wrap active" id="card-0">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Inventario de Depresión</span>
         </div>
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
+        <div class="card-body">
+            <div class="welcome-title">Inventario de Depresión de Beck (Versión Abreviada)</div>
+            <div class="instructions-box">
+                Este cuestionario consiste en 13 grupos de afirmaciones. Seleccione <strong>UNA</strong> afirmación de cada grupo que mejor describa cómo se ha sentido actualmente.<br><br>
+                Si varias afirmaciones le parecen aplicables, seleccione la que indique el mayor grado de intensidad.
+            </div>
+            <button class="btn-start" onclick="showCard(1)">Comenzar Evaluación</button>
         </div>
-        <!-- Card 0: Bienvenida -->
-        <div class="card active" id="card-0">
-            
-            <div class="instructions">
-                <h4>Instrucciones:</h4>
-                <p>Este cuestionario consiste en 13 grupos de afirmaciones. Por favor, lea atentamente cada grupo completo antes de realizar su elección.</p>
-                <p>Seleccione UNA afirmación de cada grupo que mejor describa cómo se ha sentido <strong>actualmente</strong>.</p>
-                <p>Si varias afirmaciones del mismo grupo le parecen aplicables, seleccione la que indique el mayor grado de intensidad.</p>
-                <p>Asegúrese de leer todas las afirmaciones de cada grupo antes de hacer su elección.</p>
-            </div>
-            
-            <button class="btn" onclick="startScale()">Comenzar Evaluación</button>
+    </div>
+
+    <!-- card-1: Estado de ánimo -->
+    <div class="card-wrap" id="card-1">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Estado de Ánimo</span>
         </div>
-
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <h2>Evaluación Completada</h2>
-            <h3>Muchas gracias por completar el cuestionario</h3>
-            
-            <div class="instructions">
-                <p>Ha completado exitosamente el Inventario de Depresión de Beck-13.</p>
-                <p>Por favor, entregue el dispositivo a su médico o profesional de la salud mental para la revisión de los resultados.</p>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 1 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:7.7%"></div></div>
+            <div class="question-text" style="font-size:19px;">Estado de ánimo</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(1, 0, this)">No me encuentro triste</button>
+                <button class="option" onclick="selectOption(1, 1, this)">Me siento triste o melancólico</button>
+                <button class="option" onclick="selectOption(1, 2, this)">Constantemente estoy melancólico o triste y no puedo superarlo</button>
+                <button class="option" onclick="selectOption(1, 3, this)">Me siento tan triste o infeliz que no puedo resistirlo</button>
             </div>
-            
-            <button class="btn" onclick="showResults()">Revisar Resultados (Profesional)</button>
-        </div>
-
-        <!-- Card Results -->
-        <div class="card" id="card-results">
-            <h2>Resultados BECK 13</h2>
-            
-            <div class="score-display">
-                <h3>Puntuación Total</h3>
-                <div id="total-score" style="font-size: 2rem; font-weight: bold;"></div>
-                <div id="score-range" style="margin-top: 10px;"></div>
-            </div>
-
-            <div class="interpretation">
-                <h4>Interpretación Clínica</h4>
-                <div id="clinical-interpretation"></div>
-            </div>
-
-            <div id="alerts-section"></div>
-
-            <div class="recommendations">
-                <h4>Descripción Técnica</h4>
-                <div id="technical-description"></div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn" onclick="generatePDF()">📄 Generar PDF</button>
-                <button class="btn" onclick="captureScreen()">📷 Capturar Pantalla</button>
-                <button class="btn btn-secondary" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">1 / 13</span>
             </div>
         </div>
     </div>
 
+    <!-- card-2: Pesimismo -->
+    <div class="card-wrap" id="card-2">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Pesimismo</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 2 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15.4%"></div></div>
+            <div class="question-text" style="font-size:19px;">Pesimismo</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(2, 0, this)">No soy particularmente pesimista y no me encuentro desalentado respecto al futuro</button>
+                <button class="option" onclick="selectOption(2, 1, this)">Me siento desanimado respecto al futuro</button>
+                <button class="option" onclick="selectOption(2, 2, this)">No tengo nada que esperar del futuro</button>
+                <button class="option" onclick="selectOption(2, 3, this)">No tengo ninguna esperanza en el futuro y creo que las cosas no pueden mejorar</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">2 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-3: Sentimiento de fracaso -->
+    <div class="card-wrap" id="card-3">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Sentimiento de Fracaso</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 3 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:23.1%"></div></div>
+            <div class="question-text" style="font-size:19px;">Sentimiento de fracaso</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(3, 0, this)">No me siento fracasado</button>
+                <button class="option" onclick="selectOption(3, 1, this)">Creo que he fracasado más que la mayoría de las personas</button>
+                <button class="option" onclick="selectOption(3, 2, this)">Cuando miro hacia atrás en mi vida, todo lo que veo son un montón de fracasos</button>
+                <button class="option" onclick="selectOption(3, 3, this)">Creo que como persona soy un completo fracaso</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">3 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-4: Insatisfacción -->
+    <div class="card-wrap" id="card-4">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Insatisfacción</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 4 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30.8%"></div></div>
+            <div class="question-text" style="font-size:19px;">Insatisfacción</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(4, 0, this)">No estoy particularmente descontento</button>
+                <button class="option" onclick="selectOption(4, 1, this)">No disfruto de las cosas como antes</button>
+                <button class="option" onclick="selectOption(4, 2, this)">No encuentro satisfacción en nada</button>
+                <button class="option" onclick="selectOption(4, 3, this)">Me siento descontento de todo</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">4 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-5: Sentimientos de culpa -->
+    <div class="card-wrap" id="card-5">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Sentimientos de Culpa</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 5 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:38.5%"></div></div>
+            <div class="question-text" style="font-size:19px;">Sentimientos de culpa</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(5, 0, this)">No me siento particularmente culpable</button>
+                <button class="option" onclick="selectOption(5, 1, this)">Me siento malo o indigno muchas veces</button>
+                <button class="option" onclick="selectOption(5, 2, this)">Me siento culpable</button>
+                <button class="option" onclick="selectOption(5, 3, this)">Pienso que soy muy malo e indigno</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">5 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-6: Autodesprecio -->
+    <div class="card-wrap" id="card-6">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Autodesprecio</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 6 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:46.2%"></div></div>
+            <div class="question-text" style="font-size:19px;">Autodesprecio</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(6, 0, this)">No me siento decepcionado conmigo mismo</button>
+                <button class="option" onclick="selectOption(6, 1, this)">Estoy decepcionado conmigo mismo</button>
+                <button class="option" onclick="selectOption(6, 2, this)">Estoy disgustado conmigo mismo</button>
+                <button class="option" onclick="selectOption(6, 3, this)">Me odio</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">6 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-7: Ideas suicidas -->
+    <div class="card-wrap" id="card-7">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Ideas Suicidas</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 7 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:53.8%"></div></div>
+            <div class="question-text" style="font-size:19px;">Ideas suicidas</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(7, 0, this)">No tengo pensamientos de dañarme</button>
+                <button class="option" onclick="selectOption(7, 1, this)">Creo que estaría mejor muerto</button>
+                <button class="option" onclick="selectOption(7, 2, this)">Tengo planes precisos para suicidarme</button>
+                <button class="option" onclick="selectOption(7, 3, this)">Me mataría si tuviera la oportunidad</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">7 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-8: Aislamiento social -->
+    <div class="card-wrap" id="card-8">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Aislamiento Social</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 8 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:61.5%"></div></div>
+            <div class="question-text" style="font-size:19px;">Aislamiento social</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(8, 0, this)">No he perdido el interés por los demás</button>
+                <button class="option" onclick="selectOption(8, 1, this)">Estoy menos interesado en los demás que antes</button>
+                <button class="option" onclick="selectOption(8, 2, this)">He perdido la mayor parte del interés por los demás y pienso poco en ellos</button>
+                <button class="option" onclick="selectOption(8, 3, this)">He perdido todo el interés por los demás y no me importa en absoluto</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">8 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-9: Indecisión -->
+    <div class="card-wrap" id="card-9">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Indecisión</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 9 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:69.2%"></div></div>
+            <div class="question-text" style="font-size:19px;">Indecisión</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(9, 0, this)">Tomo mis decisiones con la misma facilidad que antes</button>
+                <button class="option" onclick="selectOption(9, 1, this)">Trato de no tener que tomar decisiones</button>
+                <button class="option" onclick="selectOption(9, 2, this)">Tengo grandes dificultades para tomar decisiones</button>
+                <button class="option" onclick="selectOption(9, 3, this)">Ya no puedo tomar decisiones</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">9 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-10: Imagen corporal -->
+    <div class="card-wrap" id="card-10">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Imagen Corporal</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 10 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:76.9%"></div></div>
+            <div class="question-text" style="font-size:19px;">Imagen corporal</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(10, 0, this)">No creo que mi aspecto haya empeorado</button>
+                <button class="option" onclick="selectOption(10, 1, this)">Estoy preocupado porque me veo viejo y poco atractivo</button>
+                <button class="option" onclick="selectOption(10, 2, this)">Creo que mi aspecto empeora constantemente quitándome atractivo</button>
+                <button class="option" onclick="selectOption(10, 3, this)">Siento que mi aspecto es feo y repulsivo</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">10 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-11: Capacidad laboral -->
+    <div class="card-wrap" id="card-11">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Capacidad Laboral</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 11 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:84.6%"></div></div>
+            <div class="question-text" style="font-size:19px;">Capacidad laboral</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(11, 0, this)">Puedo trabajar igual de bien que antes</button>
+                <button class="option" onclick="selectOption(11, 1, this)">Me cuesta un esfuerzo especial comenzar a hacer algo</button>
+                <button class="option" onclick="selectOption(11, 2, this)">Debo esforzarme mucho para hacer cualquier cosa</button>
+                <button class="option" onclick="selectOption(11, 3, this)">No puedo realizar ningún trabajo</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">11 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-12: Fatiga -->
+    <div class="card-wrap" id="card-12">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Fatiga</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 12 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:92.3%"></div></div>
+            <div class="question-text" style="font-size:19px;">Fatiga</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(12, 0, this)">No me canso más que antes</button>
+                <button class="option" onclick="selectOption(12, 1, this)">Me canso más fácilmente que antes</button>
+                <button class="option" onclick="selectOption(12, 2, this)">Me canso por cualquier cosa</button>
+                <button class="option" onclick="selectOption(12, 3, this)">Me canso demasiado por hacer cualquier cosa</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">12 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-13: Pérdida de apetito -->
+    <div class="card-wrap" id="card-13">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Pérdida de Apetito</span>
+        </div>
+        <div class="card-body">
+            <div class="q-progress-label">Pregunta 13 de 13</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+            <div class="question-text" style="font-size:19px;">Pérdida de apetito</div>
+            <p style="font-size:13px; color:#718096; margin-top:-18px; margin-bottom:20px;">Seleccione la afirmación que mejor lo describe:</p>
+            <div class="options">
+                <button class="option" onclick="selectOption(13, 0, this)">Mi apetito es normal (igual que antes)</button>
+                <button class="option" onclick="selectOption(13, 1, this)">Mi apetito no es tan bueno como antes</button>
+                <button class="option" onclick="selectOption(13, 2, this)">Mi apetito es ahora mucho peor</button>
+                <button class="option" onclick="selectOption(13, 3, this)">He perdido el apetito por completo</button>
+            </div>
+            <div class="bottom-nav">
+                <button class="btn-back" onclick="previousCard()">← Atrás</button>
+                <span class="item-number-badge">13 / 13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- card-final -->
+    <div class="card-wrap" id="card-final">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label"></span>
+        </div>
+        <div class="card-body" style="text-align:center; padding: 40px 32px;">
+            <div class="final-title">Evaluación completada</div>
+            <p class="final-text">Muchas gracias por completar el cuestionario. Por favor, entregue el dispositivo a su médico o profesional de la salud mental para la revisión de los resultados.</p>
+            <button class="btn-start" onclick="showResults()">Revisar Resultados</button>
+        </div>
+    </div>
+
+    <!-- card-results -->
+    <div class="card-wrap" id="card-results">
+        <div class="card-header">
+            <span class="scale-name">BDI-13</span>
+            <span class="q-label">Resultados</span>
+        </div>
+        <div class="card-body">
+            <div class="score-area" id="score-area-bdi13">
+                <div class="score-num" id="score-num-bdi13">—</div>
+                <div class="score-range">/ 39 puntos</div>
+                <span class="score-badge" id="score-badge-bdi13"></span>
+            </div>
+
+            <div class="section-label">Interpretación Clínica</div>
+            <div class="interp-box" id="interp-box-bdi13"></div>
+
+            <div id="alerts-section-bdi13" style="display:none;">
+                <div class="section-label">Alertas Clínicas</div>
+                <div class="alerts-box" id="alerts-box-bdi13"></div>
+            </div>
+
+            <div class="action-row">
+                <button class="btn-action" onclick="generatePDF()">&#128196; Generar PDF</button>
+                <button class="btn-action" onclick="newEvaluation()">&#x1F504; Nueva Evaluación</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Variables globales
-        let currentCard = 0;
+        const totalItems = 13;
+        let currentCardId = 'card-0';
         let responses = {};
-        const totalQuestions = 13;
 
-        // Datos de los ítems del BECK 13
-        const beck13Items = [
-            {
-                number: 1,
-                title: "Estado de ánimo",
-                options: [
-                    { text: "No me encuentro triste", score: 0 },
-                    { text: "Me siento triste o melancólico", score: 1 },
-                    { text: "Constantemente estoy melancólico o triste y no puedo superarlo", score: 2 },
-                    { text: "Me siento tan triste o infeliz que no puedo resistirlo", score: 3 }
-                ]
-            },
-            {
-                number: 2,
-                title: "Pesimismo",
-                options: [
-                    { text: "No soy particularmente pesimista y no me encuentro desalentado respecto al futuro", score: 0 },
-                    { text: "Me siento desanimado respecto al futuro", score: 1 },
-                    { text: "No tengo nada que esperar del futuro", score: 2 },
-                    { text: "No tengo ninguna esperanza en el futuro y creo que las cosas no pueden mejorar", score: 3 }
-                ]
-            },
-            {
-                number: 3,
-                title: "Sentimiento de fracaso",
-                options: [
-                    { text: "No me siento fracasado", score: 0 },
-                    { text: "Creo que he fracasado más que la mayoría de las personas", score: 1 },
-                    { text: "Cuando miro hacia atrás en mi vida, todo lo que veo son un montón de fracasos", score: 2 },
-                    { text: "Creo que como persona soy un completo fracaso (como padre, marido, esposa etc)", score: 3 }
-                ]
-            },
-            {
-                number: 4,
-                title: "Insatisfacción",
-                options: [
-                    { text: "No estoy particularmente descontento", score: 0 },
-                    { text: "No disfruto de las cosas como antes", score: 1 },
-                    { text: "No encuentro satisfacción en nada", score: 2 },
-                    { text: "Me siento descontento de todo", score: 3 }
-                ]
-            },
-            {
-                number: 5,
-                title: "Sentimientos de culpa",
-                options: [
-                    { text: "No me siento particularmente culpable", score: 0 },
-                    { text: "Me siento malo o indigno muchas veces", score: 1 },
-                    { text: "Me siento culpable", score: 2 },
-                    { text: "Pienso que soy muy malo e indigno", score: 3 }
-                ]
-            },
-            {
-                number: 6,
-                title: "Autodesprecio",
-                options: [
-                    { text: "No me siento decepcionado conmigo mismo", score: 0 },
-                    { text: "Estoy decepcionado conmigo mismo", score: 1 },
-                    { text: "Estoy disgustado conmigo mismo", score: 2 },
-                    { text: "Me odio", score: 3 }
-                ]
-            },
-            {
-                number: 7,
-                title: "Ideas suicidas",
-                options: [
-                    { text: "No tengo pensamientos de dañarme", score: 0 },
-                    { text: "Creo que estaría mejor muerto", score: 1 },
-                    { text: "Tengo planes precisos para suicidarme", score: 2 },
-                    { text: "Me mataría si tuviera la oportunidad", score: 3 }
-                ]
-            },
-            {
-                number: 8,
-                title: "Aislamiento social",
-                options: [
-                    { text: "No he perdido el interés por los demás", score: 0 },
-                    { text: "Estoy menos interesado en los demás que antes", score: 1 },
-                    { text: "He perdido la mayor parte del interés por los demás y pienso poco en ellos", score: 2 },
-                    { text: "He perdido todo el interés por los demás y no me importa en absoluto", score: 3 }
-                ]
-            },
-            {
-                number: 9,
-                title: "Indecisión",
-                options: [
-                    { text: "Tomo mis decisiones con la misma facilidad que antes", score: 0 },
-                    { text: "Trato de no tener que tomar decisiones", score: 1 },
-                    { text: "Tengo grandes dificultades para tomar decisiones", score: 2 },
-                    { text: "Ya no puedo tomar decisiones", score: 3 }
-                ]
-            },
-            {
-                number: 10,
-                title: "Imagen corporal",
-                options: [
-                    { text: "No creo que mi aspecto haya empeorado", score: 0 },
-                    { text: "Estoy preocupado porque me veo viejo y poco atractivo", score: 1 },
-                    { text: "Creo que mi aspecto empeora constantemente quitándome atractivo", score: 2 },
-                    { text: "Siento que mi aspecto es feo y repulsivo", score: 3 }
-                ]
-            },
-            {
-                number: 11,
-                title: "Capacidad laboral",
-                options: [
-                    { text: "Puedo trabajar igual de bien que antes", score: 0 },
-                    { text: "Me cuesta un esfuerzo especial comenzar a hacer algo", score: 1 },
-                    { text: "Debo esforzarme mucho para hacer cualquier cosa", score: 2 },
-                    { text: "No puedo realizar ningún trabajo", score: 3 }
-                ]
-            },
-            {
-                number: 12,
-                title: "Fatiga",
-                options: [
-                    { text: "No me canso más que antes", score: 0 },
-                    { text: "Me canso más fácilmente que antes", score: 1 },
-                    { text: "Me canso por cualquier cosa", score: 2 },
-                    { text: "Me canso demasiado por hacer cualquier cosa", score: 3 }
-                ]
-            },
-            {
-                number: 13,
-                title: "Pérdida de apetito",
-                options: [
-                    { text: "Mi apetito es normal (igual que antes)", score: 0 },
-                    { text: "Mi apetito no es tan bueno como antes (subió o bajó)", score: 1 },
-                    { text: "Mi apetito es ahora mucho peor (bajó mucho o subió mucho)", score: 2 },
-                    { text: "He perdido el apetito por completo (no como nada o como cada que tengo oportunidad)", score: 3 }
-                ]
-            }
-        ];
-
-        // Funciones principales
-        function startScale() {
-            createItemCards();
-            showCard(1);
-            updateBackButton();
-            updateProgressBar();
+        function showCard(id) {
+            document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+            const key = (typeof id === 'number') ? 'card-' + id : id;
+            document.getElementById(key).classList.add('active');
+            currentCardId = key;
+            window.scrollTo(0, 0);
+            if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
         }
 
-        function createItemCards() {
-            const container = document.querySelector('.container');
-            const cardFinal = document.getElementById('card-final');
-            
-            beck13Items.forEach(item => {
-                const cardHTML = `
-                    <div class="card" id="card-${item.number}">
-                        <div class="question-number">${item.number}</div>
-                        <h3>${item.title}</h3>
-                        
-                        <div class="options">
-                            ${item.options.map((option, index) => `
-                                <div class="option" onclick="selectOption(${item.number}, ${index}, ${option.score})">
-                                    ${option.text}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="navigation">
-                            <button class="btn-back" onclick="goBack()">← Regresar</button>
-                        </div>
-                    </div>
-                `;
-                
-                cardFinal.insertAdjacentHTML('beforebegin', cardHTML);
+        function restoreSelections(n) {
+            if (responses[n] === undefined) return;
+            const card = document.getElementById('card-' + n);
+            card.querySelectorAll('.option').forEach((btn, idx) => {
+                btn.classList.toggle('selected', idx === responses[n]);
             });
         }
 
-        function selectOption(questionNumber, optionIndex, score) {
-            responses[questionNumber] = score;
-            
-            // Marcar opción seleccionada
-            const card = document.getElementById(`card-${questionNumber}`);
-            if (card) {
-                const options = card.querySelectorAll('.option');
-                options.forEach((option, index) => {
-                    option.classList.toggle('selected', index === optionIndex);
-                });
-            }
-            
-            // Auto-avance después de 120ms
+        function selectOption(qNum, value, btn) {
+            btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            responses[qNum] = value;
             setTimeout(() => {
-                if (questionNumber < totalQuestions) {
-                    showCard(questionNumber + 1);
-                } else {
-                    showCard('final');
-                }
-                updateBackButton();
-                updateProgressBar();
-            }, 120);
+                if (qNum < totalItems) showCard(qNum + 1);
+                else showCard('card-final');
+            }, 150);
         }
 
-        function showCard(cardId) {
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
-            
-            let targetCard;
-            if (typeof cardId === 'number') {
-                currentCard = cardId;
-                targetCard = document.getElementById(`card-${cardId}`);
-            } else {
-                currentCard = cardId;
-                targetCard = document.getElementById(`card-${cardId}`);
-            }
-            
-            if (targetCard) {
-                targetCard.classList.add('active');
-            }
-        }
-
-        function goBack() {
-            if (currentCard > 1) {
-                showCard(currentCard - 1);
-                updateBackButton();
-                updateProgressBar();
-            } else if (currentCard === 1) {
-                showCard(0);
-                updateBackButton();
-                updateProgressBar();
-            }
-        }
-
-        function updateBackButton() {
-            const backBtn = document.getElementById('back-btn');
-            if (backBtn) {
-                const shouldHide = currentCard === 0 || currentCard === 'final' || currentCard === 'results';
-                backBtn.classList.toggle('hidden', shouldHide);
-            }
-        }
-
-        function updateProgressBar() {
-            const progressBar = document.getElementById('progress-bar');
-            if (progressBar) {
-                let progress = 0;
-                
-                if (typeof currentCard === 'number' && currentCard > 0) {
-                    progress = (currentCard / totalQuestions) * 100;
-                } else if (currentCard === 'final') {
-                    progress = 100;
-                }
-                
-                progressBar.style.width = `${progress}%`;
-            }
+        function previousCard() {
+            const match = currentCardId.match(/card-(\d+)/);
+            if (!match) return;
+            const n = parseInt(match[1]);
+            if (n <= 1) showCard(0);
+            else showCard(n - 1);
         }
 
         function calculateScore() {
-            return Object.values(responses).reduce((sum, score) => sum + score, 0);
+            return Object.values(responses).reduce((s, v) => s + v, 0);
         }
 
-        function getInterpretation(score) {
-            if (score >= 0 && score <= 8) {
-                return {
-                    level: "Depresión Mínima",
-                    color: "#48bb78",
-                    range: "0-8 puntos",
-                    description: "Las puntuaciones en este rango indican síntomas depresivos mínimos o ausentes. Los síntomas presentes no interfieren significativamente con el funcionamiento diario.",
-                    clinical: "Sin sintomatología depresiva clínicamente significativa. El paciente presenta un estado de ánimo dentro de parámetros normales."
-                };
-            } else if (score >= 9 && score <= 12) {
-                return {
-                    level: "Depresión Leve",
-                    color: "#f6ad55",
-                    range: "9-12 puntos",
-                    description: "Presencia de síntomas depresivos leves que pueden interferir ocasionalmente con el funcionamiento diario. Se requiere evaluación clínica adicional.",
-                    clinical: "Sintomatología depresiva leve. Los síntomas están presentes pero no cumplen criterios para episodio depresivo mayor. Posible trastorno adaptativo con estado de ánimo deprimido."
-                };
-            } else if (score >= 13 && score <= 20) {
-                return {
-                    level: "Depresión Moderada",
-                    color: "#ed8936",
-                    range: "13-20 puntos",
-                    description: "Sintomatología depresiva moderada que interfiere de manera significativa con el funcionamiento diario. Se requiere intervención terapéutica estructurada.",
-                    clinical: "Presencia de sintomatología depresiva moderada. Probable episodio depresivo mayor. Los síntomas interfieren significativamente con el funcionamiento social, laboral o en otras áreas importantes."
-                };
-            } else {
-                return {
-                    level: "Depresión Grave",
-                    color: "#f56565",
-                    range: "21-39 puntos",
-                    description: "Sintomatología depresiva grave que interfiere severamente con el funcionamiento diario. Se requiere intervención inmediata y seguimiento especializado.",
-                    clinical: "Episodio depresivo mayor grave. Los síntomas son severos e interfieren marcadamente con el funcionamiento. Alto riesgo de deterioro funcional y posibles ideas suicidas."
-                };
-            }
-        }
-
-        function getHighRiskItems() {
-            const highRiskItems = [];
-            const maxScore = 3;
-            const threshold = Math.ceil(maxScore * 0.66);
-            
-            beck13Items.forEach(item => {
-                const score = responses[item.number];
-                if (score !== undefined && score >= threshold) {
-                    highRiskItems.push({
-                        number: item.number,
-                        title: item.title,
-                        score: score,
-                        selectedText: item.options.find(opt => opt.score === score)?.text || ""
-                    });
-                }
-            });
-            
-            return highRiskItems;
+        function getLevel(score) {
+            if (score <= 8) return {
+                label: 'Mínima',
+                color: '#48bb78',
+                bgColor: 'rgba(72,187,120,0.12)',
+                border: '#48bb78',
+                description: 'Sin sintomatología depresiva clínicamente significativa. Las puntuaciones en este rango (0-8) indican síntomas mínimos o ausentes que no interfieren con el funcionamiento diario.'
+            };
+            if (score <= 12) return {
+                label: 'Leve',
+                color: '#f6ad55',
+                bgColor: 'rgba(246,173,85,0.12)',
+                border: '#f6ad55',
+                description: 'Sintomatología depresiva leve (9-12 puntos). Los síntomas pueden interferir ocasionalmente con el funcionamiento diario. Se requiere evaluación clínica adicional.'
+            };
+            if (score <= 20) return {
+                label: 'Moderada',
+                color: '#ed8936',
+                bgColor: 'rgba(237,137,54,0.12)',
+                border: '#ed8936',
+                description: 'Sintomatología depresiva moderada (13-20 puntos). Los síntomas interfieren significativamente con el funcionamiento. Se requiere intervención terapéutica estructurada.'
+            };
+            return {
+                label: 'Grave',
+                color: '#f56565',
+                bgColor: 'rgba(245,101,101,0.12)',
+                border: '#f56565',
+                description: 'Sintomatología depresiva grave (21-39 puntos). Síntomas severos que requieren intervención inmediata y seguimiento especializado.'
+            };
         }
 
         function showResults() {
-            const totalScore = calculateScore();
-            const interpretation = getInterpretation(totalScore);
-            const highRiskItems = getHighRiskItems();
-            
-            // Mostrar puntuación total
-            const totalScoreEl = document.getElementById('total-score');
-            const scoreRangeEl = document.getElementById('score-range');
-            if (totalScoreEl) totalScoreEl.textContent = `${totalScore} / 39`;
-            if (scoreRangeEl) scoreRangeEl.textContent = interpretation.range;
-            
-            // Cambiar color según el nivel
-            const scoreDisplay = document.querySelector('.score-display');
-            if (scoreDisplay) {
-                scoreDisplay.style.background = `linear-gradient(135deg, ${interpretation.color}, #112F33)`;
+            const score = calculateScore();
+            const lv = getLevel(score);
+
+            const scoreArea = document.getElementById('score-area-bdi13');
+            scoreArea.style.borderColor = lv.border;
+            scoreArea.style.background = lv.bgColor;
+
+            const scoreNum = document.getElementById('score-num-bdi13');
+            scoreNum.textContent = score;
+            scoreNum.style.color = lv.color;
+
+            const badge = document.getElementById('score-badge-bdi13');
+            badge.textContent = 'Depresión ' + lv.label;
+            badge.style.color = lv.color;
+            badge.style.background = lv.bgColor;
+            badge.style.border = '1px solid ' + lv.border;
+
+            document.getElementById('interp-box-bdi13').textContent = lv.description;
+
+            // Suicide alert: item 7 >= 2
+            const alertsSection = document.getElementById('alerts-section-bdi13');
+            const alertsBox = document.getElementById('alerts-box-bdi13');
+            if (responses[7] !== undefined && responses[7] >= 2) {
+                alertsBox.innerHTML = '&#9888;&#65039; <strong>Ítem 7 (Ideas suicidas):</strong> Puntuación ≥2. Se requiere evaluación inmediata del riesgo suicida.';
+                alertsSection.style.display = 'block';
+            } else {
+                alertsSection.style.display = 'none';
             }
-            
-            // Interpretación clínica
-            const clinicalInterpretationEl = document.getElementById('clinical-interpretation');
-            if (clinicalInterpretationEl) {
-                clinicalInterpretationEl.innerHTML = `
-                    <h5 style="color: ${interpretation.color}; margin-bottom: 10px;">${interpretation.level}</h5>
-                    <p style="margin-bottom: 15px;"><strong>Interpretación:</strong> ${interpretation.clinical}</p>
-                    <p><strong>Descripción:</strong> ${interpretation.description}</p>
-                `;
-            }
-            
-            // Descripción técnica
-            const technicalDescriptionEl = document.getElementById('technical-description');
-            if (technicalDescriptionEl) {
-                technicalDescriptionEl.innerHTML = `
-                    <p><strong>Instrumento:</strong> Inventario de Depresión de Beck-13 (BDI-13)</p>
-                    <p><strong>Número de ítems:</strong> 13 (versión abreviada)</p>
-                    <p><strong>Rango de puntuación:</strong> 0-39 puntos</p>
-                    <p><strong>Sistema de puntuación:</strong> Uniforme 0-1-2-3 puntos por ítem</p>
-                    <p><strong>Consistencia interna:</strong> α = 0.85-0.92</p>
-                    <p><strong>Tiempo de aplicación:</strong> 3-5 minutos</p>
-                `;
-            }
-            
-            // Alertas para ítems de alto riesgo
-            const alertsSection = document.getElementById('alerts-section');
-            if (alertsSection) {
-                if (highRiskItems.length > 0) {
-                    const alertHTML = `
-                        <div class="alert">
-                            <h4 style="color: #742a2a; margin-bottom: 15px;">⚠️ Ítems de Atención Clínica</h4>
-                            <p style="margin-bottom: 15px;">Los siguientes ítems presentan puntuaciones ≥66% del máximo y requieren evaluación clínica específica:</p>
-                            ${highRiskItems.map(item => `
-                                <div style="margin: 10px 0; padding: 10px; background: rgba(245, 101, 101, 0.1); border-radius: 6px;">
-                                    <strong>Ítem ${item.number} - ${item.title}:</strong> ${item.score}/3 puntos<br>
-                                    <em style="font-size: 0.9em; color: #666;">"${item.selectedText}"</em>
-                                </div>
-                            `).join('')}
-                            ${highRiskItems.some(item => item.number === 7) ? 
-                                '<div style="margin-top: 15px; padding: 15px; background: rgba(245, 101, 101, 0.2); border-radius: 6px; border: 2px solid #f56565;"><strong style="color: #742a2a;">⚠️ ALERTA: Riesgo suicida identificado. Evaluación inmediata requerida.</strong></div>' 
-                                : ''}
-                        </div>
-                    `;
-                    alertsSection.innerHTML = alertHTML;
-                } else {
-                    alertsSection.innerHTML = '';
-                }
-            }
-            
-            showCard('results');
-            updateBackButton();
-            updateProgressBar();
+
+            showCard('card-results');
         }
 
         function generatePDF() {
-            const totalScore = calculateScore();
-            const interpretation = getInterpretation(totalScore);
-            
-            const printContent = `
-                <html>
-                <head>
-                    <title>Reporte BECK 13</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #29A98C; padding-bottom: 15px; }
-                        .score { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
-                        .interpretation { background: #f9fafb; padding: 15px; border-left: 4px solid #29A98C; margin: 15px 0; }
-                        .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #666; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>INVENTARIO DE DEPRESIÓN DE BECK-13</h1>
-                        <h2>(Versión Abreviada)</h2>
-                    </div>
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-                    
-                    <div class="score">
-                        <h2>Resultado: ${totalScore} / 39 puntos</h2>
-                        <h3 style="color: ${interpretation.color};">${interpretation.level} (${interpretation.range})</h3>
-                    </div>
-                    
-                    <div class="interpretation">
-                        <h3>Interpretación Clínica</h3>
-                        <p>${interpretation.clinical}</p>
-                        <p>${interpretation.description}</p>
-                    </div>
-                    
-                    <div class="footer">
-                        <p><strong>Nota importante:</strong> Este reporte es un instrumento de evaluación psicométrica y debe ser interpretado únicamente por profesionales de la salud mental calificados. No constituye un diagnóstico por sí mismo.</p>
-                    </div>
-                    </body>
-                </html>
-            `;
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-        function captureScreen() {
-            alert('Para capturar la pantalla, use la función de captura de pantalla de su dispositivo:\n\n• Windows: Win + Shift + S\n• Mac: Cmd + Shift + 4\n• Android: Botón encendido + Volumen abajo\n• iOS: Botón lateral + Volumen arriba');
+            window.print();
         }
 
         function newEvaluation() {
-            if (confirm('¿Está seguro de que desea iniciar una nueva evaluación? Se perderán los datos actuales.')) {
-                responses = {};
-                currentCard = 0;
-                
-                // Eliminar cards de ítems generados dinámicamente
-                beck13Items.forEach(item => {
-                    const card = document.getElementById(`card-${item.number}`);
-                    if (card) {
-                        card.remove();
-                    }
-                });
-                
-                showCard(0);
-                updateBackButton();
-                updateProgressBar();
-            }
+            responses = {};
+            document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+            showCard(0);
         }
-
-        // Inicialización cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            updateBackButton();
-            updateProgressBar();
-        });
     </script>
-<script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
-        }
-    });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
-</script>
 </body>
 </html>

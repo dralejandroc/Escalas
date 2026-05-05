@@ -1,917 +1,440 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHQ-9 - Cuestionario de Salud del Paciente</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
-
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
-        }
-
-        .card {
-            padding: 50px;
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
-            color: #112F33;
-            text-align: left;
-        }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-        }
-
-        .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
-
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
-
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
-            color: #112F33;
-        }
-
-        .welcome-text {
-            text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 30px;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
-        }
-
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
-            color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-
-        .export-buttons, .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        h1, h2 { color: #29A98C; }
-        h3 { color: #112F33; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHQ-9 — Cuestionario de Salud del Paciente</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+.card-wrap { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+.card-wrap.active { display:block; }
+.card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+.scale-name { font-size:15px; font-weight:600; opacity:.9; }
+.q-label { font-size:13px; opacity:.8; }
+.card-body { padding:28px 32px 24px; }
+.question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:28px; }
+.options { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+.option { width:100%; border:2px solid #e2e8f0; border-radius:12px; padding:14px 20px; font-size:14px; font-weight:500; color:#112F33; background:#fff; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; }
+.option:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+.option.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; }
+.q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+.progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; transition:width .3s; }
+.bottom-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-back:hover { border-color:#29A98C; color:#29A98C; }
+.item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
+.welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+.instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:24px; color:#112F33; font-size:14px; line-height:1.75; }
+.btn-start { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:12px 32px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; display:block; margin:0 auto; }
+.score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+.score-num { font-size:72px; font-weight:900; line-height:1; }
+.score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+.score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+.interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+.alerts-box { background:#fff5f5; border:1px solid #feb2b2; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#742a2a; }
+.functional-box { background:#f0faf7; border:1px solid #b2dfdb; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#112F33; }
+.action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.final-msg { text-align:center; padding:24px 20px; }
+.final-msg h2 { font-size:20px; font-weight:700; color:#112F33; margin-bottom:12px; }
+.final-msg p { font-size:14px; color:#718096; line-height:1.7; margin-bottom:24px; }
+@media(max-width:600px){body{padding:12px 10px;}.card-body{padding:20px 18px 18px;}.question-text{font-size:18px;}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>PHQ-9</h1>
-            <p>Cuestionario de Salud del Paciente - 9</p>
-        </div>
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <!-- Card 0: Bienvenida -->
-        <div class="card active" id="card-0">
-            
-            <div class="instructions">
-                <strong>Instrucciones:</strong><br>
-                Durante las <strong>ÚLTIMAS DOS SEMANAS</strong>, ¿con qué frecuencia le ha afectado alguno de los siguientes problemas?
-                <br><br>
-                Por favor, seleccione la opción que mejor describa su experiencia para cada pregunta.
-                <br><br>
-                <em>Esta evaluación consta de 9 preguntas principales más una pregunta adicional sobre el impacto funcional.</em>
-            </div>
-            
-            <button class="start-btn" onclick="startQuestionnaire()">Comenzar Evaluación</button>
-        </div>
 
-        <!-- Cards 1-9: Ítems principales -->
-        <div class="card" id="card-1">
-            <div class="question-header">
-                <div class="question-number">Pregunta 1 de 9</div>
-                <div class="question-text">Poco interés o alegría para hacer las cosas</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(1, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(1, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(1, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(1, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 0: Welcome -->
+<div class="card-wrap active" id="card-0">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Evaluación de Depresión</span>
+  </div>
+  <div class="card-body">
+    <div class="welcome-title">Cuestionario de Salud del Paciente</div>
+    <div class="instructions-box">
+      Durante las <strong>ÚLTIMAS DOS SEMANAS</strong>, ¿con qué frecuencia le ha afectado alguno de los siguientes problemas?<br><br>
+      Por favor, seleccione la opción que mejor describa su experiencia para cada pregunta. Esta evaluación consta de 9 preguntas principales más una pregunta adicional sobre el impacto funcional.
+    </div>
+    <button class="btn-start" onclick="showCard(1)">Comenzar evaluación</button>
+  </div>
+</div>
 
-        <div class="card" id="card-2">
-            <div class="question-header">
-                <div class="question-number">Pregunta 2 de 9</div>
-                <div class="question-text">Sensación de estar decaído, deprimido o desesperanzado</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(2, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(2, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(2, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(2, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 1 -->
+<div class="card-wrap" id="card-1">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 1 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div>
+    <div class="question-text">Poco interés o alegría para hacer las cosas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(1,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(1,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(1,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(1,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="showCard(0)">← Atrás</button>
+      <span class="item-number-badge">1 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-3">
-            <div class="question-header">
-                <div class="question-number">Pregunta 3 de 9</div>
-                <div class="question-text">Problemas para quedarse dormido, para seguir durmiendo o dormir demasiado</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(3, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(3, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(3, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(3, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 2 -->
+<div class="card-wrap" id="card-2">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 2 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+    <div class="question-text">Sensación de estar decaído, deprimido o desesperanzado</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(2,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(2,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(2,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(2,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">2 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-4">
-            <div class="question-header">
-                <div class="question-number">Pregunta 4 de 9</div>
-                <div class="question-text">Sensación de cansancio o de tener poca energía</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(4, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(4, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(4, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(4, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 3 -->
+<div class="card-wrap" id="card-3">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 3 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+    <div class="question-text">Problemas para quedarse dormido, para seguir durmiendo o dormir demasiado</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(3,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(3,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(3,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(3,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">3 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-5">
-            <div class="question-header">
-                <div class="question-number">Pregunta 5 de 9</div>
-                <div class="question-text">Poco apetito o comer demasiado</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(5, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(5, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(5, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(5, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 4 -->
+<div class="card-wrap" id="card-4">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 4 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+    <div class="question-text">Sensación de cansancio o de tener poca energía</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(4,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(4,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(4,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(4,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">4 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-6">
-            <div class="question-header">
-                <div class="question-number">Pregunta 6 de 9</div>
-                <div class="question-text">Sentirse mal consigo mismo; sentir que es un fracasado o que ha decepcionado a su familia o a sí mismo</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(6, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(6, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(6, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(6, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 5 -->
+<div class="card-wrap" id="card-5">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 5 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+    <div class="question-text">Poco apetito o comer demasiado</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(5,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(5,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(5,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(5,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">5 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-7">
-            <div class="question-header">
-                <div class="question-number">Pregunta 7 de 9</div>
-                <div class="question-text">Problemas para concentrarse en algo, como leer el periódico o ver la televisión</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(7, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(7, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(7, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(7, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 6 -->
+<div class="card-wrap" id="card-6">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 6 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+    <div class="question-text">Sentirse mal consigo mismo; sentir que es un fracasado o que ha decepcionado a su familia o a sí mismo</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(6,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(6,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(6,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(6,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">6 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-8">
-            <div class="question-header">
-                <div class="question-number">Pregunta 8 de 9</div>
-                <div class="question-text">Moverse o hablar tan despacio que los demás pueden haberlo notado. O lo contrario: estar tan inquieto o agitado que se ha estado moviendo de un lado a otro más de lo habitual</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(8, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(8, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(8, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(8, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 7 -->
+<div class="card-wrap" id="card-7">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 7 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+    <div class="question-text">Problemas para concentrarse en algo, como leer el periódico o ver la televisión</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(7,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(7,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(7,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(7,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">7 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-9">
-            <div class="question-header">
-                <div class="question-number">Pregunta 9 de 9</div>
-                <div class="question-text">Pensamientos de que estaría mejor muerto o de querer hacerse daño de algún modo</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(9, 0)">
-                    <span class="option-value">0</span>
-                    <span>Nunca</span>
-                </div>
-                <div class="option" onclick="selectOption(9, 1)">
-                    <span class="option-value">1</span>
-                    <span>Varios días</span>
-                </div>
-                <div class="option" onclick="selectOption(9, 2)">
-                    <span class="option-value">2</span>
-                    <span>Más de la mitad de los días</span>
-                </div>
-                <div class="option" onclick="selectOption(9, 3)">
-                    <span class="option-value">3</span>
-                    <span>Casi todos los días</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 8 -->
+<div class="card-wrap" id="card-8">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 8 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+    <div class="question-text">Moverse o hablar tan despacio que los demás pueden haberlo notado. O lo contrario: estar tan inquieto o agitado que se ha estado moviendo más de lo habitual</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(8,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(8,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(8,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(8,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">8 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card 10: Pregunta adicional de funcionalidad -->
-        <div class="card" id="card-10">
-            <div class="question-header">
-                <div class="question-number">Pregunta adicional</div>
-                <div class="question-text">Si ha marcado alguno de los problemas de este cuestionario, ¿hasta qué punto estos problemas le han creado dificultades para hacer su trabajo, ocuparse de la casa o relacionarse con los demás?</div>
-            </div>
-            <div class="options">
-                <div class="option" onclick="selectOption(10, 0)">
-                    <span class="option-value">0</span>
-                    <span>Ninguna dificultad</span>
-                </div>
-                <div class="option" onclick="selectOption(10, 1)">
-                    <span class="option-value">1</span>
-                    <span>Algunas dificultades</span>
-                </div>
-                <div class="option" onclick="selectOption(10, 2)">
-                    <span class="option-value">2</span>
-                    <span>Muchas dificultades</span>
-                </div>
-                <div class="option" onclick="selectOption(10, 3)">
-                    <span class="option-value">3</span>
-                    <span>Muchísimas dificultades</span>
-                </div>
-            </div>
-        </div>
+<!-- CARD 9 -->
+<div class="card-wrap" id="card-9">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Síntoma Depresivo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 9 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div>
+    <div class="question-text">Pensamientos de que estaría mejor muerto o de querer hacerse daño de algún modo</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(9,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(9,1,this)">Varios días</button>
+      <button class="option" data-score="2" onclick="selectOption(9,2,this)">Más de la mitad de los días</button>
+      <button class="option" data-score="3" onclick="selectOption(9,3,this)">Casi todos los días</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">9 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <div class="completed-message">
-                <h2>Escala completada</h2>
-                <p>Muchas gracias por completar el cuestionario.</p>
-                <p><strong>Por favor, pase el dispositivo a su médico o profesional de la salud para su revisión.</strong></p>
-            </div>
-            <button class="results-btn" onclick="showResults()">Revisar Resultados (Médico)</button>
-        </div>
+<!-- CARD 10 — Functional impact -->
+<div class="card-wrap" id="card-10">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Impacto Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 10 de 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+    <div class="question-text">Si ha marcado alguno de los problemas anteriores, ¿hasta qué punto esos problemas le han creado dificultades en su trabajo, en casa o con los demás?</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(10,0,this)">Ninguna dificultad</button>
+      <button class="option" data-score="1" onclick="selectOption(10,1,this)">Algunas dificultades</button>
+      <button class="option" data-score="2" onclick="selectOption(10,2,this)">Muchas dificultades</button>
+      <button class="option" data-score="3" onclick="selectOption(10,3,this)">Muchísimas dificultades</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">10 / 10</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card Results -->
-        <div class="card" id="card-results">
-            <div class="results-container">
-                <h2>Resultados PHQ-9</h2>
-                <div class="score-display" id="score-display">
-                    <!-- Score will be inserted here -->
-                </div>
-                <div class="interpretation" id="interpretation">
-                    <!-- Interpretation will be inserted here -->
-                </div>
-                <div class="alerts" id="alerts" style="display: none;">
-                    <!-- Alerts will be inserted here -->
-                </div>
-                <div class="technical-info">
-                    <strong>Información técnica:</strong><br>
-                    • PHQ-9 (Patient Health Questionnaire-9)<br>
-                    • Rango de puntuación: 0-27 puntos<br>
-                    • Puntos de corte validados clínicamente<br>
-                    • Incluye evaluación de riesgo suicida
-                </div>
-                <div class="action-buttons">
-                    <button class="action-btn" onclick="generatePDF()">📄 Generar PDF</button>
-                    <button class="action-btn" onclick="captureScreen()">📸 Captura</button>
-                    <button class="action-btn" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
-                </div>
-            </div>
-        </div>
+<!-- CARD FINAL -->
+<div class="card-wrap" id="card-final">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Evaluación completada</span>
+  </div>
+  <div class="card-body">
+    <div class="final-msg">
+      <h2>¡Muchas gracias!</h2>
+      <p>Muchas gracias por completar el cuestionario. Por favor, entregue el dispositivo a su médico o profesional de la salud para la revisión de los resultados.</p>
+      <button class="btn-start" onclick="showResults()">Ver resultados</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARD RESULTS -->
+<div class="card-wrap" id="card-results">
+  <div class="card-header">
+    <span class="scale-name">PHQ-9</span>
+    <span class="q-label">Resultados</span>
+  </div>
+  <div class="card-body">
+    <div class="score-area" id="score-area">
+      <div class="score-num" id="score-num">—</div>
+      <div class="score-range">/ 27 puntos</div>
+      <div id="score-badge-wrap"></div>
     </div>
 
+    <div class="section-label">Interpretación clínica</div>
+    <div class="interp-box" id="interp-box"></div>
 
-    <script>
-        let currentCard = 0;
-        let responses = {};
-        let totalQuestions = 10; // 9 main questions + 1 functional question
+    <div class="section-label">Impacto funcional</div>
+    <div class="functional-box" id="functional-box"></div>
 
-        function startQuestionnaire() {
-            currentCard = 1;
-            showCard(currentCard);
-            updateProgress();
-            document.getElementById('back-btn').classList.remove('hidden');
-        }
+    <div class="alerts-box" id="alerts-box" style="display:none"></div>
 
-        function showCard(cardNumber) {
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.getElementById(`card-${cardNumber}`).classList.add('active');
-            
-            // Hide back button on special cards
-            const backBtn = document.getElementById('back-btn');
-            if (cardNumber === 0 || cardNumber === 'final' || cardNumber === 'results') {
-                backBtn.classList.add('hidden');
-            } else {
-                backBtn.classList.remove('hidden');
-            }
-        }
+    <div class="action-row">
+      <button class="btn-action" onclick="window.print()">Imprimir resultados</button>
+      <button class="btn-action" onclick="showCard(0); responses={};">Nueva evaluación</button>
+    </div>
+  </div>
+</div>
 
-        function selectOption(questionNumber, value) {
-            responses[questionNumber] = value;
-            
-            // Visual feedback
-            const card = document.getElementById(`card-${questionNumber}`);
-            const options = card.querySelectorAll('.option');
-            options.forEach((option, index) => {
-                option.classList.remove('selected');
-                if (index === value) {
-                    option.classList.add('selected');
-                }
-            });
+<script>
+const totalItems = 10;
+let currentCardId = 'card-0';
+let responses = {};
 
-            // Auto-advance after 150ms
-            setTimeout(() => {
-                if (questionNumber < totalQuestions) {
-                    currentCard = questionNumber + 1;
-                    showCard(currentCard);
-                    updateProgress();
-                } else {
-                    // Show completion card
-                    showCard('final');
-                    updateProgress();
-                }
-            }, 150);
-        }
+const funcLabels = ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'];
 
-        function goBack() {
-            if (currentCard > 1) {
-                currentCard--;
-                showCard(currentCard);
-                updateProgress();
-            } else if (currentCard === 1) {
-                currentCard = 0;
-                showCard(0);
-                updateProgress();
-            }
-        }
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    const key = (typeof id === 'number') ? 'card-' + id : id;
+    document.getElementById(key).classList.add('active');
+    currentCardId = key;
+    window.scrollTo(0, 0);
+    if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+}
 
-        function updateProgress() {
-            const progressBar = document.getElementById('progress-bar');
-            let progress = 0;
-            
-            if (currentCard === 0) {
-                progress = 0;
-            } else if (currentCard === 'final') {
-                progress = 100;
-            } else if (currentCard === 'results') {
-                progress = 100;
-            } else {
-                progress = (currentCard / totalQuestions) * 100;
-            }
-            
-            progressBar.style.width = progress + '%';
-        }
-
-        function calculateScore() {
-            let totalScore = 0;
-            for (let i = 1; i <= 9; i++) {
-                if (responses[i] !== undefined) {
-                    totalScore += responses[i];
-                }
-            }
-            return totalScore;
-        }
-
-        function getInterpretation(score) {
-            if (score >= 0 && score <= 4) {
-                return {
-                    level: 'minimal',
-                    title: 'Sintomatología Depresiva Mínima',
-                    description: 'Los síntomas reportados son mínimos y no sugieren un episodio depresivo clínicamente significativo. Se recomienda monitoreo rutinario y promoción de hábitos saludables.',
-                    recommendations: 'Mantenimiento de rutinas saludables, ejercicio regular, y seguimiento preventivo.',
-                    className: 'level-minimal'
-                };
-            } else if (score >= 5 && score <= 9) {
-                return {
-                    level: 'mild',
-                    title: 'Sintomatología Depresiva Leve',
-                    description: 'Presencia de síntomas depresivos leves que pueden requerir vigilancia clínica. Se sugiere evaluación psicológica y consideración de intervenciones psicoterapéuticas.',
-                    recommendations: 'Evaluación psicológica, técnicas de manejo del estrés, y seguimiento clínico en 2-4 semanas.',
-                    className: 'level-mild'
-                };
-            } else if (score >= 10 && score <= 14) {
-                return {
-                    level: 'moderate',
-                    title: 'Sintomatología Depresiva Moderada',
-                    description: 'Síntomas depresivos moderados que requieren intervención clínica activa. Se recomienda evaluación psiquiátrica y consideración de tratamiento psicoterapéutico y/o farmacológico.',
-                    recommendations: 'Evaluación psiquiátrica prioritaria, inicio de psicoterapia estructurada, y seguimiento clínico semanal.',
-                    className: 'level-moderate'
-                };
-            } else if (score >= 15 && score <= 19) {
-                return {
-                    level: 'moderate-severe',
-                    title: 'Sintomatología Depresiva Moderada-Severa',
-                    description: 'Síntomas depresivos moderados a severos que requieren intervención inmediata. Se recomienda evaluación psiquiátrica urgente y consideración de tratamiento combinado.',
-                    recommendations: 'Evaluación psiquiátrica urgente, tratamiento farmacológico y psicoterapéutico combinado, y seguimiento estrecho.',
-                    className: 'level-severe'
-                };
-            } else {
-                return {
-                    level: 'severe',
-                    title: 'Sintomatología Depresiva Severa',
-                    description: 'Síntomas depresivos severos que requieren atención clínica inmediata y manejo especializado. Alto riesgo de deterioro funcional significativo.',
-                    recommendations: 'Evaluación psiquiátrica inmediata, hospitalización si es necesario, tratamiento intensivo combinado, y seguimiento diario.',
-                    className: 'level-severe'
-                };
-            }
-        }
-
-        function checkAlerts() {
-            const alerts = [];
-            
-            // Check for suicidal ideation (question 9)
-            if (responses[9] && responses[9] >= 1) {
-                alerts.push({
-                    type: 'critical',
-                    title: '⚠️ ALERTA CRÍTICA: Ideación Suicida',
-                    message: 'El paciente reporta pensamientos de muerte o autolesión. Requiere evaluación inmediata de riesgo suicida y manejo de seguridad.'
-                });
-            }
-
-            // Check for high-scoring items (≥2 points = 66% of maximum)
-            const highScoreItems = [];
-            const itemTexts = {
-                1: 'Anhedonia (pérdida de interés/placer)',
-                2: 'Estado de ánimo deprimido',
-                3: 'Alteraciones del sueño',
-                4: 'Fatiga/pérdida de energía',
-                5: 'Alteraciones del apetito',
-                6: 'Sentimientos de culpa/inutilidad',
-                7: 'Problemas de concentración',
-                8: 'Alteraciones psicomotoras'
-            };
-
-            for (let i = 1; i <= 8; i++) {
-                if (responses[i] && responses[i] >= 2) {
-                    highScoreItems.push(itemTexts[i]);
-                }
-            }
-
-            if (highScoreItems.length > 0) {
-                alerts.push({
-                    type: 'warning',
-                    title: '⚠️ Síntomas Significativos',
-                    message: 'Los siguientes síntomas requieren atención clínica: ' + highScoreItems.join(', ') + '.'
-                });
-            }
-
-            // Check functional impairment (question 10)
-            if (responses[10] && responses[10] >= 2) {
-                alerts.push({
-                    type: 'functional',
-                    title: '📋 Deterioro Funcional Significativo',
-                    message: 'El paciente reporta dificultades importantes en el funcionamiento laboral, doméstico o social.'
-                });
-            }
-
-            return alerts;
-        }
-
-        function showResults() {
-            const score = calculateScore();
-            const interpretation = getInterpretation(score);
-            const alerts = checkAlerts();
-
-            // Color by severity
-            const colorMap = { minimal: '#48bb78', mild: '#f6ad55', moderate: '#ed8936', 'moderate-severe': '#f56565', severe: '#f56565' };
-            const severityColor = colorMap[interpretation.level] || '#29A98C';
-
-            // Functional impact text
-            const funcTexts = ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'];
-            const funcText = responses[10] !== undefined ? funcTexts[responses[10]] : 'No respondida';
-
-            // Update score display with large number and color
-            const scoreBox = document.getElementById('score-display');
-            scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
-            scoreBox.innerHTML = `
-                <div style="font-size:0.95em;opacity:0.85;margin-bottom:4px;">Puntuación Total PHQ-9</div>
-                <div style="font-size:3.5em;font-weight:300;line-height:1;">${score}<span style="font-size:0.4em;opacity:0.7;"> / 27</span></div>
-                <div style="margin-top:12px;font-size:1em;font-weight:600;">${interpretation.title}</div>
-                <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.3);padding-top:12px;">
-                    <div style="font-size:0.85em;opacity:0.8;">Impacto sindromatico referido</div>
-                    <div style="font-size:1.05em;font-weight:500;margin-top:4px;">${funcText}</div>
-                </div>
-            `;
-
-            // Update interpretation
-            document.getElementById('interpretation').innerHTML = `
-                <h3>${interpretation.title}</h3>
-                <p><strong>Descripción:</strong> ${interpretation.description}</p>
-                <p><strong>Recomendaciones:</strong> ${interpretation.recommendations}</p>
-            `;
-            document.getElementById('interpretation').className = `interpretation ${interpretation.className}`;
-
-            // Update alerts
-            const alertsDiv = document.getElementById('alerts');
-            if (alerts.length > 0) {
-                alertsDiv.style.display = 'block';
-                alertsDiv.innerHTML = '<h3>Alertas Clínicas</h3>' + 
-                    alerts.map(alert => `<p><strong>${alert.title}</strong><br>${alert.message}</p>`).join('');
-            } else {
-                alertsDiv.style.display = 'none';
-            }
-
-            showCard('results');
-            updateProgress();
-        }
-
-        function generatePDF() {
-            const score = calculateScore();
-            const interpretation = getInterpretation(score);
-            const alerts = checkAlerts();
-            const now = new Date();
-            const fecha = now.toLocaleDateString('es-ES');
-            const hora = now.toLocaleTimeString('es-ES');
-
-            const questionTexts = [
-                '',
-                'Poco interés o alegría para hacer las cosas',
-                'Sensación de estar decaído, deprimido o desesperanzado',
-                'Problemas para quedarse dormido, para seguir durmiendo o dormir demasiado',
-                'Sensación de cansancio o de tener poca energía',
-                'Poco apetito o comer demasiado',
-                'Sentirse mal consigo mismo; sentir que es un fracasado o que ha decepcionado a su familia o a sí mismo',
-                'Problemas para concentrarse en algo, como leer el periódico o ver la televisión',
-                'Moverse o hablar tan despacio que los demás pueden haberlo notado. O lo contrario: estar tan inquieto o agitado',
-                'Pensamientos de que estaría mejor muerto o de querer hacerse daño de algún modo'
-            ];
-            const responseTexts = ['Nunca', 'Varios días', 'Más de la mitad de los días', 'Casi todos los días'];
-            const funcTexts = ['Ninguna dificultad', 'Algunas dificultades', 'Muchas dificultades', 'Muchísimas dificultades'];
-
-            let itemRows = '';
-            for (let i = 1; i <= 9; i++) {
-                const rt = responses[i] !== undefined ? responseTexts[responses[i]] : 'No respondida';
-                itemRows += `<tr><td style="padding:6px 8px;border-bottom:1px solid #eee;">${i}. ${questionTexts[i]}</td><td style="padding:6px 8px;border-bottom:1px solid #eee;white-space:nowrap;">${rt}</td></tr>`;
-            }
-            const funcText = responses[10] !== undefined ? funcTexts[responses[10]] : 'No respondida';
-            const alertsHTML = alerts.length > 0
-                ? `<div style="background:#ffe5e5;border:1px solid #f56565;border-radius:8px;padding:12px;margin-top:16px;"><strong>⚠️ Alertas Clínicas:</strong><ul style="margin:8px 0 0 16px;">${alerts.map(a => `<li>${a.title}: ${a.message}</li>`).join('')}</ul></div>`
-                : '';
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
-            <title>PHQ-9 - ${fecha}</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 30px; color: #333; line-height: 1.5; }
-                h1 { color: #29A98C; margin-bottom: 4px; }
-                .score-box { background: linear-gradient(135deg, ${interpretation.color || '#29A98C'}, #112F33); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
-                .score-box .num { font-size: 48px; font-weight: 900; }
-                .score-box .label { font-size: 18px; font-weight: 700; margin-top: 4px; }
-                table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-                th { background: #29A98C; color: #fff; padding: 8px; text-align: left; }
-                .func-box { background: #f0fdf4; border: 1px solid #9ae6b4; border-radius: 8px; padding: 12px; margin-top: 16px; }
-                @media print { body { margin: 15px; } }
-            </style></head><body>
-            <h1>PHQ-9 — Cuestionario de Salud del Paciente</h1>
-            <p>Fecha: ${fecha} &nbsp;|&nbsp; Hora: ${hora}</p>
-            <div class="score-box">
-                <div class="num">${score}/27</div>
-                <div class="label">${interpretation.title}</div>
-            </div>
-            <p>${interpretation.description}</p>
-            <table>
-                <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
-                <tbody>${itemRows}</tbody>
-            </table>
-            <div class="func-box">
-                <strong>Impacto sindromatico referido:</strong><br>
-                Si ha marcado alguno de los problemas de este cuestionario, ¿hasta qué punto estos problemas le han creado dificultades para hacer su trabajo, ocuparse de la casa o relacionarse con los demás?<br>
-                <strong>${funcText}</strong>
-            </div>
-            ${alertsHTML}
-            </body></html>`);
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
-        }
-
-        function captureScreen() {
-            // Simple screen capture simulation - in a real environment, you'd use html2canvas or similar
-            alert('Función de captura: En un entorno real, esto tomaría una captura de pantalla de los resultados. Por favor, use la función de captura de pantalla de su dispositivo.');
-        }
-
-        function newEvaluation() {
-            if (confirm('¿Está seguro de que desea iniciar una nueva evaluación? Se perderán los datos actuales.')) {
-                currentCard = 0;
-                responses = {};
-                showCard(0);
-                updateProgress();
-                
-                // Reset all selected options
-                document.querySelectorAll('.option.selected').forEach(option => {
-                    option.classList.remove('selected');
-                });
-            }
-        }
-
-        // Initialize
-        updateProgress();
-    </script>
-    <script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
-        }
+function restoreSelections(n) {
+    if (responses[n] === undefined) return;
+    const card = document.getElementById('card-' + n);
+    const storedScore = responses[n];
+    card.querySelectorAll('.option').forEach(btn => {
+        const btnScore = parseInt(btn.dataset.score);
+        btn.classList.toggle('selected', btnScore === storedScore);
     });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
+}
+
+function selectOption(qNum, value, btn) {
+    btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    responses[qNum] = value;
+    setTimeout(() => {
+        if (qNum < totalItems) showCard(qNum + 1);
+        else showCard('card-final');
+    }, 150);
+}
+
+function previousCard() {
+    const match = currentCardId.match(/card-(\d+)/);
+    if (!match) return;
+    const n = parseInt(match[1]);
+    if (n <= 1) showCard(0);
+    else showCard(n - 1);
+}
+
+function calculateScore() {
+    let total = 0;
+    for (let i = 1; i <= 9; i++) {
+        if (responses[i] !== undefined) total += responses[i];
+    }
+    return total;
+}
+
+function getLevel(score) {
+    if (score <= 4)  return { label: 'Mínima',       color: '#48bb78', bgColor: 'rgba(72,187,120,0.12)',   description: 'Sintomatología depresiva mínima (0-4). Sin indicación de intervención específica. Se recomienda seguimiento preventivo.' };
+    if (score <= 9)  return { label: 'Leve',          color: '#f6ad55', bgColor: 'rgba(246,173,85,0.12)',   description: 'Sintomatología depresiva leve (5-9). Vigilancia clínica recomendada. Considerar evaluación psicológica y seguimiento en 2-4 semanas.' };
+    if (score <= 14) return { label: 'Moderada',      color: '#ed8936', bgColor: 'rgba(237,137,54,0.12)',   description: 'Sintomatología depresiva moderada (10-14). Se recomienda evaluación psiquiátrica y consideración de tratamiento psicoterapéutico y/o farmacológico.' };
+    if (score <= 19) return { label: 'Mod.-Severa',   color: '#f56565', bgColor: 'rgba(245,101,101,0.12)',  description: 'Sintomatología depresiva moderada-severa (15-19). Evaluación psiquiátrica urgente. Tratamiento combinado farmacológico y psicoterapéutico.' };
+    return            { label: 'Severa',              color: '#f56565', bgColor: 'rgba(245,101,101,0.12)',  description: 'Sintomatología depresiva severa (20-27). Atención clínica inmediata. Hospitalización si es necesario. Seguimiento diario.' };
+}
+
+function showResults() {
+    const score = calculateScore();
+    const lv = getLevel(score);
+
+    // Main score
+    const scoreNum = document.getElementById('score-num');
+    scoreNum.textContent = score;
+    scoreNum.style.color = lv.color;
+
+    const scoreArea = document.getElementById('score-area');
+    scoreArea.style.borderColor = lv.color;
+    scoreArea.style.background = lv.bgColor;
+
+    const badgeWrap = document.getElementById('score-badge-wrap');
+    badgeWrap.innerHTML = `<span class="score-badge" style="background:${lv.bgColor};color:${lv.color};border:1px solid ${lv.color};">${lv.label}</span>`;
+
+    // Interpretation
+    document.getElementById('interp-box').textContent = lv.description;
+
+    // Functional impact (item 10)
+    const funcBox = document.getElementById('functional-box');
+    if (responses[10] !== undefined) {
+        funcBox.innerHTML = `<strong>Impacto en funcionamiento:</strong> ${funcLabels[responses[10]]}`;
+    } else {
+        funcBox.innerHTML = '<em>No respondido</em>';
+    }
+
+    // Suicide alert — item 9 >= 1
+    const alertsBox = document.getElementById('alerts-box');
+    if (responses[9] !== undefined && responses[9] >= 1) {
+        alertsBox.innerHTML = `<strong>Atención: Ítem 9 — Pensamientos de autolesión o suicidio</strong><br>
+        <span style="margin-top:6px;display:block;">Respuesta: "${['Nunca','Varios días','Más de la mitad de los días','Casi todos los días'][responses[9]]}"</span>
+        <span style="margin-top:8px;display:block;font-weight:700;color:#c53030;">Se requiere evaluación inmediata del riesgo suicida.</span>`;
+        alertsBox.style.display = 'block';
+    } else {
+        alertsBox.style.display = 'none';
+    }
+
+    showCard('card-results');
+}
 </script>
 </body>
 </html>

@@ -1,649 +1,357 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escala de Depresión Geriátrica (GDS)</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #112F33;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
-            display: none;
-            overflow: hidden;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .card.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: #fff;
-            padding: 28px 32px 22px;
-        }
-
-        .card-header h1 { font-size: 1.65rem; font-weight: 700; margin-bottom: 5px; }
-        .card-header p { opacity: 0.85; font-size: 0.95rem; }
-
-        .card-body { padding: 28px 32px 24px; }
-
-        /* Question badge */
-        .question-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 5px 14px;
-            border-radius: 20px;
-            margin-bottom: 18px;
-        }
-
-        .question-text {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 22px;
-        }
-
-        /* Options — white bordered, not gradient */
-        .options {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .option {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            color: #112F33;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            width: 100%;
-            font-family: inherit;
-        }
-
-        .option:hover { border-color: #29A98C; background: rgba(41, 169, 140, 0.07); }
-        .option.selected { border-color: #29A98C; background: rgba(41, 169, 140, 0.12); font-weight: 600; }
-
-        /* Inline progress bar */
-        .progress-wrap {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            margin-bottom: 16px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-
-        /* Inline back button */
-        .navigation { display: flex; align-items: center; }
-
-        .btn-back {
-            background: none;
-            border: 1px solid #cbd5e0;
-            color: #718096;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .btn-back:hover { border-color: #29A98C; color: #29A98C; }
-
-        /* Instructions */
-        .instructions {
-            background: rgba(41, 169, 140, 0.08);
-            padding: 16px 18px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid #29A98C;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .instructions h3 { color: #112F33; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
-
-        /* Version selection buttons */
-        .version-grid { display: grid; gap: 12px; }
-
-        .btn {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: #fff;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 1rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        .btn-secondary {
-            background: #fff;
-            color: #29A98C;
-            border: 2px solid #29A98C;
-            text-align: center;
-        }
-
-        .btn-secondary:hover { background: rgba(41, 169, 140, 0.08); transform: translateY(-1px); }
-
-        /* Results */
-        .clinical-section {
-            background: #f7fafc;
-            border-left: 4px solid #29A98C;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .differential-section {
-            background: #fffaf0;
-            border: 1px solid #fbd38d;
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .cognitive-section {
-            background: #fffbeb;
-            border: 1px solid #fbd38d;
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .alert-section {
-            background: #fff5f5;
-            border: 1px solid #feb2b2;
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .action-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 4px;
-        }
-
-        .action-row .btn { text-align: center; }
-
-        @media (max-width: 600px) {
-            .card-header { padding: 20px; }
-            .card-body { padding: 20px; }
-            .card-header h1 { font-size: 1.35rem; }
-            .question-text { font-size: 1rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDS — Escala de Depresión Geriátrica</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+.card-wrap { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+.card-wrap.active { display:block; }
+.card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+.scale-name { font-size:15px; font-weight:600; opacity:.9; }
+.q-label { font-size:13px; opacity:.8; }
+.card-body { padding:28px 32px 24px; }
+.question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:28px; }
+.options { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+.option { width:100%; border:2px solid #e2e8f0; border-radius:12px; padding:14px 20px; font-size:14px; font-weight:500; color:#112F33; background:#fff; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; }
+.option:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+.option.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; }
+.q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+.progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; transition:width .3s; }
+.bottom-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-back:hover { border-color:#29A98C; color:#29A98C; }
+.item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
+.welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+.instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:24px; color:#112F33; font-size:14px; line-height:1.75; }
+.btn-version { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:14px 20px; border-radius:12px; font-size:14px; cursor:pointer; font-family:inherit; text-align:left; transition:all .2s; line-height:1.5; }
+.btn-version:hover { opacity:.9; }
+.btn-version small { font-size:12px; opacity:.8; }
+.score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+.score-num { font-size:72px; font-weight:900; line-height:1; }
+.score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+.score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+.interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+.alerts-box { background:#fff5f5; border:1px solid #feb2b2; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#742a2a; }
+.action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+@media(max-width:600px){body{padding:12px 10px;}.card-body{padding:20px 18px 18px;}.question-text{font-size:18px;}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Card 0: Welcome + version selection -->
-        <div class="card active" id="card-0">
-            <div class="card-header">
-                <h1>Escala de Depresión Geriátrica</h1>
-                <p>Geriatric Depression Scale (GDS) — Heteroaplicada</p>
-            </div>
-            <div class="card-body">
-                <div class="instructions">
-                    <h3>Instrucciones para el Profesional:</h3>
-                    <ul style="margin-left: 18px; margin-top: 6px;">
-                        <li>Lea cada pregunta claramente al paciente</li>
-                        <li>Espere la respuesta y registre SÍ o NO</li>
-                        <li>No influya en las respuestas del paciente</li>
-                        <li>Seleccione la versión apropiada según el tiempo disponible y capacidad del paciente</li>
-                    </ul>
-                </div>
 
-                <div style="font-size: 14px; font-weight: 600; color: #112F33; margin-bottom: 12px;">Seleccione la versión a aplicar:</div>
-
-                <div class="version-grid">
-                    <button class="btn" onclick="startScale(30)">
-                        <strong>Versión Completa (30 ítems)</strong><br>
-                        <small style="opacity: 0.8;">Evaluación completa — 10-15 minutos</small>
-                    </button>
-                    <button class="btn" onclick="startScale(15)">
-                        <strong>Versión Abreviada (15 ítems)</strong><br>
-                        <small style="opacity: 0.8;">Evaluación estándar — 5-8 minutos</small>
-                    </button>
-                    <button class="btn" onclick="startScale(5)">
-                        <strong>Versión Ultracorta (5 ítems)</strong><br>
-                        <small style="opacity: 0.8;">Tamizaje rápido — 2-3 minutos</small>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dynamic question cards injected here -->
-        <div id="question-cards"></div>
-
-        <!-- Results card -->
-        <div class="card" id="card-results">
-            <div class="card-header">
-                <h1>Resultados GDS</h1>
-                <p id="results-version-label">Escala de Depresión Geriátrica</p>
-            </div>
-            <div class="card-body">
-                <!-- Score box — gradient updated dynamically -->
-                <div id="gds-score-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px; color: #fff;">
-                    <div style="font-size: 56px; font-weight: 900; line-height: 1;" id="total-score">--</div>
-                    <div style="font-size: 15px; opacity: 0.85; margin-top: 4px;" id="score-range">de N puntos</div>
-                    <div style="font-size: 20px; font-weight: 700; margin-top: 8px;" id="severity-badge">--</div>
-                </div>
-
-                <!-- Clinical interpretation -->
-                <div id="interpretation-section" class="clinical-section" style="display: none;">
-                    <div style="font-size: 13px; font-weight: 700; color: #112F33; margin-bottom: 8px;">Interpretación Clínica</div>
-                    <div id="interpretation-body" style="font-size: 13px; color: #444; line-height: 1.7;"></div>
-                </div>
-
-                <!-- Differential diagnosis -->
-                <div id="differential-section" class="differential-section" style="display: none;">
-                    <div style="font-size: 13px; font-weight: 700; color: #744210; margin-bottom: 6px;">🔍 Diagnóstico Diferencial</div>
-                    <div id="differential-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
-                </div>
-
-                <!-- Cognitive symptoms alert -->
-                <div id="cognitive-section" class="cognitive-section" style="display: none;">
-                    <div style="font-size: 13px; font-weight: 700; color: #744210; margin-bottom: 6px;">🧠 Síntomas Cognitivos Reportados</div>
-                    <div id="cognitive-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
-                </div>
-
-                <!-- High-score alert -->
-                <div id="alerts-section" class="alert-section" style="display: none;">
-                    <div style="font-size: 13px; font-weight: 700; color: #c53030; margin-bottom: 6px;">⚠️ Alerta Clínica</div>
-                    <div id="alerts-body" style="font-size: 13px; color: #444; line-height: 1.6;"></div>
-                </div>
-
-                <div class="action-row">
-                    <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                    <button class="btn btn-secondary" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
-                </div>
-            </div>
-        </div>
+<!-- CARD 0: Version selector -->
+<div class="card-wrap active" id="card-0">
+  <div class="card-header">
+    <span class="scale-name">GDS</span>
+    <span class="q-label">Escala de Depresión Geriátrica</span>
+  </div>
+  <div class="card-body">
+    <h2 class="welcome-title">Escala de Depresión Geriátrica</h2>
+    <div class="instructions-box">
+      <strong>Instrucciones para el Profesional:</strong><br>
+      • Lea cada pregunta claramente al paciente<br>
+      • Espere la respuesta y registre SÍ o NO<br>
+      • No influya en las respuestas del paciente<br>
+      • Seleccione la versión apropiada según el tiempo disponible
     </div>
+    <p style="font-size:14px; font-weight:600; color:#112F33; margin-bottom:12px;">Seleccione la versión a aplicar:</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn-version" onclick="startScale(30)">
+        <strong>Versión Completa — 30 ítems</strong><br>
+        <small>Evaluación completa · 10-15 minutos</small>
+      </button>
+      <button class="btn-version" onclick="startScale(15)">
+        <strong>Versión Abreviada — 15 ítems</strong><br>
+        <small>Evaluación estándar · 5-8 minutos</small>
+      </button>
+      <button class="btn-version" onclick="startScale(5)">
+        <strong>Versión Ultracorta — 5 ítems</strong><br>
+        <small>Tamizaje rápido · 2-3 minutos</small>
+      </button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        var currentCard = 0;
-        var responses = {};
-        var totalQuestions = 0;
-        var selectedVersion = 0;
-        var questions = [];
+<!-- Dynamic question cards injected here -->
+<div id="question-cards"></div>
 
-        var questionsData = {
-            30: [
-                { text: "¿Está usted satisfecho con su vida?", positive: true },
-                { text: "¿Ha abandonado muchos de sus intereses y actividades?", positive: false },
-                { text: "¿Siente que su vida está vacía?", positive: false },
-                { text: "¿Se siente usted frecuentemente aburrido?", positive: false },
-                { text: "¿Tiene usted mucha fe en el futuro?", positive: true },
-                { text: "¿Tiene pensamientos que le molestan?", positive: false },
-                { text: "¿La mayoría del tiempo está de buen humor?", positive: true },
-                { text: "¿Tiene miedo de que algo malo le vaya a pasar?", positive: false },
-                { text: "¿Se siente usted feliz la mayor parte del tiempo?", positive: true },
-                { text: "¿Se siente usted a menudo impotente, desamparado, desvalido?", positive: false },
-                { text: "¿Se siente a menudo intranquilo?", positive: false },
-                { text: "¿Prefiere quedarse en su hogar en vez de salir?", positive: false },
-                { text: "¿Se preocupa usted a menudo sobre el futuro?", positive: false },
-                { text: "¿Cree que tiene más problemas con su memoria que los demás?", positive: false },
-                { text: "¿Cree que es maravilloso estar viviendo?", positive: true },
-                { text: "¿Se siente usted a menudo triste?", positive: false },
-                { text: "¿Se siente usted inútil?", positive: false },
-                { text: "¿Se preocupa mucho sobre el pasado?", positive: false },
-                { text: "¿Cree que la vida es muy interesante?", positive: true },
-                { text: "¿Es difícil para usted empezar proyectos nuevos?", positive: false },
-                { text: "¿Se siente lleno de energía?", positive: true },
-                { text: "¿Se siente usted sin esperanza?", positive: false },
-                { text: "¿Cree que los demás tienen más suerte que usted?", positive: false },
-                { text: "¿Se preocupa por cosas sin importancia?", positive: false },
-                { text: "¿Siente a menudo ganas de llorar?", positive: false },
-                { text: "¿Es difícil para usted concentrarse?", positive: false },
-                { text: "¿Disfruta al levantarse por las mañanas?", positive: true },
-                { text: "¿Prefiere evitar las reuniones sociales?", positive: false },
-                { text: "¿Es fácil para usted tomar decisiones?", positive: true },
-                { text: "¿Está su mente tan clara como antes?", positive: true }
-            ],
-            15: [
-                { text: "¿Está satisfecho con su vida?", positive: true },
-                { text: "¿Ha renunciado a muchas actividades?", positive: false },
-                { text: "¿Siente que su vida está vacía?", positive: false },
-                { text: "¿Se encuentra a menudo aburrido/a?", positive: false },
-                { text: "¿Tiene a menudo buen ánimo?", positive: true },
-                { text: "¿Teme que le pase algo?", positive: false },
-                { text: "¿Se siente feliz muchas veces?", positive: true },
-                { text: "¿Se siente a menudo abandonado/a?", positive: false },
-                { text: "¿Prefiere quedarse en casa a salir?", positive: false },
-                { text: "¿Cree tener más problemas de memoria que el resto de la gente?", positive: false },
-                { text: "¿Piensa que es maravilloso vivir?", positive: true },
-                { text: "¿Le cuesta iniciar nuevos proyectos?", positive: false },
-                { text: "¿Se siente lleno de energía?", positive: true },
-                { text: "¿Siente que su situación es desesperada?", positive: false },
-                { text: "¿Cree que mucha gente está mejor que usted?", positive: false }
-            ],
-            5: [
-                { text: "¿Está satisfecho con su vida?", positive: true },
-                { text: "¿Siente que su vida está vacía?", positive: false },
-                { text: "¿Tiene a menudo buen ánimo?", positive: true },
-                { text: "¿Siente que su situación es desesperada?", positive: false },
-                { text: "¿Piensa que es maravilloso vivir?", positive: true }
-            ]
-        };
+<!-- CARD RESULTS -->
+<div class="card-wrap" id="card-results">
+  <div class="card-header">
+    <span class="scale-name">GDS</span>
+    <span class="q-label" id="results-version-label">Resultados</span>
+  </div>
+  <div class="card-body">
+    <div class="score-area" id="gds-score-area">
+      <div class="score-num" id="gds-score-num">--</div>
+      <div class="score-range" id="gds-score-range">de N puntos</div>
+      <div class="score-badge" id="gds-score-badge">--</div>
+    </div>
+    <div class="section-label">Interpretación Clínica</div>
+    <div class="interp-box" id="gds-interp-box"></div>
+    <div id="gds-diff-section" style="display:none;">
+      <div class="section-label">Diagnóstico Diferencial</div>
+      <div class="interp-box" style="background:#fffaf0; border-color:#f6ad55;" id="gds-diff-body"></div>
+    </div>
+    <div id="gds-alerts-section" style="display:none;">
+      <div class="section-label">Alerta Clínica</div>
+      <div class="alerts-box" id="gds-alerts-body"></div>
+    </div>
+    <div class="action-row">
+      <button class="btn-action" onclick="exportToPDF()">Exportar PDF</button>
+      <button class="btn-action" onclick="newEvaluation()">Nueva Evaluación</button>
+    </div>
+  </div>
+</div>
 
-        function startScale(version) {
-            selectedVersion = version;
-            totalQuestions = version;
-            questions = questionsData[version];
-            createQuestionCards();
-            currentCard = 1;
-            showCard(currentCard);
+<script>
+var currentCardId = 'card-0';
+var responses = {};
+var totalQuestions = 0;
+var selectedVersion = 0;
+var questions = [];
+
+var questionsData = {
+    30: [
+        { text:"¿Está usted satisfecho con su vida?", positive:true },
+        { text:"¿Ha abandonado muchos de sus intereses y actividades?", positive:false },
+        { text:"¿Siente que su vida está vacía?", positive:false },
+        { text:"¿Se siente usted frecuentemente aburrido?", positive:false },
+        { text:"¿Tiene usted mucha fe en el futuro?", positive:true },
+        { text:"¿Tiene pensamientos que le molestan?", positive:false },
+        { text:"¿La mayoría del tiempo está de buen humor?", positive:true },
+        { text:"¿Tiene miedo de que algo malo le vaya a pasar?", positive:false },
+        { text:"¿Se siente usted feliz la mayor parte del tiempo?", positive:true },
+        { text:"¿Se siente usted a menudo impotente, desamparado, desvalido?", positive:false },
+        { text:"¿Se siente a menudo intranquilo?", positive:false },
+        { text:"¿Prefiere quedarse en su hogar en vez de salir?", positive:false },
+        { text:"¿Se preocupa usted a menudo sobre el futuro?", positive:false },
+        { text:"¿Cree que tiene más problemas con su memoria que los demás?", positive:false },
+        { text:"¿Cree que es maravilloso estar viviendo?", positive:true },
+        { text:"¿Se siente usted a menudo triste?", positive:false },
+        { text:"¿Se siente usted inútil?", positive:false },
+        { text:"¿Se preocupa mucho sobre el pasado?", positive:false },
+        { text:"¿Cree que la vida es muy interesante?", positive:true },
+        { text:"¿Es difícil para usted empezar proyectos nuevos?", positive:false },
+        { text:"¿Se siente lleno de energía?", positive:true },
+        { text:"¿Se siente usted sin esperanza?", positive:false },
+        { text:"¿Cree que los demás tienen más suerte que usted?", positive:false },
+        { text:"¿Se preocupa por cosas sin importancia?", positive:false },
+        { text:"¿Siente a menudo ganas de llorar?", positive:false },
+        { text:"¿Es difícil para usted concentrarse?", positive:false },
+        { text:"¿Disfruta al levantarse por las mañanas?", positive:true },
+        { text:"¿Prefiere evitar las reuniones sociales?", positive:false },
+        { text:"¿Es fácil para usted tomar decisiones?", positive:true },
+        { text:"¿Está su mente tan clara como antes?", positive:true }
+    ],
+    15: [
+        { text:"¿Está satisfecho con su vida?", positive:true },
+        { text:"¿Ha renunciado a muchas actividades?", positive:false },
+        { text:"¿Siente que su vida está vacía?", positive:false },
+        { text:"¿Se encuentra a menudo aburrido/a?", positive:false },
+        { text:"¿Tiene a menudo buen ánimo?", positive:true },
+        { text:"¿Teme que le pase algo?", positive:false },
+        { text:"¿Se siente feliz muchas veces?", positive:true },
+        { text:"¿Se siente a menudo abandonado/a?", positive:false },
+        { text:"¿Prefiere quedarse en casa a salir?", positive:false },
+        { text:"¿Cree tener más problemas de memoria que el resto de la gente?", positive:false },
+        { text:"¿Piensa que es maravilloso vivir?", positive:true },
+        { text:"¿Le cuesta iniciar nuevos proyectos?", positive:false },
+        { text:"¿Se siente lleno de energía?", positive:true },
+        { text:"¿Siente que su situación es desesperada?", positive:false },
+        { text:"¿Cree que mucha gente está mejor que usted?", positive:false }
+    ],
+    5: [
+        { text:"¿Está satisfecho con su vida?", positive:true },
+        { text:"¿Siente que su vida está vacía?", positive:false },
+        { text:"¿Tiene a menudo buen ánimo?", positive:true },
+        { text:"¿Siente que su situación es desesperada?", positive:false },
+        { text:"¿Piensa que es maravilloso vivir?", positive:true }
+    ]
+};
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    var key = (typeof id === 'number') ? 'card-' + id : id;
+    var el = document.getElementById(key);
+    if (el) el.classList.add('active');
+    currentCardId = key;
+    window.scrollTo(0, 0);
+}
+
+function startScale(version) {
+    selectedVersion = version;
+    totalQuestions = version;
+    questions = questionsData[version];
+    createQuestionCards();
+    showCard(1);
+}
+
+function createQuestionCards() {
+    var container = document.getElementById('question-cards');
+    container.innerHTML = '';
+    for (var i = 0; i < questions.length; i++) {
+        var num = i + 1;
+        var pct = (num / totalQuestions * 100).toFixed(1);
+        container.innerHTML += '<div class="card-wrap" id="card-' + num + '">' +
+            '<div class="card-header">' +
+            '<span class="scale-name">GDS-' + selectedVersion + '</span>' +
+            '<span class="q-label">Pregunta ' + num + ' de ' + totalQuestions + '</span>' +
+            '</div>' +
+            '<div class="card-body">' +
+            '<div class="q-progress-label">Pregunta ' + num + ' de ' + totalQuestions + '</div>' +
+            '<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div>' +
+            '<div class="question-text">' + questions[i].text + '</div>' +
+            '<div class="options" style="flex-direction:row; gap:16px;">' +
+            '<button class="option" style="flex:1; text-align:center; font-size:18px; font-weight:700; padding:20px;" onclick="selectOption(' + num + ', true, this)">SÍ</button>' +
+            '<button class="option" style="flex:1; text-align:center; font-size:18px; font-weight:700; padding:20px;" onclick="selectOption(' + num + ', false, this)">NO</button>' +
+            '</div>' +
+            '<div class="bottom-nav">' +
+            '<button class="btn-back" onclick="goBack()">← Atrás</button>' +
+            '<span class="item-number-badge">' + num + ' / ' + totalQuestions + '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }
+}
+
+function selectOption(questionNumber, answer, btn) {
+    responses[questionNumber] = answer;
+    var card = document.getElementById('card-' + questionNumber);
+    var opts = card.querySelectorAll('.option');
+    opts.forEach(function(o) { o.classList.remove('selected'); });
+    btn.classList.add('selected');
+    setTimeout(function() {
+        if (questionNumber < totalQuestions) showCard(questionNumber + 1);
+        else showResults();
+    }, 150);
+}
+
+function goBack() {
+    var match = currentCardId.match(/card-(\d+)/);
+    if (!match) return;
+    var n = parseInt(match[1]);
+    if (n <= 1) showCard(0); else showCard(n - 1);
+}
+
+function calculateScore() {
+    var score = 0;
+    for (var i = 1; i <= totalQuestions; i++) {
+        var r = responses[i];
+        var q = questions[i - 1];
+        if (r !== undefined && ((q.positive && r === false) || (!q.positive && r === true))) score++;
+    }
+    return score;
+}
+
+function getInterpretation(score) {
+    var level, color, interpText, diffText;
+    if (selectedVersion === 30) {
+        if (score <= 9) {
+            level = 'Normal'; color = '#48bb78';
+            interpText = 'Puntuación dentro del rango normal. No se evidencia depresión clínicamente significativa. Se recomienda seguimiento periódico.';
+            diffText = null;
+        } else if (score <= 19) {
+            level = 'Leve-Moderada'; color = '#f6ad55';
+            interpText = 'Puntuación sugestiva de depresión leve a moderada. Se recomienda evaluación clínica completa, intervención psicosocial y considerar tratamiento farmacológico si está indicado.';
+            diffText = 'Descartar patología médica subyacente (hipotiroidismo, déficit vitamínico, dolor crónico). Considerar duelo, aislamiento social o adaptación a cambios vitales como factores contribuyentes.';
+        } else {
+            level = 'Severa'; color = '#f56565';
+            interpText = 'Puntuación indicativa de depresión severa. Se requiere evaluación psiquiátrica urgente y plan de tratamiento inmediato.';
+            diffText = 'Descartar psicosis depresiva, trastorno bipolar de inicio tardío y pseudodemencia depresiva. Evaluar riesgo suicida activo.';
         }
-
-        function createQuestionCards() {
-            var container = document.getElementById('question-cards');
-            container.innerHTML = '';
-
-            for (var i = 0; i < questions.length; i++) {
-                var num = i + 1;
-                var pct = Math.round((num / totalQuestions) * 100);
-                var cardHTML =
-                    '<div class="card" id="card-' + num + '">' +
-                        '<div class="card-header">' +
-                            '<h1 style="font-size:1.1rem; font-weight:600; opacity:0.9; margin:0;">GDS — Pregunta ' + num + ' de ' + totalQuestions + '</h1>' +
-                        '</div>' +
-                        '<div class="card-body">' +
-                            '<div class="question-text">' + questions[i].text + '</div>' +
-                            '<div class="options">' +
-                                '<button class="option" onclick="selectOption(' + num + ', true)">SÍ</button>' +
-                                '<button class="option" onclick="selectOption(' + num + ', false)">NO</button>' +
-                            '</div>' +
-                            '<div class="progress-wrap">' +
-                                '<div class="progress-fill" style="width:' + pct + '%;"></div>' +
-                            '</div>' +
-                            '<div class="navigation">' +
-                                '<button class="btn-back" onclick="goBack()">← Regresar</button>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>';
-                container.innerHTML += cardHTML;
-            }
+    } else if (selectedVersion === 15) {
+        if (score <= 4) {
+            level = 'Normal'; color = '#48bb78';
+            interpText = 'Puntuación dentro del rango normal. No se evidencia depresión clínicamente significativa. Se recomienda seguimiento periódico.';
+            diffText = null;
+        } else if (score <= 8) {
+            level = 'Leve-Moderada'; color = '#f6ad55';
+            interpText = 'Puntuación sugestiva de depresión leve a moderada. Se recomienda evaluación clínica completa e intervención terapéutica.';
+            diffText = 'Descartar patología médica subyacente (hipotiroidismo, déficit vitamínico, dolor crónico). Considerar factores psicosociales como duelo o aislamiento social.';
+        } else {
+            level = 'Severa'; color = '#f56565';
+            interpText = 'Puntuación indicativa de depresión severa. Se requiere evaluación psiquiátrica urgente y plan de tratamiento inmediato.';
+            diffText = 'Descartar psicosis depresiva, trastorno bipolar de inicio tardío y pseudodemencia depresiva. Evaluar riesgo suicida activo.';
         }
-
-        function selectOption(questionNumber, answer) {
-            responses[questionNumber] = answer;
-            // Visual feedback on selected button
-            var card = document.getElementById('card-' + questionNumber);
-            var opts = card.querySelectorAll('.option');
-            opts[0].classList.toggle('selected', answer === true);
-            opts[1].classList.toggle('selected', answer === false);
-
-            setTimeout(function() {
-                if (questionNumber < totalQuestions) {
-                    currentCard = questionNumber + 1;
-                    showCard(currentCard);
-                } else {
-                    showResults();
-                }
-            }, 150);
+    } else {
+        if (score <= 1) {
+            level = 'Normal'; color = '#48bb78';
+            interpText = 'Tamizaje negativo para depresión. No se requiere evaluación adicional en este momento. Se recomienda repetir el tamizaje en controles rutinarios.';
+            diffText = null;
+        } else if (score === 2) {
+            level = 'Leve-Moderada'; color = '#f6ad55';
+            interpText = 'Tamizaje positivo. Se recomienda aplicar la versión de 15 o 30 ítems para evaluación completa.';
+            diffText = 'El tamizaje positivo requiere confirmación con versión extendida. Descartar causas médicas reversibles.';
+        } else {
+            level = 'Severa'; color = '#f56565';
+            interpText = 'Tamizaje fuertemente positivo. Se recomienda evaluación psiquiátrica urgente y aplicación de versión completa.';
+            diffText = 'Resultado de alto riesgo. Evaluar riesgo suicida de inmediato. Descartar pseudodemencia depresiva.';
         }
+    }
+    return { level: level, color: color, interpText: interpText, diffText: diffText };
+}
 
-        function showCard(cardId) {
-            var cards = document.querySelectorAll('.card');
-            for (var i = 0; i < cards.length; i++) {
-                cards[i].classList.remove('active');
-            }
-            var target = document.getElementById('card-' + cardId);
-            if (target) target.classList.add('active');
-        }
+function showResults() {
+    var score = calculateScore();
+    var interp = getInterpretation(score);
 
-        function calculateScore() {
-            var score = 0;
-            for (var i = 1; i <= totalQuestions; i++) {
-                var response = responses[i];
-                var question = questions[i - 1];
-                if ((question.positive && !response) || (!question.positive && response)) {
-                    score++;
-                }
-            }
-            return score;
-        }
+    document.getElementById('results-version-label').textContent = 'GDS-' + selectedVersion + ' — Resultados';
 
-        function getInterpretation(score) {
-            var level, description, recommendations, colorKey, differentialDx = '';
+    var scoreNumEl = document.getElementById('gds-score-num');
+    scoreNumEl.textContent = score;
+    scoreNumEl.style.color = interp.color;
+    document.getElementById('gds-score-range').textContent = 'de ' + totalQuestions + ' puntos';
+    document.getElementById('gds-score-area').style.borderColor = interp.color;
 
-            if (selectedVersion === 30) {
-                if (score <= 9) {
-                    level = 'Normal'; colorKey = 'normal';
-                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
-                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
-                } else if (score <= 19) {
-                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
-                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
-                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
-                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados (memoria, concentración) corresponden a pseudodemencia depresiva o demencia primaria.';
-                } else {
-                    level = 'Depresión Severa'; colorKey = 'severe';
-                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
-                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
-                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos, patrón de deterioro.';
-                }
-            } else if (selectedVersion === 15) {
-                if (score <= 4) {
-                    level = 'Normal'; colorKey = 'normal';
-                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
-                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
-                } else if (score <= 8) {
-                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
-                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
-                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
-                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales. Evaluar si los síntomas cognitivos reportados corresponden a pseudodemencia depresiva o demencia primaria.';
-                } else {
-                    level = 'Depresión Severa'; colorKey = 'severe';
-                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
-                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
-                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Los síntomas cognitivos en depresión geriátrica pueden simular demencia (pseudodemencia depresiva). Evaluar: inicio súbito vs gradual, quejas subjetivas vs déficit objetivo, respuesta a estímulos.';
-                }
-            } else {
-                if (score <= 1) {
-                    level = 'Normal'; colorKey = 'normal';
-                    description = 'Ausencia de sintomatología depresiva clínicamente significativa.';
-                    recommendations = 'Mantener seguimiento de rutina. Promover actividades de bienestar.';
-                } else if (score === 2) {
-                    level = 'Depresión Leve a Moderada'; colorKey = 'mild';
-                    description = 'Presencia de síntomas depresivos que requieren evaluación especializada.';
-                    recommendations = 'Evaluación más detallada del estado afectivo. Considerar intervenciones psicosociales.';
-                    differentialDx = 'En adultos mayores, realizar diagnóstico diferencial con síndromes demenciales.';
-                } else {
-                    level = 'Depresión Severa'; colorKey = 'severe';
-                    description = 'Sintomatología depresiva severa que requiere intervención inmediata.';
-                    recommendations = 'Evaluación urgente para tratamiento especializado. Considerar riesgo suicida.';
-                    differentialDx = 'PRIORITARIO: Diagnóstico diferencial con demencia. Evaluar pseudodemencia depresiva vs demencia primaria.';
-                }
-            }
+    var badge = document.getElementById('gds-score-badge');
+    badge.textContent = interp.level;
+    badge.style.backgroundColor = interp.color + '22';
+    badge.style.color = interp.color;
 
-            return { level: level, colorKey: colorKey, description: description, recommendations: recommendations, differentialDx: differentialDx };
-        }
+    document.getElementById('gds-interp-box').textContent = interp.interpText;
 
-        function checkMemoryResponses() {
-            var memoryQuestions = {
-                30: [ { index: 14, text: 'problemas de memoria' }, { index: 26, text: 'dificultad para concentrarse' }, { index: 30, text: 'mente menos clara' } ],
-                15: [ { index: 10, text: 'problemas de memoria' } ],
-                5: []
-            };
-            var alerts = [];
-            var toCheck = memoryQuestions[selectedVersion] || [];
-            for (var i = 0; i < toCheck.length; i++) {
-                var item = toCheck[i];
-                var response = responses[item.index];
-                var question = questions[item.index - 1];
-                if ((question.positive && !response) || (!question.positive && response)) {
-                    alerts.push(item.text);
-                }
-            }
-            return alerts;
-        }
+    var diffSection = document.getElementById('gds-diff-section');
+    if (interp.diffText) {
+        diffSection.style.display = 'block';
+        document.getElementById('gds-diff-body').textContent = interp.diffText;
+    } else {
+        diffSection.style.display = 'none';
+    }
 
-        function getMinScoreForDifferential() {
-            if (selectedVersion === 30) return 10;
-            if (selectedVersion === 15) return 5;
-            return 2;
-        }
+    // Alert if score >= 66% of max
+    var alertsSection = document.getElementById('gds-alerts-section');
+    if (score >= totalQuestions * 0.66) {
+        alertsSection.style.display = 'block';
+        document.getElementById('gds-alerts-body').textContent =
+            '⚠️ Puntuación elevada (' + score + '/' + totalQuestions + '). ' +
+            'Se recomienda evaluación psiquiátrica inmediata y valoración de riesgo suicida.';
+    } else {
+        alertsSection.style.display = 'none';
+    }
 
-        function showResults() {
-            var score = calculateScore();
-            var interpretation = getInterpretation(score);
+    showCard('card-results');
+}
 
-            // Color by severity
-            var colorMap = { normal: '#48bb78', mild: '#f6ad55', severe: '#f56565' };
-            var scoreBox = document.getElementById('gds-score-box');
-            if (scoreBox) scoreBox.style.background = 'linear-gradient(135deg, ' + (colorMap[interpretation.colorKey] || '#29A98C') + ', #112F33)';
+function exportToPDF() { window.print(); }
 
-            // Score display
-            document.getElementById('total-score').textContent = score;
-            document.getElementById('score-range').textContent = 'de ' + totalQuestions + ' puntos';
-            document.getElementById('severity-badge').textContent = interpretation.level;
-            document.getElementById('results-version-label').textContent = 'Versión de ' + totalQuestions + ' ítems';
-
-            // Clinical interpretation
-            var interpBody = '<strong>' + interpretation.description + '</strong><br>' + interpretation.recommendations;
-            document.getElementById('interpretation-body').innerHTML = interpBody;
-            document.getElementById('interpretation-section').style.display = 'block';
-
-            // Differential diagnosis
-            if (interpretation.differentialDx) {
-                document.getElementById('differential-body').textContent = interpretation.differentialDx;
-                document.getElementById('differential-section').style.display = 'block';
-            }
-
-            // Cognitive alerts
-            var memoryAlerts = checkMemoryResponses();
-            if (memoryAlerts.length > 0 && score > getMinScoreForDifferential()) {
-                document.getElementById('cognitive-body').innerHTML =
-                    'Respuestas positivas en: <strong>' + memoryAlerts.join(', ') + '</strong>. ' +
-                    'Considerar evaluación cognitiva específica para descartar deterioro cognitivo vs pseudodemencia depresiva.';
-                document.getElementById('cognitive-section').style.display = 'block';
-            }
-
-            // High-score alert
-            var threshold = Math.ceil(totalQuestions * 0.66);
-            if (score >= threshold) {
-                document.getElementById('alerts-body').innerHTML =
-                    'Puntuación elevada (≥66% del máximo): <strong>' + score + '/' + totalQuestions + '</strong>. ' +
-                    'Se recomienda evaluación prioritaria del estado mental y riesgo suicida.';
-                document.getElementById('alerts-section').style.display = 'block';
-            }
-
-            currentCard = 'results';
-            showCard('results');
-        }
-
-        function goBack() {
-            if (currentCard === 'results') {
-                currentCard = totalQuestions;
-            } else if (currentCard > 1) {
-                currentCard--;
-            } else {
-                currentCard = 0;
-            }
-            showCard(currentCard);
-        }
-
-        function exportToPDF() {
-            var score = calculateScore();
-            var interpretation = getInterpretation(score);
-            var fecha = new Date().toLocaleDateString('es-ES');
-            var hora = new Date().toLocaleTimeString('es-ES');
-
-            var memoryAlerts = checkMemoryResponses();
-            var memHTML = (memoryAlerts.length > 0 && score > getMinScoreForDifferential())
-                ? '<div style="background:#fffbeb;border:1px solid #fbd38d;border-radius:8px;padding:12px;margin:12px 0;"><strong>🧠 Síntomas Cognitivos:</strong> ' + memoryAlerts.join(', ') + '</div>'
-                : '';
-            var diffHTML = interpretation.differentialDx
-                ? '<div style="background:#fffaf0;border:1px solid #fbd38d;border-radius:8px;padding:12px;margin:12px 0;"><strong>🔍 Diagnóstico Diferencial:</strong><br>' + interpretation.differentialDx + '</div>'
-                : '';
-            var threshold = Math.ceil(totalQuestions * 0.66);
-            var alertHTML = (score >= threshold)
-                ? '<div style="background:#fff5f5;border:1px solid #feb2b2;border-radius:8px;padding:12px;margin:12px 0;"><strong>⚠️ Alerta Clínica:</strong> Puntuación elevada (' + score + '/' + totalQuestions + '). Evaluar estado mental y riesgo suicida.</div>'
-                : '';
-
-            var colorMap = { normal: '#48bb78', mild: '#f6ad55', severe: '#f56565' };
-            var color = colorMap[interpretation.colorKey] || '#29A98C';
-
-            var printWindow = window.open('', '_blank');
-            printWindow.document.write('<!DOCTYPE html><html><head><meta charset="utf-8">' +
-                '<title>GDS ' + selectedVersion + ' ítems — ' + fecha + '</title>' +
-                '<style>body{font-family:Arial,sans-serif;margin:30px;color:#333;line-height:1.5;}' +
-                'h1{color:#29A98C;}' +
-                '.score-box{background:linear-gradient(135deg,' + color + ',#112F33);color:#fff;border-radius:12px;padding:20px;text-align:center;margin:16px 0;}' +
-                '.score-box .num{font-size:48px;font-weight:900;}' +
-                '.score-box .lbl{font-size:18px;font-weight:700;margin-top:4px;}' +
-                '.interp{background:#f7fafc;border-left:4px solid #29A98C;padding:12px 14px;margin:12px 0;border-radius:0 8px 8px 0;}' +
-                '@media print{body{margin:15px;}}' +
-                '</style></head><body>' +
-                '<h1>Escala de Depresión Geriátrica (GDS)</h1>' +
-                '<p>Versión de ' + selectedVersion + ' ítems &nbsp;|&nbsp; Fecha: ' + fecha + ' &nbsp;|&nbsp; Hora: ' + hora + '</p>' +
-                '<div class="score-box"><div class="num">' + score + '/' + totalQuestions + '</div><div class="lbl">' + interpretation.level + '</div></div>' +
-                '<div class="interp"><strong>' + interpretation.description + '</strong><br>' + interpretation.recommendations + '</div>' +
-                diffHTML + memHTML + alertHTML +
-                '</body></html>');
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
-        }
-
-        function newEvaluation() {
-            currentCard = 0;
-            responses = {};
-            totalQuestions = 0;
-            selectedVersion = 0;
-            questions = [];
-            document.getElementById('question-cards').innerHTML = '';
-            // Reset result sections
-            ['interpretation-section','differential-section','cognitive-section','alerts-section'].forEach(function(id) {
-                document.getElementById(id).style.display = 'none';
-            });
-            showCard(0);
-        }
-
-        // Legacy stubs (called in various places, no longer needed with inline elements)
-        function updateBackButton() {}
-        function updateProgress() {}
-    </script>
+function newEvaluation() {
+    currentCardId = 'card-0';
+    responses = {};
+    totalQuestions = 0;
+    selectedVersion = 0;
+    questions = [];
+    document.getElementById('question-cards').innerHTML = '';
+    ['gds-diff-section', 'gds-alerts-section'].forEach(function(id) {
+        document.getElementById(id).style.display = 'none';
+    });
+    showCard(0);
+}
+</script>
 </body>
 </html>

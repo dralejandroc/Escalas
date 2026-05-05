@@ -1,956 +1,817 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuestionario de Depresión Infantil CDI - COVEX</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
-
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
-        }
-
-        .card {
-            padding: 50px;
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
-            color: #112F33;
-            text-align: left;
-        }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-        }
-
-        .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
-
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
-
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
-            color: #112F33;
-        }
-
-        .welcome-text {
-            text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 30px;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
-        }
-
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
-            color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-
-        .export-buttons, .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        h1, h2 { color: #29A98C; }
-        .card-header h1, .card-header h2 { color: white !important; }
-        h3 { color: #112F33; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDI — Cuestionario de Depresión Infantil</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+.card-wrap { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+.card-wrap.active { display:block; }
+.card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+.scale-name { font-size:15px; font-weight:600; opacity:.9; }
+.q-label { font-size:13px; opacity:.8; }
+.card-body { padding:28px 32px 24px; }
+.question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:28px; }
+.options { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+.option { width:100%; border:2px solid #e2e8f0; border-radius:12px; padding:14px 20px; font-size:14px; font-weight:500; color:#112F33; background:#fff; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; }
+.option:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+.option.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; }
+.q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+.progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; transition:width .3s; }
+.bottom-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-back:hover { border-color:#29A98C; color:#29A98C; }
+.item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
+.welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+.instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:24px; color:#112F33; font-size:14px; line-height:1.75; }
+.scale-note { font-size:13px; color:#718096; margin-bottom:20px; font-style:italic; }
+.btn-start { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:12px 32px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; display:block; margin:0 auto; }
+.score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+.score-num { font-size:72px; font-weight:900; line-height:1; }
+.score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+.score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+.subscales-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.subscale-box { border:1px solid #e2e8f0; border-radius:10px; padding:14px; text-align:center; }
+.subscale-title { font-size:12px; color:#718096; font-weight:600; margin-bottom:6px; }
+.subscale-num { font-size:32px; font-weight:700; }
+.subscale-max { font-size:11px; color:#a0aec0; margin-top:2px; }
+.subscale-interp { font-size:11px; color:#718096; margin-top:5px; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+.interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+.alerts-box { background:#fff5f5; border:1px solid #feb2b2; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#742a2a; }
+.action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+@media(max-width:600px){body{padding:12px 10px;}.card-body{padding:20px 18px 18px;}.question-text{font-size:18px;}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>CDI</h1>
-            <p>Cuestionario de Depresión Infantil - COVEX</p>
-        </div>
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <!-- Card 0: Bienvenida -->
-        <div class="card active" id="card-0">
-            <div class="card-header">
-                <h1>Cuestionario de Depresión Infantil</h1>
-                <h2>CDI - KOVACS</h2>
-                <div class="subtitle">Población infantil de 7-17 años</div>
-            </div>
-            
-            <div class="instructions">
-                <h3 style="color: #29A98C; margin-bottom: 15px;">Instrucciones</h3>
-                <p style="margin-bottom: 15px;">
-                    Este es un cuestionario que tiene oraciones que están en grupos de tres. 
-                    Escoge en cada grupo una oración, la que mejor diga cómo te has portado, 
-                    cómo te has sentido en las <strong>ÚLTIMAS DOS SEMANAS</strong>.
-                </p>
-                <p style="margin-bottom: 15px;">
-                    Luego marca con una 'X' la opción que corresponda. No hay respuesta correcta 
-                    ni falsa, solo trata de contestar con la mayor sinceridad, lo que es cierto para ti.
-                </p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
-            </div>
-        </div>
 
-        <!-- Cards 1-27: Preguntas -->
-        <div class="card" id="card-1">
-            <div class="question-number">Pregunta 1 de 27</div>
-            <div class="question-text">¿Cómo te has sentido de triste?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(1, 0)">Estoy triste de vez en cuando.</div>
-                <div class="option" onclick="selectOption(1, 1)">Estoy triste muchas veces.</div>
-                <div class="option" onclick="selectOption(1, 2)">Estoy triste siempre.</div>
-            </div>
-        </div>
+<!-- CARD 0: Welcome -->
+<div class="card-wrap active" id="card-0">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">Cuestionario de Depresión Infantil</span>
+  </div>
+  <div class="card-body">
+    <h2 class="welcome-title">Cuestionario de Depresión Infantil</h2>
+    <div class="instructions-box">
+      Este es un cuestionario que tiene oraciones que están en grupos de tres. Escoge en cada grupo una oración, la que mejor diga cómo te has portado, cómo te has sentido en las <strong>ÚLTIMAS DOS SEMANAS</strong>.<br><br>
+      No hay respuesta correcta ni falsa, solo trata de contestar con la mayor sinceridad lo que es cierto para ti.
+    </div>
+    <p class="scale-note">(Población infantil de 7 a 17 años)</p>
+    <button class="btn-start" onclick="showCard(1)">Comenzar</button>
+  </div>
+</div>
 
-        <div class="card" id="card-2">
-            <div class="question-number">Pregunta 2 de 27</div>
-            <div class="question-text">¿Qué piensas sobre cómo te van a salir las cosas?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(2, 2)">Nunca me saldrá nada bien.</div>
-                <div class="option" onclick="selectOption(2, 1)">No estoy seguro de si las cosas me saldrán bien.</div>
-                <div class="option" onclick="selectOption(2, 0)">Las cosas me saldrán bien.</div>
-            </div>
-        </div>
+<!-- CARD 1 -->
+<div class="card-wrap" id="card-1">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 1 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:3.7%"></div></div>
+    <div class="question-text">¿Cómo te has sentido de triste?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(1,0,this)" data-score="0">Estoy triste de vez en cuando.</button>
+      <button class="option" onclick="selectOption(1,1,this)" data-score="1">Estoy triste muchas veces.</button>
+      <button class="option" onclick="selectOption(1,2,this)" data-score="2">Estoy triste siempre.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">1 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-3">
-            <div class="question-number">Pregunta 3 de 27</div>
-            <div class="question-text">¿Cómo haces las cosas?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(3, 0)">Hago bien la mayoría de las cosas.</div>
-                <div class="option" onclick="selectOption(3, 1)">Hago mal muchas cosas.</div>
-                <div class="option" onclick="selectOption(3, 2)">Todo lo hago mal.</div>
-            </div>
-        </div>
+<!-- CARD 2 -->
+<div class="card-wrap" id="card-2">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 2 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:7.4%"></div></div>
+    <div class="question-text">¿Qué piensas sobre cómo te van a salir las cosas?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(2,2,this)" data-score="2">Nunca me saldrá nada bien.</button>
+      <button class="option" onclick="selectOption(2,1,this)" data-score="1">No estoy seguro de si las cosas me saldrán bien.</button>
+      <button class="option" onclick="selectOption(2,0,this)" data-score="0">Las cosas me saldrán bien.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">2 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-4">
-            <div class="question-number">Pregunta 4 de 27</div>
-            <div class="question-text">¿Qué cosas te divierten?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(4, 0)">Me divierten muchas cosas.</div>
-                <div class="option" onclick="selectOption(4, 1)">Me divierten algunas cosas.</div>
-                <div class="option" onclick="selectOption(4, 2)">Nada me divierte.</div>
-            </div>
-        </div>
+<!-- CARD 3 -->
+<div class="card-wrap" id="card-3">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 3 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:11.1%"></div></div>
+    <div class="question-text">¿Cómo haces las cosas?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(3,0,this)" data-score="0">Hago bien la mayoría de las cosas.</button>
+      <button class="option" onclick="selectOption(3,1,this)" data-score="1">Hago mal muchas cosas.</button>
+      <button class="option" onclick="selectOption(3,2,this)" data-score="2">Todo lo hago mal.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">3 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-5">
-            <div class="question-number">Pregunta 5 de 27</div>
-            <div class="question-text">¿Cómo te consideras?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(5, 2)">Soy malo siempre.</div>
-                <div class="option" onclick="selectOption(5, 1)">Soy malo muchas veces.</div>
-                <div class="option" onclick="selectOption(5, 0)">Soy malo algunas veces.</div>
-            </div>
-        </div>
+<!-- CARD 4 -->
+<div class="card-wrap" id="card-4">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 4 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:14.8%"></div></div>
+    <div class="question-text">¿Qué cosas te divierten?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(4,0,this)" data-score="0">Me divierten muchas cosas.</button>
+      <button class="option" onclick="selectOption(4,1,this)" data-score="1">Me divierten algunas cosas.</button>
+      <button class="option" onclick="selectOption(4,2,this)" data-score="2">Nada me divierte.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">4 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-6">
-            <div class="question-number">Pregunta 6 de 27</div>
-            <div class="question-text">¿Qué piensas que te puede ocurrir?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(6, 0)">A veces pienso que me pueden ocurrir cosas malas.</div>
-                <div class="option" onclick="selectOption(6, 1)">Me preocupa que me ocurran cosas malas.</div>
-                <div class="option" onclick="selectOption(6, 2)">Estoy seguro de que me van a ocurrir cosas terribles.</div>
-            </div>
-        </div>
+<!-- CARD 5 -->
+<div class="card-wrap" id="card-5">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 5 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:18.5%"></div></div>
+    <div class="question-text">¿Cómo te consideras?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(5,2,this)" data-score="2">Soy malo siempre.</button>
+      <button class="option" onclick="selectOption(5,1,this)" data-score="1">Soy malo muchas veces.</button>
+      <button class="option" onclick="selectOption(5,0,this)" data-score="0">Soy malo algunas veces.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">5 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-7">
-            <div class="question-number">Pregunta 7 de 27</div>
-            <div class="question-text">¿Cómo te sientes contigo mismo?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(7, 2)">Me odio.</div>
-                <div class="option" onclick="selectOption(7, 1)">No me gusta como soy.</div>
-                <div class="option" onclick="selectOption(7, 0)">Me gusta como soy.</div>
-            </div>
-        </div>
+<!-- CARD 6 -->
+<div class="card-wrap" id="card-6">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 6 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:22.2%"></div></div>
+    <div class="question-text">¿Qué piensas que te puede ocurrir?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(6,0,this)" data-score="0">A veces pienso que me pueden ocurrir cosas malas.</button>
+      <button class="option" onclick="selectOption(6,1,this)" data-score="1">Me preocupa que me ocurran cosas malas.</button>
+      <button class="option" onclick="selectOption(6,2,this)" data-score="2">Estoy seguro de que me van a ocurrir cosas terribles.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">6 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-8">
-            <div class="question-number">Pregunta 8 de 27</div>
-            <div class="question-text">¿De quién es la culpa cuando ocurren cosas malas?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(8, 2)">Todas las cosas malas son culpa mía.</div>
-                <div class="option" onclick="selectOption(8, 1)">Muchas cosas malas son culpa mía.</div>
-                <div class="option" onclick="selectOption(8, 0)">Generalmente no tengo la culpa de que ocurran cosas malas.</div>
-            </div>
-        </div>
+<!-- CARD 7 -->
+<div class="card-wrap" id="card-7">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 7 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25.9%"></div></div>
+    <div class="question-text">¿Cómo te sientes contigo mismo?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(7,2,this)" data-score="2">Me odio.</button>
+      <button class="option" onclick="selectOption(7,1,this)" data-score="1">No me gusta como soy.</button>
+      <button class="option" onclick="selectOption(7,0,this)" data-score="0">Me gusta como soy.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">7 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-9">
-            <div class="question-number">Pregunta 9 de 27</div>
-            <div class="question-text">¿Piensas en hacerte daño?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(9, 0)">No pienso en matarme.</div>
-                <div class="option" onclick="selectOption(9, 1)">Pienso en matarme pero no lo haría.</div>
-                <div class="option" onclick="selectOption(9, 2)">Quiero matarme.</div>
-            </div>
-        </div>
+<!-- CARD 8 -->
+<div class="card-wrap" id="card-8">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 8 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:29.6%"></div></div>
+    <div class="question-text">¿De quién es la culpa cuando ocurren cosas malas?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(8,2,this)" data-score="2">Todas las cosas malas son culpa mía.</button>
+      <button class="option" onclick="selectOption(8,1,this)" data-score="1">Muchas cosas malas son culpa mía.</button>
+      <button class="option" onclick="selectOption(8,0,this)" data-score="0">Generalmente no tengo la culpa de que ocurran cosas malas.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">8 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-10">
-            <div class="question-number">Pregunta 10 de 27</div>
-            <div class="question-text">¿Con qué frecuencia tienes ganas de llorar?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(10, 2)">Tengo ganas de llorar todos los días.</div>
-                <div class="option" onclick="selectOption(10, 1)">Tengo ganas de llorar muchos días.</div>
-                <div class="option" onclick="selectOption(10, 0)">Tengo ganas de llorar de cuando en cuando.</div>
-            </div>
-        </div>
+<!-- CARD 9 -->
+<div class="card-wrap" id="card-9">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 9 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33.3%"></div></div>
+    <div class="question-text">¿Piensas en hacerte daño?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(9,0,this)" data-score="0">No pienso en matarme.</button>
+      <button class="option" onclick="selectOption(9,1,this)" data-score="1">Pienso en matarme pero no lo haría.</button>
+      <button class="option" onclick="selectOption(9,2,this)" data-score="2">Quiero matarme.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">9 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-11">
-            <div class="question-number">Pregunta 11 de 27</div>
-            <div class="question-text">¿Con qué frecuencia te preocupan las cosas?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(11, 2)">Las cosas me preocupan siempre.</div>
-                <div class="option" onclick="selectOption(11, 1)">Las cosas me preocupan muchas veces.</div>
-                <div class="option" onclick="selectOption(11, 0)">Las cosas me preocupan de cuando en cuando.</div>
-            </div>
-        </div>
+<!-- CARD 10 -->
+<div class="card-wrap" id="card-10">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 10 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:37%"></div></div>
+    <div class="question-text">¿Con qué frecuencia tienes ganas de llorar?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(10,2,this)" data-score="2">Tengo ganas de llorar todos los días.</button>
+      <button class="option" onclick="selectOption(10,1,this)" data-score="1">Tengo ganas de llorar muchos días.</button>
+      <button class="option" onclick="selectOption(10,0,this)" data-score="0">Tengo ganas de llorar de cuando en cuando.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">10 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-12">
-            <div class="question-number">Pregunta 12 de 27</div>
-            <div class="question-text">¿Te gusta estar con la gente?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(12, 0)">Me gusta estar con la gente.</div>
-                <div class="option" onclick="selectOption(12, 1)">Muy a menudo no me gusta estar con la gente.</div>
-                <div class="option" onclick="selectOption(12, 2)">No quiero en absoluto estar con la gente.</div>
-            </div>
-        </div>
+<!-- CARD 11 -->
+<div class="card-wrap" id="card-11">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 11 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40.7%"></div></div>
+    <div class="question-text">¿Con qué frecuencia te preocupan las cosas?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(11,2,this)" data-score="2">Las cosas me preocupan siempre.</button>
+      <button class="option" onclick="selectOption(11,1,this)" data-score="1">Las cosas me preocupan muchas veces.</button>
+      <button class="option" onclick="selectOption(11,0,this)" data-score="0">Las cosas me preocupan de cuando en cuando.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">11 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-13">
-            <div class="question-number">Pregunta 13 de 27</div>
-            <div class="question-text">¿Cómo tomas las decisiones?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(13, 2)">No puedo decidirme.</div>
-                <div class="option" onclick="selectOption(13, 1)">Me cuesta decidirme.</div>
-                <div class="option" onclick="selectOption(13, 0)">Me decido fácilmente.</div>
-            </div>
-        </div>
+<!-- CARD 12 -->
+<div class="card-wrap" id="card-12">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 12 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:44.4%"></div></div>
+    <div class="question-text">¿Te gusta estar con la gente?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(12,0,this)" data-score="0">Me gusta estar con la gente.</button>
+      <button class="option" onclick="selectOption(12,1,this)" data-score="1">Muy a menudo no me gusta estar con la gente.</button>
+      <button class="option" onclick="selectOption(12,2,this)" data-score="2">No quiero en absoluto estar con la gente.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">12 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-14">
-            <div class="question-number">Pregunta 14 de 27</div>
-            <div class="question-text">¿Cómo ves tu aspecto?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(14, 0)">Tengo buen aspecto.</div>
-                <div class="option" onclick="selectOption(14, 1)">Hay algunas cosas de mi aspecto que no me gustan.</div>
-                <div class="option" onclick="selectOption(14, 2)">Soy feo.</div>
-            </div>
-        </div>
+<!-- CARD 13 -->
+<div class="card-wrap" id="card-13">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 13 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:48.1%"></div></div>
+    <div class="question-text">¿Cómo tomas las decisiones?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(13,2,this)" data-score="2">No puedo decidirme.</button>
+      <button class="option" onclick="selectOption(13,1,this)" data-score="1">Me cuesta decidirme.</button>
+      <button class="option" onclick="selectOption(13,0,this)" data-score="0">Me decido fácilmente.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">13 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-15">
-            <div class="question-number">Pregunta 15 de 27</div>
-            <div class="question-text">¿Cómo te sientes cuando tienes que hacer los deberes?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(15, 2)">Siempre me cuesta ponerme a hacer los deberes.</div>
-                <div class="option" onclick="selectOption(15, 1)">Muchas veces me cuesta ponerme a hacer los deberes.</div>
-                <div class="option" onclick="selectOption(15, 0)">No me cuesta ponerme a hacer los deberes.</div>
-            </div>
-        </div>
+<!-- CARD 14 -->
+<div class="card-wrap" id="card-14">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 14 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:51.9%"></div></div>
+    <div class="question-text">¿Cómo ves tu aspecto?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(14,0,this)" data-score="0">Tengo buen aspecto.</button>
+      <button class="option" onclick="selectOption(14,1,this)" data-score="1">Hay algunas cosas de mi aspecto que no me gustan.</button>
+      <button class="option" onclick="selectOption(14,2,this)" data-score="2">Soy feo.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">14 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-16">
-            <div class="question-number">Pregunta 16 de 27</div>
-            <div class="question-text">¿Cómo duermes por las noches?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(16, 2)">Todas las noches me cuesta dormirme.</div>
-                <div class="option" onclick="selectOption(16, 1)">Muchas noches me cuesta dormirme.</div>
-                <div class="option" onclick="selectOption(16, 0)">Duermo muy bien.</div>
-            </div>
-        </div>
+<!-- CARD 15 -->
+<div class="card-wrap" id="card-15">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 15 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:55.6%"></div></div>
+    <div class="question-text">¿Cómo te sientes cuando tienes que hacer los deberes?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(15,2,this)" data-score="2">Siempre me cuesta ponerme a hacer los deberes.</button>
+      <button class="option" onclick="selectOption(15,1,this)" data-score="1">Muchas veces me cuesta ponerme a hacer los deberes.</button>
+      <button class="option" onclick="selectOption(15,0,this)" data-score="0">No me cuesta ponerme a hacer los deberes.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">15 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-17">
-            <div class="question-number">Pregunta 17 de 27</div>
-            <div class="question-text">¿Cómo te sientes de cansado?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(17, 0)">Estoy cansado de cuando en cuando.</div>
-                <div class="option" onclick="selectOption(17, 1)">Estoy cansado muchos días.</div>
-                <div class="option" onclick="selectOption(17, 2)">Estoy cansado siempre.</div>
-            </div>
-        </div>
+<!-- CARD 16 -->
+<div class="card-wrap" id="card-16">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 16 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:59.3%"></div></div>
+    <div class="question-text">¿Cómo duermes por las noches?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(16,2,this)" data-score="2">Todas las noches me cuesta dormirme.</button>
+      <button class="option" onclick="selectOption(16,1,this)" data-score="1">Muchas noches me cuesta dormirme.</button>
+      <button class="option" onclick="selectOption(16,0,this)" data-score="0">Duermo muy bien.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">16 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-18">
-            <div class="question-number">Pregunta 18 de 27</div>
-            <div class="question-text">¿Cómo tienes el apetito?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(18, 2)">La mayoría de los días no tengo ganas de comer.</div>
-                <div class="option" onclick="selectOption(18, 1)">Muchos días no tengo ganas de comer.</div>
-                <div class="option" onclick="selectOption(18, 0)">Como muy bien.</div>
-            </div>
-        </div>
+<!-- CARD 17 -->
+<div class="card-wrap" id="card-17">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 17 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:63%"></div></div>
+    <div class="question-text">¿Cómo te sientes de cansado?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(17,0,this)" data-score="0">Estoy cansado de cuando en cuando.</button>
+      <button class="option" onclick="selectOption(17,1,this)" data-score="1">Estoy cansado muchos días.</button>
+      <button class="option" onclick="selectOption(17,2,this)" data-score="2">Estoy cansado siempre.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">17 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-19">
-            <div class="question-number">Pregunta 19 de 27</div>
-            <div class="question-text">¿Te preocupas por dolores y enfermedades?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(19, 0)">No me preocupa el dolor ni la enfermedad.</div>
-                <div class="option" onclick="selectOption(19, 1)">Muchas veces me preocupa el dolor y la enfermedad.</div>
-                <div class="option" onclick="selectOption(19, 2)">Siempre me preocupa el dolor y la enfermedad.</div>
-            </div>
-        </div>
+<!-- CARD 18 -->
+<div class="card-wrap" id="card-18">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 18 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:66.7%"></div></div>
+    <div class="question-text">¿Cómo tienes el apetito?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(18,2,this)" data-score="2">La mayoría de los días no tengo ganas de comer.</button>
+      <button class="option" onclick="selectOption(18,1,this)" data-score="1">Muchos días no tengo ganas de comer.</button>
+      <button class="option" onclick="selectOption(18,0,this)" data-score="0">Como muy bien.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">18 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-20">
-            <div class="question-number">Pregunta 20 de 27</div>
-            <div class="question-text">¿Te sientes solo?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(20, 0)">Nunca me siento solo.</div>
-                <div class="option" onclick="selectOption(20, 1)">Me siento solo muchas veces.</div>
-                <div class="option" onclick="selectOption(20, 2)">Me siento solo siempre.</div>
-            </div>
-        </div>
+<!-- CARD 19 -->
+<div class="card-wrap" id="card-19">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 19 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70.4%"></div></div>
+    <div class="question-text">¿Te preocupas por dolores y enfermedades?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(19,0,this)" data-score="0">No me preocupa el dolor ni la enfermedad.</button>
+      <button class="option" onclick="selectOption(19,1,this)" data-score="1">Muchas veces me preocupa el dolor y la enfermedad.</button>
+      <button class="option" onclick="selectOption(19,2,this)" data-score="2">Siempre me preocupa el dolor y la enfermedad.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">19 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-21">
-            <div class="question-number">Pregunta 21 de 27</div>
-            <div class="question-text">¿Te diviertes en el colegio?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(21, 2)">Nunca me divierto en el colegio.</div>
-                <div class="option" onclick="selectOption(21, 1)">Me divierto en el colegio sólo de vez en cuando.</div>
-                <div class="option" onclick="selectOption(21, 0)">Me divierto en el colegio muchas veces.</div>
-            </div>
-        </div>
+<!-- CARD 20 -->
+<div class="card-wrap" id="card-20">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 20 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:74.1%"></div></div>
+    <div class="question-text">¿Te sientes solo?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(20,0,this)" data-score="0">Nunca me siento solo.</button>
+      <button class="option" onclick="selectOption(20,1,this)" data-score="1">Me siento solo muchas veces.</button>
+      <button class="option" onclick="selectOption(20,2,this)" data-score="2">Me siento solo siempre.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">20 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-22">
-            <div class="question-number">Pregunta 22 de 27</div>
-            <div class="question-text">¿Cuántos amigos tienes?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(22, 0)">Tengo muchos amigos.</div>
-                <div class="option" onclick="selectOption(22, 1)">Tengo muchos amigos pero me gustaría tener más.</div>
-                <div class="option" onclick="selectOption(22, 2)">No tengo amigos.</div>
-            </div>
-        </div>
+<!-- CARD 21 -->
+<div class="card-wrap" id="card-21">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 21 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:77.8%"></div></div>
+    <div class="question-text">¿Te diviertes en el colegio?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(21,2,this)" data-score="2">Nunca me divierto en el colegio.</button>
+      <button class="option" onclick="selectOption(21,1,this)" data-score="1">Me divierto en el colegio sólo de vez en cuando.</button>
+      <button class="option" onclick="selectOption(21,0,this)" data-score="0">Me divierto en el colegio muchas veces.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">21 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-23">
-            <div class="question-number">Pregunta 23 de 27</div>
-            <div class="question-text">¿Cómo va tu trabajo en el colegio?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(23, 0)">Mi trabajo en el colegio es bueno.</div>
-                <div class="option" onclick="selectOption(23, 1)">Mi trabajo en el colegio no es tan bueno como antes.</div>
-                <div class="option" onclick="selectOption(23, 2)">Llevo muy mal las asignaturas que antes llevaba bien.</div>
-            </div>
-        </div>
+<!-- CARD 22 -->
+<div class="card-wrap" id="card-22">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 22 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:81.5%"></div></div>
+    <div class="question-text">¿Cuántos amigos tienes?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(22,0,this)" data-score="0">Tengo muchos amigos.</button>
+      <button class="option" onclick="selectOption(22,1,this)" data-score="1">Tengo muchos amigos pero me gustaría tener más.</button>
+      <button class="option" onclick="selectOption(22,2,this)" data-score="2">No tengo amigos.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">22 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-24">
-            <div class="question-number">Pregunta 24 de 27</div>
-            <div class="question-text">¿Cómo te comparas con otros niños?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(24, 2)">Nunca podré ser tan bueno como otros niños.</div>
-                <div class="option" onclick="selectOption(24, 1)">Si quiero puedo ser tan bueno como otros niños.</div>
-                <div class="option" onclick="selectOption(24, 0)">Soy tan bueno como otros niños.</div>
-            </div>
-        </div>
+<!-- CARD 23 -->
+<div class="card-wrap" id="card-23">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 23 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:85.2%"></div></div>
+    <div class="question-text">¿Cómo va tu trabajo en el colegio?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(23,0,this)" data-score="0">Mi trabajo en el colegio es bueno.</button>
+      <button class="option" onclick="selectOption(23,1,this)" data-score="1">Mi trabajo en el colegio no es tan bueno como antes.</button>
+      <button class="option" onclick="selectOption(23,2,this)" data-score="2">Llevo muy mal las asignaturas que antes llevaba bien.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">23 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-25">
-            <div class="question-number">Pregunta 25 de 27</div>
-            <div class="question-text">¿Sientes que alguien te quiere?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(25, 2)">Nadie me quiere.</div>
-                <div class="option" onclick="selectOption(25, 1)">No estoy seguro de que alguien me quiera.</div>
-                <div class="option" onclick="selectOption(25, 0)">Estoy seguro de que alguien me quiere.</div>
-            </div>
-        </div>
+<!-- CARD 24 -->
+<div class="card-wrap" id="card-24">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 24 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:88.9%"></div></div>
+    <div class="question-text">¿Cómo te comparas con otros niños?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(24,2,this)" data-score="2">Nunca podré ser tan bueno como otros niños.</button>
+      <button class="option" onclick="selectOption(24,1,this)" data-score="1">Si quiero puedo ser tan bueno como otros niños.</button>
+      <button class="option" onclick="selectOption(24,0,this)" data-score="0">Soy tan bueno como otros niños.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">24 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-26">
-            <div class="question-number">Pregunta 26 de 27</div>
-            <div class="question-text">¿Haces lo que te dicen?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(26, 0)">Generalmente hago lo que me dicen.</div>
-                <div class="option" onclick="selectOption(26, 1)">Muchas veces no hago lo que me dicen.</div>
-                <div class="option" onclick="selectOption(26, 2)">Nunca hago lo que me dicen.</div>
-            </div>
-        </div>
+<!-- CARD 25 -->
+<div class="card-wrap" id="card-25">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 25 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:92.6%"></div></div>
+    <div class="question-text">¿Sientes que alguien te quiere?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(25,2,this)" data-score="2">Nadie me quiere.</button>
+      <button class="option" onclick="selectOption(25,1,this)" data-score="1">No estoy seguro de que alguien me quiera.</button>
+      <button class="option" onclick="selectOption(25,0,this)" data-score="0">Estoy seguro de que alguien me quiere.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">25 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-27">
-            <div class="question-number">Pregunta 27 de 27</div>
-            <div class="question-text">¿Cómo te llevas con la gente?</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(27, 0)">Me llevo bien con la gente.</div>
-                <div class="option" onclick="selectOption(27, 1)">Me peleo muchas veces.</div>
-                <div class="option" onclick="selectOption(27, 2)">Me peleo siempre.</div>
-            </div>
-        </div>
+<!-- CARD 26 -->
+<div class="card-wrap" id="card-26">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 26 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96.3%"></div></div>
+    <div class="question-text">¿Haces lo que te dicen?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(26,0,this)" data-score="0">Generalmente hago lo que me dicen.</button>
+      <button class="option" onclick="selectOption(26,1,this)" data-score="1">Muchas veces no hago lo que me dicen.</button>
+      <button class="option" onclick="selectOption(26,2,this)" data-score="2">Nunca hago lo que me dicen.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">26 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <div class="card-header">
-                <h1>Escala Completada</h1>
-                <h2>¡Muchas gracias!</h2>
-            </div>
-            <p style="text-align: center; font-size: 18px; margin: 30px 0; color: #112F33;">
-                Por favor pase el dispositivo a su médico o profesional para su revisión.
-            </p>
-            <div style="text-align: center;">
-                <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
-            </div>
-        </div>
+<!-- CARD 27 -->
+<div class="card-wrap" id="card-27">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">CDI — KOVACS</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 27 de 27</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+    <div class="question-text">¿Cómo te llevas con la gente?</div>
+    <div class="options">
+      <button class="option" onclick="selectOption(27,0,this)" data-score="0">Me llevo bien con la gente.</button>
+      <button class="option" onclick="selectOption(27,1,this)" data-score="1">Me peleo muchas veces.</button>
+      <button class="option" onclick="selectOption(27,2,this)" data-score="2">Me peleo siempre.</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">27 / 27</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card Resultados -->
-        <div class="card" id="card-results">
-            <div class="card-header">
-                <h1>Resultados CDI</h1>
-                <h2>Cuestionario de Depresión Infantil</h2>
-            </div>
-            
-            <div id="total-score" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px;">
-                <div style="font-size: 56px; font-weight: 900; color: #fff;" id="score-value">--</div>
-                <div style="font-size: 16px; color: rgba(255,255,255,0.8);">Puntuación Total / 54</div>
-                <div style="font-size: 20px; font-weight: 700; color: #fff; margin-top: 8px;" id="severity-label-cdi">--</div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Disforia</div>
-                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="disforia-score">--</div>
-                    <div style="font-size: 11px; color: #888;">/ 20 · Humor depresivo, tristeza</div>
-                </div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                    <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Autoestima Negativa</div>
-                    <div style="font-size: 28px; font-weight: 700; color: #2d3748;" id="autoestima-score">--</div>
-                    <div style="font-size: 11px; color: #888;">/ 18 · Sentimientos de ineficacia</div>
-                </div>
-            </div>
-
-            <div id="interpretation-section">
-                <!-- Interpretación se generará dinámicamente -->
-            </div>
-
-            <div id="alerts-section">
-                <!-- Alertas se generarán dinámicamente -->
-            </div>
-
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="btn btn-secondary" onclick="captureResults()">📸 Capturar Imagen</button>
-                <button class="btn btn-secondary" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
-            </div>
-        </div>
+<!-- CARD FINAL: Results -->
+<div class="card-wrap" id="card-final">
+  <div class="card-header">
+    <span class="scale-name">CDI</span>
+    <span class="q-label">Resultados</span>
+  </div>
+  <div class="card-body">
+    <div class="score-area" id="cdi-score-area">
+      <div class="score-num" id="cdi-score-num">--</div>
+      <div class="score-range">/ 54 puntos</div>
+      <div class="score-badge" id="cdi-score-badge">--</div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress-bar">
-        <div class="progress-fill" id="progress"></div>
+    <div class="subscales-grid">
+      <div class="subscale-box">
+        <div class="subscale-title">Disforia</div>
+        <div class="subscale-num" id="sub-disforia">--</div>
+        <div class="subscale-max">/ 20 puntos</div>
+        <div class="subscale-interp" id="sub-disforia-interp"></div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Autoestima Negativa</div>
+        <div class="subscale-num" id="sub-autoestima">--</div>
+        <div class="subscale-max">/ 18 puntos</div>
+        <div class="subscale-interp" id="sub-autoestima-interp"></div>
+      </div>
     </div>
 
-    <!-- Back Button -->
+    <div class="section-label">Interpretación Clínica</div>
+    <div class="interp-box" id="cdi-interp-box"></div>
 
-    <script>
-        let currentCard = 0;
-        let responses = {};
-        const totalQuestions = 27;
+    <div id="cdi-alerts-section" style="display:none;">
+      <div class="section-label">Alerta Clínica</div>
+      <div class="alerts-box" id="cdi-alerts-body"></div>
+    </div>
 
-        // Definición de subescalas según literatura CDI
-        const disforiaItems = [1, 6, 10, 11, 12, 16, 17, 19, 20, 21]; // 10 items
-        const autoestimaItems = [2, 3, 5, 7, 8, 13, 14, 24, 25]; // 9 items
+    <div class="action-row">
+      <button class="btn-action" onclick="exportToPDF()">Exportar PDF</button>
+      <button class="btn-action" onclick="resetScale()">Nueva Evaluación</button>
+    </div>
+  </div>
+</div>
 
-        function selectOption(question, value) {
-            responses[question] = value;
-            
-            // Marcar visualmente la opción seleccionada
-            const currentCardElement = document.getElementById(`card-${currentCard}`);
-            const options = currentCardElement.querySelectorAll('.option');
-            options.forEach(option => option.classList.remove('selected'));
-            options[getOptionIndex(currentCard, value)].classList.add('selected');
-            
-            // Auto-avance después de 150ms
-            setTimeout(() => {
-                nextCard();
-            }, 150);
-        }
-
-        function getOptionIndex(question, value) {
-            // Reversed questions have options ordered 2,1,0 in HTML so DOM index = 2 - score
-            const reverseQuestions = [2, 5, 7, 8, 13, 15, 16, 18, 24, 25];
-            if (reverseQuestions.includes(question)) {
-                return 2 - value;
-            }
-            return value;
-        }
-
-        function nextCard() {
-            if (currentCard === 0) {
-                // De bienvenida a primera pregunta
-                currentCard = 1;
-                showCard(currentCard);
-                updateProgress();
-                showBackButton();
-            } else if (currentCard <= totalQuestions) {
-                if (currentCard === totalQuestions) {
-                    // Última pregunta completada
-                    showCard('final');
-                    updateProgress(100);
-                    hideBackButton();
-                } else {
-                    // Siguiente pregunta
-                    currentCard++;
-                    showCard(currentCard);
-                    updateProgress();
-                }
-            }
-        }
-
-        function previousCard() {
-            if (currentCard > 1) {
-                currentCard--;
-                showCard(currentCard);
-                updateProgress();
-                
-                // Restaurar selección anterior si existe
-                if (responses[currentCard] !== undefined) {
-                    const currentCardElement = document.getElementById(`card-${currentCard}`);
-                    const options = currentCardElement.querySelectorAll('.option');
-                    options.forEach(option => option.classList.remove('selected'));
-                    options[getOptionIndex(currentCard, responses[currentCard])].classList.add('selected');
-                }
-            } else if (currentCard === 1) {
-                currentCard = 0;
-                showCard(0);
-                updateProgress(0);
-                hideBackButton();
-            }
-        }
-
-        function showCard(cardId) {
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.getElementById(`card-${cardId}`).classList.add('active');
-        }
-
-        function updateProgress(percentage = null) {
-            if (percentage !== null) {
-                document.getElementById('progress').style.width = percentage + '%';
-            } else {
-                const progress = ((currentCard - 1) / totalQuestions) * 100;
-                document.getElementById('progress').style.width = progress + '%';
-            }
-        }
-
-        function showBackButton() {
-            document.getElementById('back-btn').style.display = 'block';
-        }
-
-        function hideBackButton() {
-            document.getElementById('back-btn').style.display = 'none';
-        }
-
-        function calculateScore() {
-            let totalScore = 0;
-            let disforiaScore = 0;
-            let autoestimaScore = 0;
-
-            // Calcular puntuación total
-            for (let i = 1; i <= totalQuestions; i++) {
-                if (responses[i] !== undefined) {
-                    totalScore += responses[i];
-                }
-            }
-
-            // Calcular subescalas
-            disforiaItems.forEach(item => {
-                if (responses[item] !== undefined) {
-                    disforiaScore += responses[item];
-                }
-            });
-
-            autoestimaItems.forEach(item => {
-                if (responses[item] !== undefined) {
-                    autoestimaScore += responses[item];
-                }
-            });
-
-            return {
-                total: totalScore,
-                disforia: disforiaScore,
-                autoestima: autoestimaScore
-            };
-        }
-
-        function getInterpretation(totalScore) {
-            if (totalScore < 19) {
-                return {
-                    level: 'normal',
-                    title: 'Sin Indicadores de Depresión',
-                    description: 'La puntuación obtenida se encuentra dentro del rango normal. No se evidencian síntomas depresivos clínicamente significativos según los criterios del CDI.',
-                    recommendations: 'Se sugiere mantener seguimiento preventivo y promover factores protectores del bienestar emocional.'
-                };
-            } else if (totalScore < 29) {
-                return {
-                    level: 'leve',
-                    title: 'Indicadores de Depresión Leve',
-                    description: 'Se identifican síntomas depresivos de intensidad leve que requieren atención y seguimiento clínico.',
-                    recommendations: 'Se recomienda intervención psicoterapéutica temprana y evaluación de factores precipitantes. Considerar apoyo familiar y escolar.'
-                };
-            } else if (totalScore < 39) {
-                return {
-                    level: 'moderada',
-                    title: 'Indicadores de Depresión Moderada',
-                    description: 'Presencia de sintomatología depresiva moderada que interfiere significativamente con el funcionamiento diario.',
-                    recommendations: 'Requiere intervención psicoterapéutica estructurada. Evaluar necesidad de intervención farmacológica. Coordinación con familia y escuela.'
-                };
-            } else {
-                return {
-                    level: 'grave',
-                    title: 'Indicadores de Depresión Grave',
-                    description: 'Sintomatología depresiva severa con alto impacto funcional. Requiere atención clínica inmediata.',
-                    recommendations: 'Intervención clínica urgente. Evaluación de riesgo suicida. Considerar hospitalización si procede. Tratamiento multidisciplinario intensivo.'
-                };
-            }
-        }
-
-        function checkAlerts() {
-            const alerts = [];
-            const highRiskItems = {
-                9: 'Ideación suicida',
-                7: 'Autoconcepto muy negativo',
-                8: 'Sentimientos de culpa excesivos',
-                25: 'Sentimientos de rechazo',
-                12: 'Aislamiento social severo'
-            };
-
-            Object.keys(highRiskItems).forEach(item => {
-                if (responses[item] >= 2) { // Puntuación máxima (respuesta más grave)
-                    alerts.push({
-                        item: item,
-                        description: highRiskItems[item],
-                        severity: 'high'
-                    });
-                }
-            });
-
-            return alerts;
-        }
-
-        function showResults() {
-            const scores = calculateScore();
-            const interpretation = getInterpretation(scores.total);
-            const alerts = checkAlerts();
-
-            // Color por severidad
-            const colorMap = { normal: '#48bb78', leve: '#f6ad55', moderada: '#ed8936', grave: '#f56565' };
-            const severityColor = colorMap[interpretation.level] || '#29A98C';
-
-            // Mostrar puntuaciones con color
-            document.getElementById('score-value').textContent = scores.total;
-            document.getElementById('severity-label-cdi').textContent = interpretation.title;
-            const scoreBox = document.getElementById('total-score');
-            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
-            document.getElementById('disforia-score').textContent = scores.disforia;
-            document.getElementById('autoestima-score').textContent = scores.autoestima;
-
-            // Generar interpretación
-            const interpretationHTML = `
-                <div class="result-section result-${interpretation.level}">
-                    <h3 style="margin-bottom: 15px; color: #112F33;">${interpretation.title}</h3>
-                    <p style="margin-bottom: 15px;"><strong>Interpretación Clínica:</strong> ${interpretation.description}</p>
-                    <p><strong>Recomendaciones:</strong> ${interpretation.recommendations}</p>
-                </div>
-                
-                <div style="margin: 20px 0;">
-                    <h4 style="color: #29A98C; margin-bottom: 10px;">Análisis por Subescalas:</h4>
-                    <p><strong>Disforia (${scores.disforia}/${disforiaItems.length * 2}):</strong> 
-                    ${scores.disforia > (disforiaItems.length * 1.3) ? 'Elevada - Indica presencia significativa de humor depresivo, tristeza y preocupación.' : 
-                      scores.disforia > (disforiaItems.length * 0.7) ? 'Moderada - Presencia de algunos síntomas disfóricos que requieren atención.' : 
-                      'Normal - Sin indicadores significativos de disforia.'}</p>
-                    
-                    <p><strong>Autoestima Negativa (${scores.autoestima}/${autoestimaItems.length * 2}):</strong> 
-                    ${scores.autoestima > (autoestimaItems.length * 1.3) ? 'Elevada - Indica sentimientos marcados de ineficacia, culpa y baja autoestima.' : 
-                      scores.autoestima > (autoestimaItems.length * 0.7) ? 'Moderada - Presencia de algunos sentimientos de inadecuación personal.' : 
-                      'Normal - Autoestima dentro de parámetros normales.'}</p>
-                </div>
-            `;
-
-            document.getElementById('interpretation-section').innerHTML = interpretationHTML;
-
-            // Mostrar alertas si existen
-            if (alerts.length > 0) {
-                let alertsHTML = `
-                    <div style="margin: 20px 0;">
-                        <h4 style="color: #f56565; margin-bottom: 15px;">⚠️ Alertas Clínicas Importantes:</h4>
-                `;
-                
-                alerts.forEach(alert => {
-                    alertsHTML += `
-                        <div class="alert-item">
-                            <strong>Ítem ${alert.item}:</strong> ${alert.description} - Requiere evaluación clínica inmediata.
-                        </div>
-                    `;
-                });
-                
-                alertsHTML += '</div>';
-                document.getElementById('alerts-section').innerHTML = alertsHTML;
-            }
-
-            showCard('results');
-            hideBackButton();
-        }
-
-        function exportToPDF() {
-            const results = document.getElementById('card-results');
-            
-            // Crear ventana de impresión
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Resultados CDI - ${new Date().toLocaleDateString()}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
-                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #29A98C; padding-bottom: 20px; }
-                        .score-display { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }
-                        .result-section { margin: 20px 0; padding: 15px; border-left: 4px solid #29A98C; background: #f8f9fa; }
-                        .alert-item { background: #ffe5e5; border: 1px solid #f56565; padding: 10px; margin: 5px 0; border-radius: 4px; }
-                        .subscale-scores { display: flex; justify-content: space-around; margin: 20px 0; }
-                        .subscale { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>Cuestionario de Depresión Infantil (CDI)</h1>
-                        <p>Fecha de evaluación: ${new Date().toLocaleDateString()}</p>
-                    </div>
-        <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-                    ${results.innerHTML.replace(/onclick="[^"]*"/g, '')}
-                    </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-        function captureResults() {
-            // Implementación simplificada de captura
-            alert('Para capturar los resultados como imagen, utilice las herramientas de captura de pantalla de su dispositivo o la función de impresión a PDF.');
-        }
-
-        function newEvaluation() {
-            if (confirm('¿Está seguro de que desea iniciar una nueva evaluación? Se perderán los datos actuales.')) {
-                currentCard = 0;
-                responses = {};
-                showCard(0);
-                updateProgress(0);
-                hideBackButton();
-                
-                // Limpiar todas las selecciones
-                document.querySelectorAll('.option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-            }
-        }
-
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgress(0);
-            hideBackButton();
-        });
-    </script>
 <script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
-        }
+const totalItems = 27;
+let currentCardId = 'card-0';
+let responses = {};
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    const key = (typeof id === 'number') ? 'card-' + id : id;
+    document.getElementById(key).classList.add('active');
+    currentCardId = key;
+    window.scrollTo(0, 0);
+    if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+}
+
+function restoreSelections(n) {
+    if (responses[n] === undefined) return;
+    const card = document.getElementById('card-' + n);
+    card.querySelectorAll('.option').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.score) === responses[n]);
     });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
+}
+
+function selectOption(qNum, value, btn) {
+    btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    responses[qNum] = value;
+    setTimeout(() => {
+        if (qNum < totalItems) showCard(qNum + 1);
+        else showResults();
+    }, 150);
+}
+
+function previousCard() {
+    const match = currentCardId.match(/card-(\d+)/);
+    if (!match) return;
+    const n = parseInt(match[1]);
+    if (n <= 1) showCard(0); else showCard(n - 1);
+}
+
+function showResults() {
+    let total = 0;
+    for (let i = 1; i <= totalItems; i++) total += (responses[i] || 0);
+
+    // Subscale: Disforia — items 1,6,10,11,12,16,17,19,20,21
+    const disforiaItems = [1,6,10,11,12,16,17,19,20,21];
+    let disforia = 0;
+    disforiaItems.forEach(i => { disforia += (responses[i] || 0); });
+
+    // Subscale: Autoestima Negativa — items 2,3,5,7,8,13,14,24,25
+    const autoestimaItems = [2,3,5,7,8,13,14,24,25];
+    let autoestima = 0;
+    autoestimaItems.forEach(i => { autoestima += (responses[i] || 0); });
+
+    let level, color, interpText;
+    if (total < 19) {
+        level = 'Normal'; color = '#48bb78';
+        interpText = 'La puntuación obtenida se encuentra dentro del rango normal. No se observan síntomas depresivos significativos en este momento. Se recomienda seguimiento de rutina.';
+    } else if (total <= 28) {
+        level = 'Leve'; color = '#f6ad55';
+        interpText = 'La puntuación indica sintomatología depresiva leve. Se recomienda monitoreo continuo, explorar posibles estresores psicosociales y considerar intervención psicoeducativa.';
+    } else if (total <= 38) {
+        level = 'Moderada'; color = '#ed8936';
+        interpText = 'La puntuación indica sintomatología depresiva moderada. Se recomienda evaluación clínica completa, intervención psicoterapéutica y seguimiento estrecho.';
+    } else {
+        level = 'Grave'; color = '#f56565';
+        interpText = 'La puntuación indica sintomatología depresiva grave. Se requiere evaluación clínica urgente e intervención inmediata. Considerar derivación especializada.';
+    }
+
+    const scoreNumEl = document.getElementById('cdi-score-num');
+    scoreNumEl.textContent = total;
+    scoreNumEl.style.color = color;
+    document.getElementById('cdi-score-area').style.borderColor = color;
+    const badge = document.getElementById('cdi-score-badge');
+    badge.textContent = level;
+    badge.style.backgroundColor = color + '22';
+    badge.style.color = color;
+
+    const disforiaEl = document.getElementById('sub-disforia');
+    disforiaEl.textContent = disforia;
+    const dPct = disforia / 20;
+    disforiaEl.style.color = dPct < 0.35 ? '#48bb78' : dPct < 0.6 ? '#f6ad55' : '#f56565';
+    document.getElementById('sub-disforia-interp').textContent = disforia <= 7 ? 'Sin alteración' : disforia <= 13 ? 'Moderada' : 'Elevada';
+
+    const autoestimaEl = document.getElementById('sub-autoestima');
+    autoestimaEl.textContent = autoestima;
+    const aPct = autoestima / 18;
+    autoestimaEl.style.color = aPct < 0.35 ? '#48bb78' : aPct < 0.6 ? '#f6ad55' : '#f56565';
+    document.getElementById('sub-autoestima-interp').textContent = autoestima <= 6 ? 'Sin alteración' : autoestima <= 11 ? 'Moderada' : 'Elevada';
+
+    document.getElementById('cdi-interp-box').textContent = interpText;
+
+    const alertsSection = document.getElementById('cdi-alerts-section');
+    if ((responses[9] || 0) >= 1) {
+        alertsSection.style.display = 'block';
+        document.getElementById('cdi-alerts-body').textContent = '⚠️ Ítem 9 (Ideación suicida): Puntuación ≥1. Se requiere evaluación inmediata del riesgo suicida.';
+    } else {
+        alertsSection.style.display = 'none';
+    }
+
+    showCard('card-final');
+}
+
+function exportToPDF() { window.print(); }
+
+function resetScale() {
+    responses = {};
+    currentCardId = 'card-0';
+    showCard(0);
+}
 </script>
 </body>
 </html>

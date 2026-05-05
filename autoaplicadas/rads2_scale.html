@@ -1,1217 +1,970 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RADS-2 - Escala de Depresión para Adolescentes</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
-        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1em; }
-
-        .progress {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 30px 0 30px;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #29A98C 0%, #112F33 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-            width: 0%;
-        }
-
-        .card {
-            padding: 50px;
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-            min-height: 400px;
-            background: white;
-        }
-        .card.active { display: block; }
-
-        .question-header .question-number,
-        .question-header .question-text,
-        .question-header * { color: white !important; }
-        .question-number {
-            color: #29A98C;
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text, .question {
-            font-size: 1.3em;
-            font-weight: 400;
-            color: #112F33;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .section-title, .section-header, .question-header, .card-header {
-            color: white !important;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: 500;
-            margin: -50px -50px 30px -50px;
-            border-radius: 0;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            background: white;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            border-radius: 20px;
-            padding: 18px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.05em;
-            color: #112F33;
-            text-align: left;
-        }
-        .option:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #29A98C;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.15);
-        }
-        .option.selected, .option.active {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border-color: #29A98C;
-            transform: translateY(-1px);
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-        }
-
-        .btn-back {
-            background: transparent;
-            color: #29A98C;
-            border: 1px solid rgba(41, 169, 140, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .btn-back:hover { opacity: 1; background: rgba(255, 255, 255, 0.8); border-color: #29A98C; }
-
-        .btn, .start-btn, .results-btn, .action-btn, .action-button {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn:hover, .start-btn:hover, .results-btn:hover, .action-btn:hover, .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 169, 140, 0.3);
-        }
-
-        .instructions {
-            background: rgba(41, 169, 140, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #29A98C;
-            font-size: 1.05em;
-            line-height: 1.6;
-            color: #112F33;
-        }
-
-        .welcome-text {
-            text-align: center;
-            font-size: 1.15em;
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 30px;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .score-number { font-size: 3em; font-weight: 300; margin-bottom: 10px; }
-
-        .interpretation, .result-section {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            border: 2px solid rgba(41, 169, 140, 0.2);
-            text-align: left;
-        }
-
-        .alert-info, .alert { 
-            background: rgba(41, 169, 140, 0.1); 
-            border-left: 4px solid #29A98C; 
-            color: #112F33; 
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-        .alert-warning { 
-            background: rgba(236, 115, 103, 0.1); 
-            border-left: 4px solid #EC7367; 
-            color: #112F33;
-            padding: 20px; border-radius: 20px; margin: 15px 0;
-        }
-
-        .export-buttons, .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .medical-access {
-            background: white;
-            border: 2px solid #29A98C;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        h1, h2 { color: #29A98C; }
-        h3 { color: #112F33; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 5px; border-radius: 24px; }
-            .card { padding: 25px; min-height: 300px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
-            .question-text, .question { font-size: 1.1em; }
-            .option { padding: 14px 18px; }
-            .section-title, .section-header, .question-header, .card-header {
-            color: white !important; margin: -25px -25px 20px -25px; }
-            .export-buttons, .action-buttons { flex-direction: column; align-items: center; }
-            .navigation { flex-direction: column; gap: 10px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RADS-2 — Escala de Depresión para Adolescentes</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+.card-wrap { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+.card-wrap.active { display:block; }
+.card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+.scale-name { font-size:15px; font-weight:600; opacity:.9; }
+.q-label { font-size:13px; opacity:.8; }
+.card-body { padding:28px 32px 24px; }
+.question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:28px; }
+.options { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+.option { width:100%; border:2px solid #e2e8f0; border-radius:12px; padding:14px 20px; font-size:14px; font-weight:500; color:#112F33; background:#fff; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; }
+.option:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+.option.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; }
+.q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+.progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; transition:width .3s; }
+.bottom-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-back:hover { border-color:#29A98C; color:#29A98C; }
+.item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
+.welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+.instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:24px; color:#112F33; font-size:14px; line-height:1.75; }
+.btn-start { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:12px 32px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; display:block; margin:0 auto; }
+.score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+.score-num { font-size:72px; font-weight:900; line-height:1; }
+.score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+.score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+.subscales-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.subscale-box { border:1px solid #e2e8f0; border-radius:10px; padding:14px; text-align:center; }
+.subscale-title { font-size:12px; color:#718096; font-weight:600; margin-bottom:6px; }
+.subscale-num { font-size:32px; font-weight:700; }
+.subscale-max { font-size:11px; color:#a0aec0; margin-top:2px; }
+.subscale-interp { font-size:11px; color:#718096; margin-top:5px; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+.interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+.alerts-box { background:#fff5f5; border:1px solid #feb2b2; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#742a2a; }
+.action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.final-msg { text-align:center; padding:24px 20px; }
+.final-msg h2 { font-size:20px; font-weight:700; color:#112F33; margin-bottom:12px; }
+.final-msg p { font-size:14px; color:#718096; line-height:1.7; margin-bottom:24px; }
+@media(max-width:600px){body{padding:12px 10px;}.card-body{padding:20px 18px 18px;}.question-text{font-size:18px;}.subscales-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
-    <div class="container">
 
-        <div class="header">
-        <h1>RADS-2</h1>
-        <p>Escala de Depresión para Adolescentes - Segunda Edición</p>
-        </div>
+<!-- CARD 0: Welcome -->
+<div class="card-wrap active" id="card-0">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Evaluación de Depresión</span>
+  </div>
+  <div class="card-body">
+    <div class="welcome-title">Escala de Depresión para Adolescentes</div>
+    <div class="instructions-box">
+      A continuación encontrarás una serie de frases que describen cómo te puedes sentir. Lee cada frase cuidadosamente y selecciona la opción que mejor describe cómo te has sentido <strong>en las últimas dos semanas</strong>.<br><br>
+      No hay respuestas correctas o incorrectas. Es importante que respondas con honestidad cómo realmente te has sentido.
+    </div>
+    <button class="btn-start" onclick="showCard(1)">Comenzar evaluación</button>
+  </div>
+</div>
 
-        <div class="progress">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-<div class="card active" id="card-0">
-            <div class="instructions">
-                <p><strong>Instrucciones:</strong></p>
-                <p>A continuación encontrarás una serie de frases que describen cómo te puedes sentir. Lee cada frase cuidadosamente y selecciona la opción que mejor describe cómo te has sentido <strong>en las últimas dos semanas</strong>.</p>
-                <br>
-                <p>Las opciones son:</p>
-                <ul style="margin-left: 20px; margin-top: 10px;">
-                    <li><strong>Casi nunca:</strong> Prácticamente no me he sentido así</li>
-                    <li><strong>Pocas veces:</strong> Me he sentido así algunas pocas veces</li>
-                    <li><strong>A veces:</strong> Me he sentido así de vez en cuando</li>
-                    <li><strong>La mayoría del tiempo:</strong> Me he sentido así frecuentemente</li>
-                </ul>
-                <br>
-                <p>No hay respuestas correctas o incorrectas. Es importante que respondas con honestidad cómo realmente te has sentido.</p>
-            </div>
-            <button class="btn" onclick="nextCard()">Comenzar Evaluación</button>
-        </div>
+<!-- CARD 1 -->
+<div class="card-wrap" id="card-1">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 1 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:3.3%"></div></div>
+    <div class="question-text">Me siento triste.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(1,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(1,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(1,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(1,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="showCard(0)">← Atrás</button>
+      <span class="item-number-badge">1 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <!-- Card 1-30: Preguntas -->
-        <div class="card" id="card-1">
-            <div class="question-number">Pregunta 1 de 30</div>
-            <div class="question-text">Me siento triste.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(1, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(1, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(1, 3)">A veces</div>
-                <div class="option" onclick="selectOption(1, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 2 -->
+<div class="card-wrap" id="card-2">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 2 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:6.7%"></div></div>
+    <div class="question-text">Me preocupo por las cosas que van mal.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(2,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(2,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(2,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(2,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">2 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-2">
-            <div class="question-number">Pregunta 2 de 30</div>
-            <div class="question-text">Me preocupo por las cosas que van mal.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(2, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(2, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(2, 3)">A veces</div>
-                <div class="option" onclick="selectOption(2, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 3 -->
+<div class="card-wrap" id="card-3">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 3 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div>
+    <div class="question-text">Siento que quiero llorar.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(3,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(3,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(3,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(3,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">3 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-3">
-            <div class="question-number">Pregunta 3 de 30</div>
-            <div class="question-text">Siento que quiero llorar.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(3, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(3, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(3, 3)">A veces</div>
-                <div class="option" onclick="selectOption(3, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 4 -->
+<div class="card-wrap" id="card-4">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 4 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:13.3%"></div></div>
+    <div class="question-text">Tengo problemas para dormir por la noche.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(4,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(4,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(4,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(4,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">4 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-4">
-            <div class="question-number">Pregunta 4 de 30</div>
-            <div class="question-text">Tengo problemas para dormir por la noche.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(4, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(4, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(4, 3)">A veces</div>
-                <div class="option" onclick="selectOption(4, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 5 -->
+<div class="card-wrap" id="card-5">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 5 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:16.7%"></div></div>
+    <div class="question-text">Siento que no vale la pena vivir.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(5,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(5,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(5,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(5,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">5 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-5">
-            <div class="question-number">Pregunta 5 de 30</div>
-            <div class="question-text">Siento que no vale la pena vivir.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(5, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(5, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(5, 3)">A veces</div>
-                <div class="option" onclick="selectOption(5, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 6 -->
+<div class="card-wrap" id="card-6">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 6 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+    <div class="question-text">Siento que soy una mala persona.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(6,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(6,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(6,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(6,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">6 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-6">
-            <div class="question-number">Pregunta 6 de 30</div>
-            <div class="question-text">Siento que soy una mala persona.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(6, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(6, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(6, 3)">A veces</div>
-                <div class="option" onclick="selectOption(6, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 7 -->
+<div class="card-wrap" id="card-7">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 7 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:23.3%"></div></div>
+    <div class="question-text">Me siento solo/a.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(7,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(7,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(7,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(7,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">7 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-7">
-            <div class="question-number">Pregunta 7 de 30</div>
-            <div class="question-text">Me siento solo/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(7, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(7, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(7, 3)">A veces</div>
-                <div class="option" onclick="selectOption(7, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 8 — REVERSED -->
+<div class="card-wrap" id="card-8">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Anhedonia / Afecto Negativo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 8 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:26.7%"></div></div>
+    <div class="question-text">Me gusta salir con mis amigos.</div>
+    <div class="options">
+      <button class="option" data-score="4" onclick="selectOption(8,4,this)">Casi nunca</button>
+      <button class="option" data-score="3" onclick="selectOption(8,3,this)">Pocas veces</button>
+      <button class="option" data-score="2" onclick="selectOption(8,2,this)">A veces</button>
+      <button class="option" data-score="1" onclick="selectOption(8,1,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">8 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-8">
-            <div class="question-number">Pregunta 8 de 30</div>
-            <div class="question-text">Me gusta salir con mis amigos.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(8, 4)">Casi nunca</div>
-                <div class="option" onclick="selectOption(8, 3)">Pocas veces</div>
-                <div class="option" onclick="selectOption(8, 2)">A veces</div>
-                <div class="option" onclick="selectOption(8, 1)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 9 -->
+<div class="card-wrap" id="card-9">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 9 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+    <div class="question-text">Quiero hacerme daño a mí mismo/a.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(9,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(9,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(9,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(9,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">9 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-9">
-            <div class="question-number">Pregunta 9 de 30</div>
-            <div class="question-text">Quiero hacerme daño a mí mismo/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(9, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(9, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(9, 3)">A veces</div>
-                <div class="option" onclick="selectOption(9, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 10 -->
+<div class="card-wrap" id="card-10">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 10 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33.3%"></div></div>
+    <div class="question-text">Tengo problemas para concentrarme.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(10,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(10,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(10,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(10,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">10 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-10">
-            <div class="question-number">Pregunta 10 de 30</div>
-            <div class="question-text">Tengo problemas para concentrarme.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(10, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(10, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(10, 3)">A veces</div>
-                <div class="option" onclick="selectOption(10, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 11 -->
+<div class="card-wrap" id="card-11">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 11 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:36.7%"></div></div>
+    <div class="question-text">Me siento cansado/a.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(11,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(11,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(11,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(11,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">11 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-11">
-            <div class="question-number">Pregunta 11 de 30</div>
-            <div class="question-text">Me siento cansado/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(11, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(11, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(11, 3)">A veces</div>
-                <div class="option" onclick="selectOption(11, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 12 -->
+<div class="card-wrap" id="card-12">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 12 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+    <div class="question-text">Creo que nadie me quiere.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(12,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(12,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(12,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(12,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">12 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-12">
-            <div class="question-number">Pregunta 12 de 30</div>
-            <div class="question-text">Creo que nadie me quiere.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(12, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(12, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(12, 3)">A veces</div>
-                <div class="option" onclick="selectOption(12, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 13 -->
+<div class="card-wrap" id="card-13">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 13 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:43.3%"></div></div>
+    <div class="question-text">No me gusta estar con otras personas.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(13,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(13,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(13,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(13,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">13 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-13">
-            <div class="question-number">Pregunta 13 de 30</div>
-            <div class="question-text">No me gusta estar con otras personas.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(13, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(13, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(13, 3)">A veces</div>
-                <div class="option" onclick="selectOption(13, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 14 -->
+<div class="card-wrap" id="card-14">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 14 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:46.7%"></div></div>
+    <div class="question-text">Tengo ganas de huir.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(14,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(14,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(14,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(14,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">14 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-14">
-            <div class="question-number">Pregunta 14 de 30</div>
-            <div class="question-text">Tengo ganas de huir.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(14, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(14, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(14, 3)">A veces</div>
-                <div class="option" onclick="selectOption(14, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 15 -->
+<div class="card-wrap" id="card-15">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 15 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+    <div class="question-text">Tengo dolores y malestares.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(15,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(15,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(15,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(15,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">15 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-15">
-            <div class="question-number">Pregunta 15 de 30</div>
-            <div class="question-text">Tengo dolores y malestares.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(15, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(15, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(15, 3)">A veces</div>
-                <div class="option" onclick="selectOption(15, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 16 -->
+<div class="card-wrap" id="card-16">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 16 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:53.3%"></div></div>
+    <div class="question-text">Me siento aburrido/a.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(16,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(16,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(16,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(16,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">16 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-16">
-            <div class="question-number">Pregunta 16 de 30</div>
-            <div class="question-text">Me siento aburrido/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(16, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(16, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(16, 3)">A veces</div>
-                <div class="option" onclick="selectOption(16, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 17 — REVERSED -->
+<div class="card-wrap" id="card-17">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Anhedonia / Afecto Negativo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 17 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:56.7%"></div></div>
+    <div class="question-text">Me gusta comer.</div>
+    <div class="options">
+      <button class="option" data-score="4" onclick="selectOption(17,4,this)">Casi nunca</button>
+      <button class="option" data-score="3" onclick="selectOption(17,3,this)">Pocas veces</button>
+      <button class="option" data-score="2" onclick="selectOption(17,2,this)">A veces</button>
+      <button class="option" data-score="1" onclick="selectOption(17,1,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">17 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-17">
-            <div class="question-number">Pregunta 17 de 30</div>
-            <div class="question-text">Me gusta comer.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(17, 4)">Casi nunca</div>
-                <div class="option" onclick="selectOption(17, 3)">Pocas veces</div>
-                <div class="option" onclick="selectOption(17, 2)">A veces</div>
-                <div class="option" onclick="selectOption(17, 1)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 18 -->
+<div class="card-wrap" id="card-18">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 18 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+    <div class="question-text">Me preocupa cómo me veo.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(18,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(18,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(18,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(18,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">18 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-18">
-            <div class="question-number">Pregunta 18 de 30</div>
-            <div class="question-text">Me preocupa cómo me veo.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(18, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(18, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(18, 3)">A veces</div>
-                <div class="option" onclick="selectOption(18, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 19 -->
+<div class="card-wrap" id="card-19">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 19 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:63.3%"></div></div>
+    <div class="question-text">Tengo que esforzarme para hacer las cosas.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(19,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(19,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(19,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(19,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">19 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-19">
-            <div class="question-number">Pregunta 19 de 30</div>
-            <div class="question-text">Tengo que esforzarme para hacer las cosas.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(19, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(19, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(19, 3)">A veces</div>
-                <div class="option" onclick="selectOption(19, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 20 -->
+<div class="card-wrap" id="card-20">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 20 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:66.7%"></div></div>
+    <div class="question-text">Siento que no soy tan bueno/a como otros adolescentes.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(20,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(20,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(20,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(20,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">20 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-20">
-            <div class="question-number">Pregunta 20 de 30</div>
-            <div class="question-text">Siento que no soy tan bueno/a como otros adolescentes.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(20, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(20, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(20, 3)">A veces</div>
-                <div class="option" onclick="selectOption(20, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 21 -->
+<div class="card-wrap" id="card-21">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 21 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+    <div class="question-text">Siento que todo es mi culpa.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(21,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(21,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(21,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(21,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">21 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-21">
-            <div class="question-number">Pregunta 21 de 30</div>
-            <div class="question-text">Siento que todo es mi culpa.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(21, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(21, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(21, 3)">A veces</div>
-                <div class="option" onclick="selectOption(21, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 22 -->
+<div class="card-wrap" id="card-22">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 22 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:73.3%"></div></div>
+    <div class="question-text">No tengo apetito.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(22,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(22,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(22,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(22,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">22 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-22">
-            <div class="question-number">Pregunta 22 de 30</div>
-            <div class="question-text">No tengo apetito.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(22, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(22, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(22, 3)">A veces</div>
-                <div class="option" onclick="selectOption(22, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 23 — REVERSED -->
+<div class="card-wrap" id="card-23">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 23 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:76.7%"></div></div>
+    <div class="question-text">Duermo bien por la noche.</div>
+    <div class="options">
+      <button class="option" data-score="4" onclick="selectOption(23,4,this)">Casi nunca</button>
+      <button class="option" data-score="3" onclick="selectOption(23,3,this)">Pocas veces</button>
+      <button class="option" data-score="2" onclick="selectOption(23,2,this)">A veces</button>
+      <button class="option" data-score="1" onclick="selectOption(23,1,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">23 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-23">
-            <div class="question-number">Pregunta 23 de 30</div>
-            <div class="question-text">Duermo bien por la noche.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(23, 4)">Casi nunca</div>
-                <div class="option" onclick="selectOption(23, 3)">Pocas veces</div>
-                <div class="option" onclick="selectOption(23, 2)">A veces</div>
-                <div class="option" onclick="selectOption(23, 1)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 24 — REVERSED -->
+<div class="card-wrap" id="card-24">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Anhedonia / Afecto Negativo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 24 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+    <div class="question-text">Disfruto de las cosas que hago.</div>
+    <div class="options">
+      <button class="option" data-score="4" onclick="selectOption(24,4,this)">Casi nunca</button>
+      <button class="option" data-score="3" onclick="selectOption(24,3,this)">Pocas veces</button>
+      <button class="option" data-score="2" onclick="selectOption(24,2,this)">A veces</button>
+      <button class="option" data-score="1" onclick="selectOption(24,1,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">24 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-24">
-            <div class="question-number">Pregunta 24 de 30</div>
-            <div class="question-text">Disfruto de las cosas que hago.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(24, 4)">Casi nunca</div>
-                <div class="option" onclick="selectOption(24, 3)">Pocas veces</div>
-                <div class="option" onclick="selectOption(24, 2)">A veces</div>
-                <div class="option" onclick="selectOption(24, 1)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 25 -->
+<div class="card-wrap" id="card-25">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 25 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:83.3%"></div></div>
+    <div class="question-text">Tengo dolores de cabeza.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(25,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(25,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(25,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(25,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">25 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-25">
-            <div class="question-number">Pregunta 25 de 30</div>
-            <div class="question-text">Tengo dolores de cabeza.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(25, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(25, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(25, 3)">A veces</div>
-                <div class="option" onclick="selectOption(25, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 26 — REVERSED -->
+<div class="card-wrap" id="card-26">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Anhedonia / Afecto Negativo</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 26 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:86.7%"></div></div>
+    <div class="question-text">Me siento bien conmigo mismo/a.</div>
+    <div class="options">
+      <button class="option" data-score="4" onclick="selectOption(26,4,this)">Casi nunca</button>
+      <button class="option" data-score="3" onclick="selectOption(26,3,this)">Pocas veces</button>
+      <button class="option" data-score="2" onclick="selectOption(26,2,this)">A veces</button>
+      <button class="option" data-score="1" onclick="selectOption(26,1,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">26 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-26">
-            <div class="question-number">Pregunta 26 de 30</div>
-            <div class="question-text">Me siento bien conmigo mismo/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(26, 4)">Casi nunca</div>
-                <div class="option" onclick="selectOption(26, 3)">Pocas veces</div>
-                <div class="option" onclick="selectOption(26, 2)">A veces</div>
-                <div class="option" onclick="selectOption(26, 1)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 27 -->
+<div class="card-wrap" id="card-27">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Estado de Ánimo Disfórico</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 27 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div>
+    <div class="question-text">Creo que mi vida va mal.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(27,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(27,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(27,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(27,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">27 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-27">
-            <div class="question-number">Pregunta 27 de 30</div>
-            <div class="question-text">Creo que mi vida va mal.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(27, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(27, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(27, 3)">A veces</div>
-                <div class="option" onclick="selectOption(27, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 28 -->
+<div class="card-wrap" id="card-28">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 28 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:93.3%"></div></div>
+    <div class="question-text">Tengo problemas de estómago.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(28,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(28,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(28,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(28,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">28 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-28">
-            <div class="question-number">Pregunta 28 de 30</div>
-            <div class="question-text">Tengo problemas de estómago.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(28, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(28, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(28, 3)">A veces</div>
-                <div class="option" onclick="selectOption(28, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 29 -->
+<div class="card-wrap" id="card-29">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Quejas Somáticas / Funcional</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 29 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96.7%"></div></div>
+    <div class="question-text">Tengo tan poca energía que no puedo hacer las cosas.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(29,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(29,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(29,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(29,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">29 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-29">
-            <div class="question-number">Pregunta 29 de 30</div>
-            <div class="question-text">Tengo tan poca energía que no puedo hacer las cosas.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(29, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(29, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(29, 3)">A veces</div>
-                <div class="option" onclick="selectOption(29, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD 30 -->
+<div class="card-wrap" id="card-30">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Autoevaluación Negativa</span>
+  </div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 30 de 30</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+    <div class="question-text">Creo que soy feo/a.</div>
+    <div class="options">
+      <button class="option" data-score="1" onclick="selectOption(30,1,this)">Casi nunca</button>
+      <button class="option" data-score="2" onclick="selectOption(30,2,this)">Pocas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(30,3,this)">A veces</button>
+      <button class="option" data-score="4" onclick="selectOption(30,4,this)">La mayoría del tiempo</button>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn-back" onclick="previousCard()">← Atrás</button>
+      <span class="item-number-badge">30 / 30</span>
+    </div>
+  </div>
+</div>
 
-        <div class="card" id="card-30">
-            <div class="question-number">Pregunta 30 de 30</div>
-            <div class="question-text">Creo que soy feo/a.</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(30, 1)">Casi nunca</div>
-                <div class="option" onclick="selectOption(30, 2)">Pocas veces</div>
-                <div class="option" onclick="selectOption(30, 3)">A veces</div>
-                <div class="option" onclick="selectOption(30, 4)">La mayoría del tiempo</div>
-            </div>
-        </div>
+<!-- CARD FINAL -->
+<div class="card-wrap" id="card-final">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Evaluación completada</span>
+  </div>
+  <div class="card-body">
+    <div class="final-msg">
+      <h2>¡Has completado la escala!</h2>
+      <p>Por favor, entrega el dispositivo a tu médico o profesional de la salud mental para la revisión de los resultados.</p>
+      <button class="btn-start" onclick="showResults()">Ver resultados</button>
+    </div>
+  </div>
+</div>
 
-        <!-- Card Final -->
-        <div class="card" id="card-final">
-            <div class="header">
-                <h1>Evaluación Completada</h1>
-                <p>¡Gracias por completar la escala!</p>
-            </div>
-            <div class="instructions">
-                <p>Has completado exitosamente la Escala de Depresión para Adolescentes RADS-2.</p>
-                <br>
-                <p><strong>Por favor, entrega el dispositivo a tu médico o profesional de la salud mental para la revisión de los resultados.</strong></p>
-                <br>
-                <p>Los resultados de esta evaluación deben ser interpretados por un profesional calificado en el contexto de una evaluación clínica completa.</p>
-            </div>
-            <button class="btn" onclick="showResults()">Revisar Resultados (Médico)</button>
-        </div>
-
-        <!-- Card Results -->
-        <div class="card" id="card-results">
-            <div class="header">
-                <h1>Resultados RADS-2</h1>
-                <p>Interpretación Clínica Profesional</p>
-            </div>
-            
-            <div class="results-container">
-                <div class="result-section">
-                    <div id="score-display-box" style="background: linear-gradient(135deg, #48bb78, #112F33); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 16px;">
-                        <div style="font-size: 56px; font-weight: 900; color: #fff;" id="total-score">--</div>
-                        <div style="font-size: 16px; color: rgba(255,255,255,0.8);">Puntuación Total / 120</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #fff; margin-top: 8px;" id="severity-badge">--</div>
-                    </div>
-                    <div class="interpretation" id="total-interpretation">--</div>
-                </div>
-
-                <div class="result-section">
-                    <div class="result-title">Subescalas</div>
-                    <div id="subscales-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
-                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Estado de Ánimo Disfórico</div>
-                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="dysphoric-score">--</div>
-                            <div id="dysphoric-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Anhedonia/Afecto Negativo</div>
-                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="anhedonia-score">--</div>
-                            <div id="anhedonia-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Autoevaluación Negativa</div>
-                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="negative-score">--</div>
-                            <div id="negative-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
-                            <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Quejas Somáticas</div>
-                            <div style="font-size: 22px; font-weight: 700; color: #2d3748;" id="somatic-score">--</div>
-                            <div id="somatic-interpretation" style="font-size: 11px; color: #666; margin-top: 4px;">--</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-section">
-                    <div class="result-title">Ítems Críticos y Alertas</div>
-                    <div id="alerts-container">
-                        <!-- Las alertas se generarán dinámicamente -->
-                    </div>
-                </div>
-
-                <div class="result-section">
-                    <div class="result-title">Recomendaciones Clínicas</div>
-                    <div class="interpretation" id="clinical-recommendations">--</div>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button class="action-btn" onclick="generatePDF()">Generar PDF</button>
-                <button class="action-btn" onclick="captureScreen()">Captura</button>
-                <button class="action-btn" onclick="newEvaluation()">Nueva Evaluación</button>
-            </div>
-        </div>
+<!-- CARD RESULTS -->
+<div class="card-wrap" id="card-results">
+  <div class="card-header">
+    <span class="scale-name">RADS-2</span>
+    <span class="q-label">Resultados</span>
+  </div>
+  <div class="card-body">
+    <div class="score-area" id="score-area">
+      <div class="score-num" id="score-num">—</div>
+      <div class="score-range">/ 120 puntos</div>
+      <div id="score-badge-wrap"></div>
     </div>
 
+    <div class="section-label">Subescalas</div>
+    <div class="subscales-grid">
+      <div class="subscale-box">
+        <div class="subscale-title">Estado de Ánimo Disfórico</div>
+        <div class="subscale-num" id="sub-dysphoric">—</div>
+        <div class="subscale-max">/ 28 puntos</div>
+        <div class="subscale-interp" id="sub-dysphoric-interp"></div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Anhedonia / Afecto Negativo</div>
+        <div class="subscale-num" id="sub-anhedonia">—</div>
+        <div class="subscale-max">/ 16 puntos</div>
+        <div class="subscale-interp" id="sub-anhedonia-interp"></div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Autoevaluación Negativa</div>
+        <div class="subscale-num" id="sub-negative">—</div>
+        <div class="subscale-max">/ 32 puntos</div>
+        <div class="subscale-interp" id="sub-negative-interp"></div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Quejas Somáticas</div>
+        <div class="subscale-num" id="sub-somatic">—</div>
+        <div class="subscale-max">/ 44 puntos</div>
+        <div class="subscale-interp" id="sub-somatic-interp"></div>
+      </div>
+    </div>
 
-    <script>
-        let currentCard = 0;
-        let responses = {};
-        const totalQuestions = 30;
+    <div class="section-label">Interpretación clínica</div>
+    <div class="interp-box" id="interp-box"></div>
 
-        // Configuración de subescalas según RADS-2
-        const subscales = {
-            dysphoric: [1, 3, 7, 13, 16, 21, 27], // Estado de Ánimo Disfórico
-            anhedonia: [8, 17, 24, 26], // Anhedonia/Afecto Negativo (ítems inversos)
-            negative: [5, 6, 9, 12, 14, 18, 20, 30], // Autoevaluación Negativa
-            somatic: [4, 10, 11, 15, 19, 22, 23, 25, 28, 29, 2] // Quejas Somáticas
-        };
+    <div class="alerts-box" id="alerts-box" style="display:none"></div>
 
-        // Ítems críticos identificados en la literatura
-        const criticalItems = [5, 9, 12, 14, 20, 21];
+    <div class="action-row">
+      <button class="btn-action" onclick="window.print()">Imprimir resultados</button>
+      <button class="btn-action" onclick="showCard(0); responses={};">Nueva evaluación</button>
+    </div>
+  </div>
+</div>
 
-        function updateProgress() {
-            const progress = (currentCard / (totalQuestions + 1)) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
-        }
-
-        function updateBackButton() {
-            const backBtn = document.getElementById('back-btn');
-            if (currentCard === 0 || currentCard === totalQuestions + 1 || currentCard === totalQuestions + 2) {
-                backBtn.style.display = 'none';
-            } else {
-                backBtn.style.display = 'block';
-            }
-        }
-
-        function showCard(cardNumber) {
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
-            
-            const targetCard = document.getElementById(`card-${cardNumber}`);
-            if (targetCard) {
-                targetCard.classList.add('active');
-            }
-            
-            updateProgress();
-            updateBackButton();
-        }
-
-        function nextCard() {
-            if (currentCard < totalQuestions + 2) {
-                currentCard++;
-                showCard(currentCard);
-            }
-        }
-
-        function previousCard() {
-            if (currentCard > 1) {
-                currentCard--;
-                showCard(currentCard);
-            }
-        }
-
-        function selectOption(questionNumber, value) {
-            responses[questionNumber] = value;
-            
-            // Marcar opción seleccionada
-            const currentCardElement = document.getElementById(`card-${questionNumber}`);
-            const options = currentCardElement.querySelectorAll('.option');
-            options.forEach(option => option.classList.remove('selected'));
-            event.target.classList.add('selected');
-            
-            // Auto-avance después de 150ms
-            setTimeout(() => {
-                if (questionNumber < totalQuestions) {
-                    nextCard();
-                } else {
-                    // Última pregunta, ir a card-final
-                    currentCard = totalQuestions + 1;
-                    showCard('final');
-                }
-            }, 150);
-        }
-
-        function calculateScore() {
-            let totalScore = 0;
-            let subscaleScores = {
-                dysphoric: 0,
-                anhedonia: 0,
-                negative: 0,
-                somatic: 0
-            };
-
-            // Calcular puntuaciones
-            for (let i = 1; i <= totalQuestions; i++) {
-                if (responses[i]) {
-                    totalScore += responses[i];
-                    
-                    // Calcular subescalas
-                    Object.keys(subscales).forEach(subscale => {
-                        if (subscales[subscale].includes(i)) {
-                            subscaleScores[subscale] += responses[i];
-                        }
-                    });
-                }
-            }
-
-            return { totalScore, subscaleScores };
-        }
-
-        function getInterpretation(totalScore) {
-            // Puntos de corte basados en la literatura (T-score 61 = raw score 76)
-            if (totalScore >= 76) {
-                return {
-                    level: "Severo",
-                    description: "Síntomas depresivos clínicamente significativos. Se recomienda evaluación y tratamiento inmediato por profesional de salud mental.",
-                    class: "alert-high"
-                };
-            } else if (totalScore >= 61) {
-                return {
-                    level: "Moderado",
-                    description: "Síntomas depresivos moderados que requieren atención profesional. Se recomienda evaluación clínica.",
-                    class: "alert-medium"
-                };
-            } else if (totalScore >= 46) {
-                return {
-                    level: "Leve",
-                    description: "Síntomas depresivos leves. Se sugiere monitoreo y consideración de apoyo profesional.",
-                    class: "alert-medium"
-                };
-            } else {
-                return {
-                    level: "Normal",
-                    description: "Puntuación dentro del rango normal. No se observan síntomas depresivos significativos.",
-                    class: "alert-low"
-                };
-            }
-        }
-
-        function getSubscaleInterpretation(score, maxScore) {
-            const percentage = (score / maxScore) * 100;
-            if (percentage >= 75) return "Elevado";
-            if (percentage >= 50) return "Moderado";
-            if (percentage >= 25) return "Leve";
-            return "Bajo";
-        }
-
-        function checkCriticalItems() {
-            let alerts = [];
-            
-            criticalItems.forEach(item => {
-                if (responses[item] >= 3) { // 66% del máximo (4 puntos)
-                    let itemText = "";
-                    switch(item) {
-                        case 5: itemText = "Ideación de falta de valor de la vida"; break;
-                        case 9: itemText = "Pensamientos de autolesión"; break;
-                        case 12: itemText = "Sentimientos de rechazo"; break;
-                        case 14: itemText = "Impulsos de escape"; break;
-                        case 20: itemText = "Baja autoestima comparativa"; break;
-                        case 21: itemText = "Autoculpabilización excesiva"; break;
-                    }
-                    alerts.push({
-                        item: item,
-                        text: itemText,
-                        score: responses[item],
-                        severity: responses[item] === 4 ? "alta" : "media"
-                    });
-                }
-            });
-
-            return alerts;
-        }
-
-        function showResults() {
-            const { totalScore, subscaleScores } = calculateScore();
-            const interpretation = getInterpretation(totalScore);
-            const alerts = checkCriticalItems();
-
-            // Color map for severity levels
-            const colorMap = { 'Normal': '#48bb78', 'Leve': '#f6ad55', 'Moderado': '#ed8936', 'Severo': '#f56565' };
-            const severityColor = colorMap[interpretation.level] || '#29A98C';
-
-            // Mostrar puntuación total con color
-            document.getElementById('total-score').textContent = totalScore;
-            document.getElementById('severity-badge').textContent = interpretation.level;
-            const scoreBox = document.getElementById('score-display-box');
-            if (scoreBox) scoreBox.style.background = `linear-gradient(135deg, ${severityColor}, #112F33)`;
-            document.getElementById('total-interpretation').innerHTML = `
-                <div class="${interpretation.class}">
-                    <strong>Nivel: ${interpretation.level}</strong><br>
-                    ${interpretation.description}
-                </div>
-            `;
-
-            // Mostrar subescalas
-            const maxScores = {
-                dysphoric: 7 * 4, // 7 ítems × 4 puntos máximo
-                anhedonia: 4 * 4, // 4 ítems × 4 puntos máximo
-                negative: 8 * 4, // 8 ítems × 4 puntos máximo
-                somatic: 11 * 4  // 11 ítems × 4 puntos máximo
-            };
-
-            document.getElementById('dysphoric-score').textContent = `${subscaleScores.dysphoric}/${maxScores.dysphoric}`;
-            document.getElementById('dysphoric-interpretation').textContent = getSubscaleInterpretation(subscaleScores.dysphoric, maxScores.dysphoric);
-
-            document.getElementById('anhedonia-score').textContent = `${subscaleScores.anhedonia}/${maxScores.anhedonia}`;
-            document.getElementById('anhedonia-interpretation').textContent = getSubscaleInterpretation(subscaleScores.anhedonia, maxScores.anhedonia);
-
-            document.getElementById('negative-score').textContent = `${subscaleScores.negative}/${maxScores.negative}`;
-            document.getElementById('negative-interpretation').textContent = getSubscaleInterpretation(subscaleScores.negative, maxScores.negative);
-
-            document.getElementById('somatic-score').textContent = `${subscaleScores.somatic}/${maxScores.somatic}`;
-            document.getElementById('somatic-interpretation').textContent = getSubscaleInterpretation(subscaleScores.somatic, maxScores.somatic);
-
-            // Mostrar alertas
-            const alertsContainer = document.getElementById('alerts-container');
-            if (alerts.length > 0) {
-                let alertsHTML = "";
-                alerts.forEach(alert => {
-                    const alertClass = alert.severity === "alta" ? "alert-high" : "alert-medium";
-                    alertsHTML += `
-                        <div class="${alertClass}">
-                            <strong>ATENCIÓN:</strong> Ítem ${alert.item} - ${alert.text} (Puntuación: ${alert.score}/4)
-                        </div>
-                    `;
-                });
-                alertsContainer.innerHTML = alertsHTML;
-            } else {
-                alertsContainer.innerHTML = '<div class="alert-low">No se identificaron ítems críticos elevados.</div>';
-            }
-
-            // Recomendaciones clínicas
-            let recommendations = "";
-            if (totalScore >= 76) {
-                recommendations = `
-                    <strong>Recomendaciones Urgentes:</strong><br>
-                    • Evaluación psiquiátrica inmediata<br>
-                    • Evaluación de riesgo suicida<br>
-                    • Consideración de tratamiento farmacológico<br>
-                    • Psicoterapia especializada<br>
-                    • Seguimiento intensivo<br>
-                    • Involucrar sistema de apoyo familiar
-                `;
-            } else if (totalScore >= 61) {
-                recommendations = `
-                    <strong>Recomendaciones Clínicas:</strong><br>
-                    • Evaluación clínica completa<br>
-                    • Psicoterapia cognitivo-conductual<br>
-                    • Monitoreo regular de síntomas<br>
-                    • Evaluación de factores de riesgo<br>
-                    • Apoyo familiar y psicoeducación
-                `;
-            } else if (totalScore >= 46) {
-                recommendations = `
-                    <strong>Recomendaciones Preventivas:</strong><br>
-                    • Monitoreo periódico<br>
-                    • Técnicas de manejo del estrés<br>
-                    • Actividades de autocuidado<br>
-                    • Fortalecimiento de red de apoyo<br>
-                    • Reevaluación en 4-6 semanas
-                `;
-            } else {
-                recommendations = `
-                    <strong>Recomendaciones Generales:</strong><br>
-                    • Mantener hábitos saludables<br>
-                    • Continuar actividades sociales<br>
-                    • Técnicas de prevención de depresión<br>
-                    • Reevaluación si aparecen síntomas
-                `;
-            }
-
-            document.getElementById('clinical-recommendations').innerHTML = recommendations;
-
-            // Mostrar card de resultados
-            currentCard = totalQuestions + 2;
-            showCard('results');
-        }
-
-        function generatePDF() {
-            const results = document.getElementById('card-results');
-            const { totalScore, subscaleScores } = calculateScore();
-            const interpretation = getInterpretation(totalScore);
-            const alerts = checkCriticalItems();
-            const fecha = new Date().toLocaleDateString('es-ES');
-            const hora = new Date().toLocaleTimeString('es-ES');
-            
-            // Crear ventana de impresión
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Resultados RADS-2 - ${fecha}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; color: #333; line-height: 1.6; }
-                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #29A98C; padding-bottom: 20px; }
-                        .header h1 { color: #29A98C; margin-bottom: 10px; font-size: 28px; }
-                        .header p { color: #666; margin: 5px 0; }
-                        .score-display { background: #29A98C; color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }
-                        .score-display h2 { font-size: 2.5em; margin: 0; }
-                        .score-display p { margin: 10px 0 0 0; font-size: 1.2em; }
-                        .result-section { margin: 20px 0; padding: 15px; border-left: 4px solid #29A98C; background: #f8f9fa; }
-                        .result-section h3 { color: #112F33; margin-bottom: 15px; }
-                        .subscale-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-                        .subscale-score { background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #29A98C; }
-                        .subscale-score h4 { color: #112F33; margin-bottom: 10px; font-size: 14px; }
-                        .subscale-score .score { font-size: 18px; font-weight: bold; color: #29A98C; }
-                        .subscale-score .level { font-size: 12px; color: #666; margin-top: 5px; }
-                        .alert-section { background: #ffe5e5; border: 1px solid #f56565; padding: 15px; margin: 15px 0; border-radius: 8px; }
-                        .alert-section h4 { color: #742a2a; margin-bottom: 10px; }
-                        .alert-item { background: #f56565; color: white; padding: 10px; margin: 5px 0; border-radius: 5px; }
-                        .level-indicator { padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.9em; color: white; }
-                        .level-normal { background: #48bb78; }
-                        .level-leve { background: #f6ad55; }
-                        .level-moderado { background: #ed8936; }
-                        .level-severo { background: #f56565; }
-                        .recommendations { background: #FFFFFF; padding: 15px; border-radius: 8px; margin: 20px 0; }
-                        .recommendations h4 { color: #112F33; margin-bottom: 10px; }
-                        .recommendations ul { margin: 10px 0; padding-left: 20px; }
-                        .recommendations li { margin: 5px 0; }
-                        .technical-info { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #29A98C; }
-                        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
-                        @media print {
-                            body { margin: 0; }
-                            .header { page-break-after: avoid; }
-                            .subscale-scores { grid-template-columns: 1fr; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>RADS-2</h1>
-                        <p><strong>Escala de Depresión para Adolescentes - Segunda Edición</strong></p>
-                        <p>Fecha: ${fecha} - Hora: ${hora}</p>
-                    </div>
-
-                    <div class="score-display">
-                        <h2>${totalScore}/120</h2>
-                        <p>Puntuación Total de Depresión</p>
-                    </div>
-
-                    <div class="result-section">
-                        <h3>Interpretación Clínica</h3>
-                        <p><strong>Nivel de Severidad:</strong> <span class="level-indicator level-${interpretation.level.toLowerCase()}">${interpretation.level}</span></p>
-                        <p><strong>Descripción:</strong> ${interpretation.description.replace(/<[^>]*>/g, '')}</p>
-                    </div>
-
-                    <div class="result-section">
-                        <h3>Puntuaciones por Subescalas</h3>
-                        <div class="subscale-scores">
-                            <div class="subscale-score">
-                                <h4>Estado de Ánimo Disfórico</h4>
-                                <div class="score">${subscaleScores.dysphoric}/28</div>
-                                <div class="level">${getSubscaleInterpretation(subscaleScores.dysphoric, 28)}</div>
-                            </div>
-                            <div class="subscale-score">
-                                <h4>Anhedonia/Afecto Negativo</h4>
-                                <div class="score">${subscaleScores.anhedonia}/16</div>
-                                <div class="level">${getSubscaleInterpretation(subscaleScores.anhedonia, 16)}</div>
-                            </div>
-                            <div class="subscale-score">
-                                <h4>Autoevaluación Negativa</h4>
-                                <div class="score">${subscaleScores.negative}/32</div>
-                                <div class="level">${getSubscaleInterpretation(subscaleScores.negative, 32)}</div>
-                            </div>
-                            <div class="subscale-score">
-                                <h4>Quejas Somáticas</h4>
-                                <div class="score">${subscaleScores.somatic}/44</div>
-                                <div class="level">${getSubscaleInterpretation(subscaleScores.somatic, 44)}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    ${alerts.length > 0 ? `
-                    <div class="alert-section">
-                        <h4>⚠️ Ítems Críticos Identificados</h4>
-                        ${alerts.map(alert => `
-                            <div class="alert-item">
-                                <strong>Ítem ${alert.item}:</strong> ${alert.text} (Puntuación: ${alert.score}/4)
-                            </div>
-                        `).join('')}
-                    </div>
-                    ` : '<div class="alert-section"><h4>✅ No se identificaron ítems críticos elevados</h4></div>'}
-
-                    <div class="recommendations">
-                        <h4>Recomendaciones Clínicas</h4>
-                        ${document.getElementById('clinical-recommendations').innerHTML}
-                    </div>
-
-                    <div class="technical-info">
-                        <h4>Información Técnica</h4>
-                        <ul>
-                            <li><strong>Instrumento:</strong> Reynolds Adolescent Depression Scale - Segunda Edición (RADS-2)</li>
-                            <li><strong>Autor:</strong> William M. Reynolds, PhD</li>
-                            <li><strong>Puntos de corte:</strong> Normal (&lt;46), Leve (46-60), Moderado (61-75), Severo (≥76)</li>
-                            <li><strong>Punto de corte clínico:</strong> T-score ≥61 (Raw score ≥76)</li>
-                            <li><strong>Sensibilidad:</strong> 91% | <strong>Especificidad:</strong> 84%</li>
-                            <li><strong>Población objetivo:</strong> Adolescentes de 11 a 20 años</li>
-                        </ul>
-                    </div>
-
-                    <div class="footer">
-                        <p><strong>IMPORTANTE:</strong> Esta evaluación debe ser interpretada por un profesional de la salud mental calificado.</p>
-                        <p>Los resultados deben considerarse en el contexto de una evaluación clínica completa.</p>
-                        <p>Generado automáticamente por el sistema RADS-2 - ${fecha} ${hora}</p>
-                    </div>
-                    </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
-            printWindow.focus();
-            
-            // Esperar a que cargue y luego imprimir
-            setTimeout(() => {
-                printWindow.print();
-            }, 500);
-        }
-
-        function captureScreen() {
-            // Simular captura de pantalla
-            const resultsCard = document.getElementById('card-results');
-            const { totalScore, subscaleScores } = calculateScore();
-            const interpretation = getInterpretation(totalScore);
-            const fecha = new Date().toLocaleDateString('es-ES');
-            const hora = new Date().toLocaleTimeString('es-ES');
-            
-            // Método alternativo: crear canvas temporal
-            try {
-                // Crear un elemento temporal para mostrar
-                const tempDiv = document.createElement('div');
-                tempDiv.style.cssText = `
-                    position: fixed; top: -9999px; left: -9999px; 
-                    background: white; padding: 20px; 
-                    font-family: Arial, sans-serif; width: 800px;
-                    border: 1px solid #ddd; border-radius: 10px;
-                `;
-                
-                tempDiv.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #29A98C; padding-bottom: 20px;">
-                        <h1 style="color: #29A98C; margin-bottom: 10px;">RADS-2 - Resultados</h1>
-                        <p style="color: #666;">Escala de Depresión para Adolescentes</p>
-                        <p style="color: #666;">Fecha: ${fecha} - Hora: ${hora}</p>
-                    </div>
-                    
-                    <div style="background: #29A98C; color: white; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
-                        <h2 style="font-size: 2.5em; margin: 0;">${totalScore}/120</h2>
-                        <p style="margin: 10px 0 0 0;">Puntuación Total</p>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #29A98C; margin: 20px 0;">
-                        <h3 style="color: #112F33;">Interpretación: ${interpretation.level.toUpperCase()}</h3>
-                        <p>${interpretation.description.replace(/<[^>]*>/g, '')}</p>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <h4 style="color: #112F33; margin-bottom: 10px;">Estado de Ánimo Disfórico</h4>
-                            <div style="font-size: 18px; font-weight: bold; color: #29A98C;">${subscaleScores.dysphoric}/28</div>
-                        </div>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <h4 style="color: #112F33; margin-bottom: 10px;">Anhedonia/Afecto Negativo</h4>
-                            <div style="font-size: 18px; font-weight: bold; color: #29A98C;">${subscaleScores.anhedonia}/16</div>
-                        </div>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <h4 style="color: #112F33; margin-bottom: 10px;">Autoevaluación Negativa</h4>
-                            <div style="font-size: 18px; font-weight: bold; color: #29A98C;">${subscaleScores.negative}/32</div>
-                        </div>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <h4 style="color: #112F33; margin-bottom: 10px;">Quejas Somáticas</h4>
-                            <div style="font-size: 18px; font-weight: bold; color: #29A98C;">${subscaleScores.somatic}/44</div>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
-                        <p><strong>RADS-2</strong> - Reynolds Adolescent Depression Scale, 2nd Edition</p>
-                        <p>Evaluación debe ser interpretada por profesional calificado</p>
-                    </div>
-                `;
-                
-                document.body.appendChild(tempDiv);
-                
-                // En un entorno real, aquí usaríamos html2canvas
-                alert('📸 Captura de resultados lista.\n\nEn un entorno de producción, esto generaría una imagen PNG/JPG de alta calidad con todos los resultados de la evaluación RADS-2.\n\nLa imagen incluiría:\n• Puntuación total y nivel de severidad\n• Puntuaciones por subescalas\n• Interpretación clínica\n• Fecha y hora de evaluación');
-                
-                document.body.removeChild(tempDiv);
-                
-            } catch (error) {
-                alert('Error al capturar imagen. Funcionalidad disponible en entorno de producción con html2canvas.');
-            }
-        }
-
-        function newEvaluation() {
-            if (confirm('¿Está seguro que desea iniciar una nueva evaluación? Se perderán los datos actuales.')) {
-                currentCard = 0;
-                responses = {};
-                showCard(0);
-                
-                // Limpiar selecciones
-                document.querySelectorAll('.option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-            }
-        }
-
-        // Inicialización
-        updateProgress();
-        updateBackButton();
-    </script>
 <script>
-// Fix null refs for removed back button elements + inject navigation
-(function() {
-    ['back-btn', 'back-button', 'backButton', 'back_btn'].forEach(function(id) {
-        if (!document.getElementById(id)) {
-            var d = document.createElement('div');
-            d.id = id;
-            d.style.cssText = 'display:none;width:0;height:0;overflow:hidden;position:absolute;';
-            document.body.appendChild(d);
+const totalItems = 30;
+let currentCardId = 'card-0';
+let responses = {};
+
+const subscalesConfig = {
+    dysphoric: [1,3,7,13,16,21,27],
+    anhedonia: [8,17,24,26],
+    negative:  [5,6,9,12,14,18,20,30],
+    somatic:   [2,4,10,11,15,19,22,23,25,28,29]
+};
+const criticalItems = [5,9,12,14,20,21];
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    const key = (typeof id === 'number') ? 'card-' + id : id;
+    document.getElementById(key).classList.add('active');
+    currentCardId = key;
+    window.scrollTo(0, 0);
+    if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+}
+
+function restoreSelections(n) {
+    if (responses[n] === undefined) return;
+    const card = document.getElementById('card-' + n);
+    const storedScore = responses[n];
+    card.querySelectorAll('.option').forEach(btn => {
+        const btnScore = parseInt(btn.dataset.score);
+        btn.classList.toggle('selected', btnScore === storedScore);
+    });
+}
+
+function selectOption(qNum, value, btn) {
+    btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    responses[qNum] = value;
+    setTimeout(() => {
+        if (qNum < totalItems) showCard(qNum + 1);
+        else showCard('card-final');
+    }, 150);
+}
+
+function previousCard() {
+    const match = currentCardId.match(/card-(\d+)/);
+    if (!match) return;
+    const n = parseInt(match[1]);
+    if (n <= 1) showCard(0);
+    else showCard(n - 1);
+}
+
+function calculateScore() {
+    let total = 0;
+    const sub = { dysphoric: 0, anhedonia: 0, negative: 0, somatic: 0 };
+    for (let i = 1; i <= 30; i++) {
+        if (responses[i] !== undefined) {
+            total += responses[i];
+            Object.entries(subscalesConfig).forEach(([k, v]) => {
+                if (v.includes(i)) sub[k] += responses[i];
+            });
         }
+    }
+    return { total, sub };
+}
+
+function getLevel(score) {
+    if (score < 46) return { label: 'Normal', color: '#48bb78', bgColor: 'rgba(72,187,120,0.12)', description: 'Puntuación dentro del rango normal (30-45). No se observan síntomas depresivos significativos.' };
+    if (score < 61) return { label: 'Leve', color: '#f6ad55', bgColor: 'rgba(246,173,85,0.12)', description: 'Síntomas depresivos leves (46-60). Se sugiere monitoreo y consideración de apoyo profesional.' };
+    if (score < 76) return { label: 'Moderado', color: '#ed8936', bgColor: 'rgba(237,137,54,0.12)', description: 'Síntomas depresivos moderados (61-75). Requieren atención profesional. Se recomienda evaluación clínica.' };
+    return { label: 'Severo', color: '#f56565', bgColor: 'rgba(245,101,101,0.12)', description: 'Síntomas depresivos severos (≥76). Se recomienda evaluación y tratamiento inmediato por profesional de salud mental.' };
+}
+
+function getSubPercent(score, max) {
+    const pct = (score / max) * 100;
+    if (pct < 50) return { label: 'Bajo', color: '#48bb78' };
+    if (pct < 70) return { label: 'Moderado', color: '#f6ad55' };
+    return { label: 'Elevado', color: '#f56565' };
+}
+
+function showResults() {
+    const { total, sub } = calculateScore();
+    const lv = getLevel(total);
+
+    // Main score
+    const scoreNum = document.getElementById('score-num');
+    scoreNum.textContent = total;
+    scoreNum.style.color = lv.color;
+
+    document.getElementById('score-area').style.borderColor = lv.color;
+    document.getElementById('score-area').style.background = lv.bgColor;
+
+    const badgeWrap = document.getElementById('score-badge-wrap');
+    badgeWrap.innerHTML = `<span class="score-badge" style="background:${lv.bgColor};color:${lv.color};border:1px solid ${lv.color};">${lv.label}</span>`;
+
+    // Subscales
+    const subMap = [
+        { id: 'sub-dysphoric', key: 'dysphoric', max: 28 },
+        { id: 'sub-anhedonia', key: 'anhedonia', max: 16 },
+        { id: 'sub-negative',  key: 'negative',  max: 32 },
+        { id: 'sub-somatic',   key: 'somatic',   max: 44 }
+    ];
+    subMap.forEach(s => {
+        const val = sub[s.key];
+        const interp = getSubPercent(val, s.max);
+        const numEl = document.getElementById(s.id);
+        numEl.textContent = val;
+        numEl.style.color = interp.color;
+        document.getElementById(s.id + '-interp').textContent = interp.label;
     });
-    var backFn = typeof previousCard !== 'undefined' ? 'previousCard()' :
-                 typeof goBack !== 'undefined' ? 'goBack()' : 'history.back()';
-    document.querySelectorAll('.card').forEach(function(card) {
-        var id = card.id || '';
-        if (id.includes('welcome') || id.includes('final') || id.includes('results') || id === 'card-0') return;
-        if (card.querySelector('.navigation')) return;
-        var nav = document.createElement('div');
-        nav.className = 'navigation';
-        nav.innerHTML = '<button class="btn-back" onclick="' + backFn + '">← Regresar</button>';
-        card.appendChild(nav);
-    });
-})();
+
+    // Interpretation
+    document.getElementById('interp-box').textContent = lv.description;
+
+    // Critical items alert
+    const alertsBox = document.getElementById('alerts-box');
+    const criticalLabels = {
+        5:  'Ítem 5: "No vale la pena vivir"',
+        9:  'Ítem 9: "Quiero hacerme daño" — ALERTA SUICIDA',
+        12: 'Ítem 12: "Nadie me quiere"',
+        14: 'Ítem 14: "Ganas de huir"',
+        20: 'Ítem 20: "No soy tan bueno/a como otros"',
+        21: 'Ítem 21: "Todo es mi culpa"'
+    };
+    const flagged = criticalItems.filter(i => responses[i] !== undefined && responses[i] >= 3);
+    if (flagged.length > 0) {
+        let html = '<strong>Atención: ítems críticos con puntuación elevada</strong><ul style="margin-top:8px;padding-left:18px;">';
+        flagged.forEach(i => {
+            html += `<li style="margin-bottom:4px;">${criticalLabels[i]} (puntuación: ${responses[i]})</li>`;
+        });
+        html += '</ul>';
+        if (responses[9] !== undefined && responses[9] >= 3) {
+            html += '<div style="margin-top:10px;font-weight:700;color:#c53030;">Se requiere evaluación inmediata del riesgo suicida.</div>';
+        }
+        alertsBox.innerHTML = html;
+        alertsBox.style.display = 'block';
+    } else {
+        alertsBox.style.display = 'none';
+    }
+
+    showCard('card-results');
+}
 </script>
 </body>
 </html>
