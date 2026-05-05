@@ -286,3 +286,10 @@ function getLevel(score) {
 | TDAH (ADHD-RS) | `tdah-assessment.html` | ✅ Referencia |
 | BHS (Desesperanza de Beck) | `bhs-assessment.html` | ✅ Estandarizado |
 | GADI (Ansiedad Generalizada) | `gadi-assessment.html` | ✅ Estandarizado |
+| BDI-21 (Inventario de Depresión de Beck) | `beck-21-assessment.html` | ✅ Estandarizado |
+| BDI-13 (Versión corta de Beck) | `bdi-13-assessment.html` | ✅ Estandarizado |
+| RADS-2 (Escala de Depresión para Adolescentes) | `rads2_scale.html` | ✅ Estandarizado |
+| PHQ-9 (Patient Health Questionnaire) | `phq9-scale.html` | ✅ Estandarizado |
+| CDI (Cuestionario de Depresión Infantil) | `cdi_covex_escala.html` | ✅ Estandarizado |
+| EsADFUN (Síntomas Cognitivos en Depresión) | `esadfun_scale.html` | ✅ Estandarizado |
+| GDS (Escala de Depresión Geriátrica) | `gds_interactive_scale.html` | ✅ Estandarizado |
