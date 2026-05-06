@@ -1,1540 +1,1332 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANSS - Escala de Síntomas Positivos y Negativos</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PANSS - Escala de Síntomas Positivos y Negativos</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+    .card { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+    .card.active { display:block; }
+    .card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+    .scale-name { font-size:15px; font-weight:600; opacity:.9; }
+    .q-label { font-size:13px; opacity:.8; }
+    .card-body { padding:28px 32px 24px; }
+    .question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:20px; }
+    .q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+    .progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:20px; }
+    .progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; }
+    .bottom-nav { display:flex; justify-content:space-between; align-items:center; margin-top:20px; }
+    .btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+    .btn-back:hover { border-color:#29A98C; color:#29A98C; }
+    .item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #29A98C 0%, #112F33 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #112F33;
-        }
+    /* Severity bar */
+    .sev-bar { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:16px; }
+    .sev-btn { border:2px solid #e2e8f0; border-radius:10px; padding:10px 4px; background:#fff; cursor:pointer; font-family:inherit; transition:all .2s; text-align:center; font-size:12px; color:#4a5568; line-height:1.3; }
+    .sev-btn span { display:block; font-size:18px; font-weight:700; color:#112F33; margin-bottom:2px; }
+    .sev-btn:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+    .sev-btn.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; color:#112F33; }
+    .sev-btn.selected span { color:#29A98C; }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
+    /* Anchor display */
+    .anchor-display { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 18px; min-height:60px; font-size:13px; color:#2d3748; line-height:1.7; margin-bottom:16px; }
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-        }
+    /* Welcome */
+    .welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+    .instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:20px; color:#112F33; font-size:14px; line-height:1.75; }
+    .instructions-box ul { margin:8px 0 0 18px; }
+    .btn-start { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:12px 32px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; display:block; margin:0 auto; }
 
-        .card.active {
-            display: block;
-        }
+    /* Subscale section header */
+    .subscale-divider { text-align:center; margin-bottom:16px; }
+    .subscale-tag { display:inline-block; background:rgba(41,169,140,0.12); border:1.5px solid #29A98C; color:#29A98C; border-radius:20px; padding:4px 14px; font-size:12px; font-weight:700; letter-spacing:.04em; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* Results */
+    .score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+    .score-num { font-size:72px; font-weight:900; line-height:1; }
+    .score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+    .score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+    .subscales-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+    .subscale-box { border:1px solid #e2e8f0; border-radius:10px; padding:14px; text-align:center; }
+    .subscale-title { font-size:12px; color:#718096; font-weight:600; margin-bottom:6px; }
+    .subscale-num { font-size:32px; font-weight:700; }
+    .subscale-max { font-size:11px; color:#a0aec0; margin-top:2px; }
+    .section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+    .interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+    .action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+    .btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
 
-        .card-header {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .instructions {
-            line-height: 1.6;
-            color: #112F33;
-            margin-bottom: 20px;
-        }
-
-        .instructions h3 {
-            color: #29A98C;
-            margin: 15px 0 10px 0;
-        }
-
-        .instructions ul {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        .question-number {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin: 0 auto 20px auto;
-        }
-
-        .question-text {
-            font-size: 18px;
-            font-weight: 600;
-            color: #112F33;
-            margin-bottom: 20px;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        .options {
-            display: grid;
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .option {
-            background: #FFF8EE;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-        }
-
-        .option:hover {
-            border-color: #29A98C;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.2);
-        }
-
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border-color: #29A98C;
-        }
-
-        .option-number {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #29A98C, #112F33);
-            transition: width 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 24px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            display: none;
-        }
-
-        .back-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .back-button.show {
-            display: block;
-        }
-
-        .results-section {
-            margin-top: 30px;
-        }
-
-        .score-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            border-left: 4px solid #29A98C;
-        }
-
-        .score-header {
-            font-weight: bold;
-            font-size: 18px;
-            color: #29A98C;
-            margin-bottom: 10px;
-        }
-
-        .score-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #112F33;
-        }
-
-        .interpretation {
-            background: #e8f5f3;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #29A98C;
-        }
-
-        .alert {
-            background: #ffeaa7;
-            border: 1px solid #fdcb6e;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            color: #2d3436;
-        }
-
-        .alert.high {
-            background: #ffcccc;
-            border-color: #ff6b6b;
-        }
-
-        .export-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-
-        .export-button {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .export-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(41, 169, 140, 0.3);
-        }
-
-        .severity-indicator {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-
-        .severity-normal { background: #48bb78; color: white; }
-        .severity-mild { background: #f6ad55; color: white; }
-        .severity-moderate { background: #ed8936; color: white; }
-        .severity-severe { background: #f56565; color: white; }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .card {
-                padding: 20px;
-                margin-bottom: 10px;
-            }
-            
-            .export-buttons {
-                flex-direction: column;
-            }
-            
-            .export-button {
-                min-width: auto;
-            }
-        }
-    </style>
+    @media(max-width:600px){
+      body{padding:12px 10px;}
+      .card-body{padding:20px 18px 18px;}
+      .question-text{font-size:18px;}
+      .sev-bar{grid-template-columns:repeat(4,1fr);}
+      .sev-btn span{font-size:14px;}
+      .subscales-grid{grid-template-columns:1fr;}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Card 0: Instrucciones -->
-        <div class="card active" id="card-0">
-            <div class="card-header">
-                Escala PANSS - Instrucciones para el Profesional
-            </div>
-            <div class="instructions">
-                <h3>Información General</h3>
-                <p>La Escala de Síntomas Positivos y Negativos (PANSS) es un instrumento de 30 ítems diseñado para evaluar la severidad de síntomas en esquizofrenia y otros trastornos psicóticos.</p>
-                
-                <h3>Aplicación de la Escala</h3>
-                <ul>
-                    <li><strong>Administración:</strong> Heteroaplicada por profesional capacitado</li>
-                    <li><strong>Tiempo:</strong> 30-40 minutos aproximadamente</li>
-                    <li><strong>Período de evaluación:</strong> Síntomas de la última semana</li>
-                    <li><strong>Técnica:</strong> Entrevista semiestructurada</li>
-                </ul>
 
-                <h3>Estructura de la Escala</h3>
-                <ul>
-                    <li><strong>Síntomas Positivos (P):</strong> 7 ítems (P1-P7)</li>
-                    <li><strong>Síntomas Negativos (N):</strong> 7 ítems (N1-N7)</li>
-                    <li><strong>Psicopatología General (G):</strong> 16 ítems (G1-G16)</li>
-                </ul>
-
-                <h3>Puntuación</h3>
-                <p>Cada ítem se califica en una escala de 7 puntos:</p>
-                <ul>
-                    <li>1 = Ausente</li>
-                    <li>2 = Mínimo</li>
-                    <li>3 = Leve</li>
-                    <li>4 = Moderado</li>
-                    <li>5 = Moderado-severo</li>
-                    <li>6 = Severo</li>
-                    <li>7 = Extremo</li>
-                </ul>
-
-                <h3>Consideraciones Importantes</h3>
-                <ul>
-                    <li>Base su evaluación en la entrevista clínica y observación del comportamiento</li>
-                    <li>Considere tanto la frecuencia como la intensidad de los síntomas</li>
-                    <li>Los resultados no son visibles para el paciente</li>
-                    <li>Una reducción del 20% en el puntaje total indica respuesta al tratamiento</li>
-                </ul>
-            </div>
-            <button onclick="nextCard()" class="export-button" style="width: 100%;">Comenzar Evaluación</button>
-        </div>
-
-        <!-- Ítems de Síntomas Positivos -->
-        <div class="card" id="card-1">
-            <div class="question-number">P1</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Delirios</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(1, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de creencias delirantes
-                </div>
-                <div class="option" onclick="selectOption(1, 2)">
-                    <span class="option-number">2</span>Mínimo - Dudosa patología; puede estar en el rango superior de lo normal
-                </div>
-                <div class="option" onclick="selectOption(1, 3)">
-                    <span class="option-number">3</span>Leve - Presencia de una o dos creencias delirantes vagas o poco sistematizadas
-                </div>
-                <div class="option" onclick="selectOption(1, 4)">
-                    <span class="option-number">4</span>Moderado - Presencia de un sistema delirante bien organizado pero limitado
-                </div>
-                <div class="option" onclick="selectOption(1, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Presencia de múltiples delirios bien organizados
-                </div>
-                <div class="option" onclick="selectOption(1, 6)">
-                    <span class="option-number">6</span>Severo - Presencia de sistema delirante estable y elaborado con contenido bizarro
-                </div>
-                <div class="option" onclick="selectOption(1, 7)">
-                    <span class="option-number">7</span>Extremo - Pensamiento dominado por delirios incapacitantes y/o peligrosos
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-2">
-            <div class="question-number">P2</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Desorganización Conceptual</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(2, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de desorganización formal del pensamiento
-                </div>
-                <div class="option" onclick="selectOption(2, 2)">
-                    <span class="option-number">2</span>Mínimo - Pensamiento un tanto vago o irrelevante
-                </div>
-                <div class="option" onclick="selectOption(2, 3)">
-                    <span class="option-number">3</span>Leve - Ocasionalmente pierde el hilo o las ideas no están bien relacionadas
-                </div>
-                <div class="option" onclick="selectOption(2, 4)">
-                    <span class="option-number">4</span>Moderado - Pensamiento frecuentemente vago, tangencial o circumstancial
-                </div>
-                <div class="option" onclick="selectOption(2, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Pensamiento generalmente difícil de seguir
-                </div>
-                <div class="option" onclick="selectOption(2, 6)">
-                    <span class="option-number">6</span>Severo - No hay conexión lógica entre ideas; habla incoherente
-                </div>
-                <div class="option" onclick="selectOption(2, 7)">
-                    <span class="option-number">7</span>Extremo - Incoherencia severa o mutismo
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-3">
-            <div class="question-number">P3</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Comportamiento Alucinatorio</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(3, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de alucinaciones
-                </div>
-                <div class="option" onclick="selectOption(3, 2)">
-                    <span class="option-number">2</span>Mínimo - Dudosa patología; puede estar en el rango superior de lo normal
-                </div>
-                <div class="option" onclick="selectOption(3, 3)">
-                    <span class="option-number">3</span>Leve - Una o dos alucinaciones claramente formadas de cualquier tipo
-                </div>
-                <div class="option" onclick="selectOption(3, 4)">
-                    <span class="option-number">4</span>Moderado - Alucinaciones ocasionales o algunas persistentes
-                </div>
-                <div class="option" onclick="selectOption(3, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Alucinaciones persistentes a lo largo del día
-                </div>
-                <div class="option" onclick="selectOption(3, 6)">
-                    <span class="option-number">6</span>Severo - Alucinaciones presentes casi continuamente
-                </div>
-                <div class="option" onclick="selectOption(3, 7)">
-                    <span class="option-number">7</span>Extremo - Totalmente preocupado por alucinaciones incapacitantes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-4">
-            <div class="question-number">P4</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Excitación</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(4, 1)">
-                    <span class="option-number">1</span>Ausente - Comportamiento natural; actividad apropiada
-                </div>
-                <div class="option" onclick="selectOption(4, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasionalmente elevado, animado o impaciente
-                </div>
-                <div class="option" onclick="selectOption(4, 3)">
-                    <span class="option-number">3</span>Leve - Claramente elevado, habla rápida, ocasionalmente ruidoso
-                </div>
-                <div class="option" onclick="selectOption(4, 4)">
-                    <span class="option-number">4</span>Moderado - Excitación significativa; habla rápida e hiperactividad ocasional
-                </div>
-                <div class="option" onclick="selectOption(4, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente excitado; habla acelerada, hiperactividad
-                </div>
-                <div class="option" onclick="selectOption(4, 6)">
-                    <span class="option-number">6</span>Severo - Significativamente excitado e hiperactivo; puede ser agresivo
-                </div>
-                <div class="option" onclick="selectOption(4, 7)">
-                    <span class="option-number">7</span>Extremo - Excitación extrema; habla acelerada incoherente o hiperactividad
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-5">
-            <div class="question-number">P5</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Grandiosidad</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(5, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de autoestima exagerada
-                </div>
-                <div class="option" onclick="selectOption(5, 2)">
-                    <span class="option-number">2</span>Mínimo - Autoestima algo elevada o jactanciosa
-                </div>
-                <div class="option" onclick="selectOption(5, 3)">
-                    <span class="option-number">3</span>Leve - Exagerada autoestima o reclamos sin garantía
-                </div>
-                <div class="option" onclick="selectOption(5, 4)">
-                    <span class="option-number">4</span>Moderado - Marcada grandiosidad con ideas grandiosas superficiales
-                </div>
-                <div class="option" onclick="selectOption(5, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Grandiosidad severa con delirios francos de grandeza
-                </div>
-                <div class="option" onclick="selectOption(5, 6)">
-                    <span class="option-number">6</span>Severo - Pensamiento dominado por delirios grandiosos organizados
-                </div>
-                <div class="option" onclick="selectOption(5, 7)">
-                    <span class="option-number">7</span>Extremo - Grandiosidad extrema con delirios incapacitantes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-6">
-            <div class="question-number">P6</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Suspicacia/Persecución</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(6, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de desconfianza, suspicacia o ideas persecutorias
-                </div>
-                <div class="option" onclick="selectOption(6, 2)">
-                    <span class="option-number">2</span>Mínimo - Vaga desconfianza o dudas sobre las motivaciones de otros
-                </div>
-                <div class="option" onclick="selectOption(6, 3)">
-                    <span class="option-number">3</span>Leve - Distintivamente suspicaz; doble sentido en comentarios neutrales
-                </div>
-                <div class="option" onclick="selectOption(6, 4)">
-                    <span class="option-number">4</span>Moderado - Marcadamente suspicaz; ideas de referencia persistentes
-                </div>
-                <div class="option" onclick="selectOption(6, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadas ideas de persecución sin delirios claros
-                </div>
-                <div class="option" onclick="selectOption(6, 6)">
-                    <span class="option-number">6</span>Severo - Delirios persecutorios claramente formados pero limitados
-                </div>
-                <div class="option" onclick="selectOption(6, 7)">
-                    <span class="option-number">7</span>Extremo - Delirios persecutorios severos dominan la presentación
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-7">
-            <div class="question-number">P7</div>
-            <div class="card-header">Síntomas Positivos</div>
-            <div class="question-text">Hostilidad</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(7, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de cólera, irritabilidad, resentimiento u hostilidad
-                </div>
-                <div class="option" onclick="selectOption(7, 2)">
-                    <span class="option-number">2</span>Mínimo - Indirecta o controlada irritabilidad
-                </div>
-                <div class="option" onclick="selectOption(7, 3)">
-                    <span class="option-number">3</span>Leve - Ocasional irritabilidad y resentimiento
-                </div>
-                <div class="option" onclick="selectOption(7, 4)">
-                    <span class="option-number">4</span>Moderado - Significativa irritabilidad y actitud francamente hostil
-                </div>
-                <div class="option" onclick="selectOption(7, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente hostil; frecuente irritabilidad y cólera
-                </div>
-                <div class="option" onclick="selectOption(7, 6)">
-                    <span class="option-number">6</span>Severo - Intensa hostilidad; comportamiento amenazante o agresivo
-                </div>
-                <div class="option" onclick="selectOption(7, 7)">
-                    <span class="option-number">7</span>Extremo - Cólera extrema con hostilidad generalizada e incontrolable
-                </div>
-            </div>
-        </div>
-
-        <!-- Ítems de Síntomas Negativos -->
-        <div class="card" id="card-8">
-            <div class="question-number">N1</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Embotamiento Afectivo</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(8, 1)">
-                    <span class="option-number">1</span>Ausente - Rango emocional apropiado y modulado
-                </div>
-                <div class="option" onclick="selectOption(8, 2)">
-                    <span class="option-number">2</span>Mínimo - Expresión emocional ligeramente disminuida
-                </div>
-                <div class="option" onclick="selectOption(8, 3)">
-                    <span class="option-number">3</span>Leve - Rango emocional claramente reducido; expresión facial infrequente
-                </div>
-                <div class="option" onclick="selectOption(8, 4)">
-                    <span class="option-number">4</span>Moderado - Rango afectivo notablemente reducido
-                </div>
-                <div class="option" onclick="selectOption(8, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada reducción en expresión emocional
-                </div>
-                <div class="option" onclick="selectOption(8, 6)">
-                    <span class="option-number">6</span>Severo - Expresión emocional severamente reducida
-                </div>
-                <div class="option" onclick="selectOption(8, 7)">
-                    <span class="option-number">7</span>Extremo - Virtualmente sin expresión emocional
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-9">
-            <div class="question-number">N2</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Retraimiento Emocional</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(9, 1)">
-                    <span class="option-number">1</span>Ausente - Apropiada participación emocional
-                </div>
-                <div class="option" onclick="selectOption(9, 2)">
-                    <span class="option-number">2</span>Mínimo - Involucración emocional ligeramente reducida
-                </div>
-                <div class="option" onclick="selectOption(9, 3)">
-                    <span class="option-number">3</span>Leve - Ocasionalmente parece indiferente o distante
-                </div>
-                <div class="option" onclick="selectOption(9, 4)">
-                    <span class="option-number">4</span>Moderado - Marcada tendencia a mantenerse emocionalmente separado
-                </div>
-                <div class="option" onclick="selectOption(9, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Claramente distante y retraído emocionalmente
-                </div>
-                <div class="option" onclick="selectOption(9, 6)">
-                    <span class="option-number">6</span>Severo - Marcadamente retraído emocionalmente e inaccesible
-                </div>
-                <div class="option" onclick="selectOption(9, 7)">
-                    <span class="option-number">7</span>Extremo - Aparenta estar totalmente retraído emocionalmente
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-10">
-            <div class="question-number">N3</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Contacto Pobre</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(10, 1)">
-                    <span class="option-number">1</span>Ausente - Contacto interpersonal natural y apropiado
-                </div>
-                <div class="option" onclick="selectOption(10, 2)">
-                    <span class="option-number">2</span>Mínimo - Contacto interpersonal ligeramente reducido
-                </div>
-                <div class="option" onclick="selectOption(10, 3)">
-                    <span class="option-number">3</span>Leve - Moderada disminución en involucramiento o tono
-                </div>
-                <div class="option" onclick="selectOption(10, 4)">
-                    <span class="option-number">4</span>Moderado - Poco natural, forzado o tono superficial
-                </div>
-                <div class="option" onclick="selectOption(10, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Claramente inadecuado, constante falta de involucramiento
-                </div>
-                <div class="option" onclick="selectOption(10, 6)">
-                    <span class="option-number">6</span>Severo - Marcado déficit con mínimo contacto interpersonal
-                </div>
-                <div class="option" onclick="selectOption(10, 7)">
-                    <span class="option-number">7</span>Extremo - Extremo déficit, paciente evita, rechaza o elude contacto
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-11">
-            <div class="question-number">N4</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Retraimiento Social Pasivo/Apático</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(11, 1)">
-                    <span class="option-number">1</span>Ausente - Involucramiento social apropiado
-                </div>
-                <div class="option" onclick="selectOption(11, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional disminución en involucramiento social
-                </div>
-                <div class="option" onclick="selectOption(11, 3)">
-                    <span class="option-number">3</span>Leve - Presente pero mantiene algún interés en actividades sociales
-                </div>
-                <div class="option" onclick="selectOption(11, 4)">
-                    <span class="option-number">4</span>Moderado - Moderada disminución en interés y iniciativa social
-                </div>
-                <div class="option" onclick="selectOption(11, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada falta de involucramiento social
-                </div>
-                <div class="option" onclick="selectOption(11, 6)">
-                    <span class="option-number">6</span>Severo - Mínimo interés y pocas actividades sociales
-                </div>
-                <div class="option" onclick="selectOption(11, 7)">
-                    <span class="option-number">7</span>Extremo - Ausencia virtual de involucramiento social
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-12">
-            <div class="question-number">N5</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Dificultad en el Pensamiento Abstracto</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(12, 1)">
-                    <span class="option-number">1</span>Ausente - No hay dificultad en el pensamiento abstracto
-                </div>
-                <div class="option" onclick="selectOption(12, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional dificultad con abstracciones complejas
-                </div>
-                <div class="option" onclick="selectOption(12, 3)">
-                    <span class="option-number">3</span>Leve - Tendencia al pensamiento concreto; dificultad con conceptos
-                </div>
-                <div class="option" onclick="selectOption(12, 4)">
-                    <span class="option-number">4</span>Moderado - Considerablemente abstracto pensamiento concreto, limitado
-                </div>
-                <div class="option" onclick="selectOption(12, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcado pensamiento concreto; dificultad con abstracciones
-                </div>
-                <div class="option" onclick="selectOption(12, 6)">
-                    <span class="option-number">6</span>Severo - Pensamiento concretístico; sin conceptos abstractos
-                </div>
-                <div class="option" onclick="selectOption(12, 7)">
-                    <span class="option-number">7</span>Extremo - Pensamiento sólo concreto; comprensión limitada de palabras simples
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-13">
-            <div class="question-number">N6</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Ausencia de Espontaneidad y Fluidez en la Conversación</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(13, 1)">
-                    <span class="option-number">1</span>Ausente - Conversación natural y fluida
-                </div>
-                <div class="option" onclick="selectOption(13, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligera reducción en espontaneidad de la conversación
-                </div>
-                <div class="option" onclick="selectOption(13, 3)">
-                    <span class="option-number">3</span>Leve - Ocasional prompting necesario para mantener conversación
-                </div>
-                <div class="option" onclick="selectOption(13, 4)">
-                    <span class="option-number">4</span>Moderado - Marcada reducción en fluidez; frecuentes prompts necesarios
-                </div>
-                <div class="option" onclick="selectOption(13, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada falta de espontaneidad; respuestas breves
-                </div>
-                <div class="option" onclick="selectOption(13, 6)">
-                    <span class="option-number">6</span>Severo - Pocas respuestas espontáneas; respuestas limitadas
-                </div>
-                <div class="option" onclick="selectOption(13, 7)">
-                    <span class="option-number">7</span>Extremo - Virtualmente sin espontaneidad; respuestas de una palabra
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-14">
-            <div class="question-number">N7</div>
-            <div class="card-header">Síntomas Negativos</div>
-            <div class="question-text">Pensamiento Estereotipado</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(14, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de pensamiento estereotipado
-                </div>
-                <div class="option" onclick="selectOption(14, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional uso de frases repetitivas o ideas clichés
-                </div>
-                <div class="option" onclick="selectOption(14, 3)">
-                    <span class="option-number">3</span>Leve - Alguna tendencia a repetición en temas o perspectivas
-                </div>
-                <div class="option" onclick="selectOption(14, 4)">
-                    <span class="option-number">4</span>Moderado - Marcada tendencia a repetir temas con pensamiento rígido
-                </div>
-                <div class="option" onclick="selectOption(14, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Frecuente repetición de ideas, frases o palabras
-                </div>
-                <div class="option" onclick="selectOption(14, 6)">
-                    <span class="option-number">6</span>Severo - Pensamiento restringido a pocas ideas estereotipadas
-                </div>
-                <div class="option" onclick="selectOption(14, 7)">
-                    <span class="option-number">7</span>Extremo - Pensamiento limitado a una o dos ideas estereotipadas
-                </div>
-            </div>
-        </div>
-
-        <!-- Ítems de Psicopatología General -->
-        <div class="card" id="card-15">
-            <div class="question-number">G1</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Preocupación Somática</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(15, 1)">
-                    <span class="option-number">1</span>Ausente - No reporta problemas físicos o de salud
-                </div>
-                <div class="option" onclick="selectOption(15, 2)">
-                    <span class="option-number">2</span>Mínimo - Vaga y ocasional preocupación por problemas de salud
-                </div>
-                <div class="option" onclick="selectOption(15, 3)">
-                    <span class="option-number">3</span>Leve - Ocasional preocupación por problemas de salud o corporales
-                </div>
-                <div class="option" onclick="selectOption(15, 4)">
-                    <span class="option-number">4</span>Moderado - Frecuentes quejas sobre problemas de salud o físicos
-                </div>
-                <div class="option" onclick="selectOption(15, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Preocupación muy frecuente por problemas de salud
-                </div>
-                <div class="option" onclick="selectOption(15, 6)">
-                    <span class="option-number">6</span>Severo - Preocupación dominante por problemas de salud
-                </div>
-                <div class="option" onclick="selectOption(15, 7)">
-                    <span class="option-number">7</span>Extremo - Totalmente preocupado por quejas de salud incapacitantes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-16">
-            <div class="question-number">G2</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Ansiedad</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(16, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de nerviosismo, preocupación o inquietud
-                </div>
-                <div class="option" onclick="selectOption(16, 2)">
-                    <span class="option-number">2</span>Mínimo - Dudosa evidencia de ansiedad
-                </div>
-                <div class="option" onclick="selectOption(16, 3)">
-                    <span class="option-number">3</span>Leve - Claramente nervioso e inquieto pero puede controlarse
-                </div>
-                <div class="option" onclick="selectOption(16, 4)">
-                    <span class="option-number">4</span>Moderado - Significativa ansiedad; dificultad para controlarla
-                </div>
-                <div class="option" onclick="selectOption(16, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada ansiedad; interfiere significativamente
-                </div>
-                <div class="option" onclick="selectOption(16, 6)">
-                    <span class="option-number">6</span>Severo - Ansiedad severa; dominante en presentación clínica
-                </div>
-                <div class="option" onclick="selectOption(16, 7)">
-                    <span class="option-number">7</span>Extremo - Ansiedad incapacitante; dominante en todas las áreas
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-17">
-            <div class="question-number">G3</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Sentimientos de Culpa</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(17, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de culpa, vergüenza o auto-reproches
-                </div>
-                <div class="option" onclick="selectOption(17, 2)">
-                    <span class="option-number">2</span>Mínimo - Vaga o dudosa evidencia de culpa
-                </div>
-                <div class="option" onclick="selectOption(17, 3)">
-                    <span class="option-number">3</span>Leve - Ocasional culpa o auto-reproches por actos menores
-                </div>
-                <div class="option" onclick="selectOption(17, 4)">
-                    <span class="option-number">4</span>Moderado - Frecuentes sentimientos de culpa; preocupación por errores pasados
-                </div>
-                <div class="option" onclick="selectOption(17, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcados sentimientos de culpa asociados con auto-depreciación
-                </div>
-                <div class="option" onclick="selectOption(17, 6)">
-                    <span class="option-number">6</span>Severo - Intensos sentimientos de culpa con ideas delirantes
-                </div>
-                <div class="option" onclick="selectOption(17, 7)">
-                    <span class="option-number">7</span>Extremo - Agobiado por delirios de culpa incapacitantes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-18">
-            <div class="question-number">G4</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Tensión</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(18, 1)">
-                    <span class="option-number">1</span>Ausente - Relajado y calmo
-                </div>
-                <div class="option" onclick="selectOption(18, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligeramente tenso; ocasionalmente inquieto
-                </div>
-                <div class="option" onclick="selectOption(18, 3)">
-                    <span class="option-number">3</span>Leve - Moderada tensión; ocasional inquietud o impaciencia
-                </div>
-                <div class="option" onclick="selectOption(18, 4)">
-                    <span class="option-number">4</span>Moderado - Significativa tensión; dificultad para relajarse
-                </div>
-                <div class="option" onclick="selectOption(18, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada tensión; inquietud motora notable
-                </div>
-                <div class="option" onclick="selectOption(18, 6)">
-                    <span class="option-number">6</span>Severo - Tensa al extremo; inquietud prominente
-                </div>
-                <div class="option" onclick="selectOption(18, 7)">
-                    <span class="option-number">7</span>Extremo - Tensión extrema; inquietud constante e incapacitante
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-19">
-            <div class="question-number">G5</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Manierismos y Posturas</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(19, 1)">
-                    <span class="option-number">1</span>Ausente - No hay evidencia de movimientos o posturas inusuales
-                </div>
-                <div class="option" onclick="selectOption(19, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligera rigidez postural o movimientos inusuales poco frecuentes
-                </div>
-                <div class="option" onclick="selectOption(19, 3)">
-                    <span class="option-number">3</span>Leve - Ocasionales movimientos inusuales o rigidez postural
-                </div>
-                <div class="option" onclick="selectOption(19, 4)">
-                    <span class="option-number">4</span>Moderado - Frecuentes movimientos peculiares o posturas inusuales
-                </div>
-                <div class="option" onclick="selectOption(19, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcados manierismos; posturas bizarras ocasionales
-                </div>
-                <div class="option" onclick="selectOption(19, 6)">
-                    <span class="option-number">6</span>Severo - Manierismos frecuentes; posturas bizarras persistentes
-                </div>
-                <div class="option" onclick="selectOption(19, 7)">
-                    <span class="option-number">7</span>Extremo - Comportamiento bizarro constante; posturas catatónicas
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-20">
-            <div class="question-number">G6</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Depresión</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(20, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de tristeza, desaliento o pesimismo
-                </div>
-                <div class="option" onclick="selectOption(20, 2)">
-                    <span class="option-number">2</span>Mínimo - Vagos y raros períodos de tristeza
-                </div>
-                <div class="option" onclick="selectOption(20, 3)">
-                    <span class="option-number">3</span>Leve - Triste pero fácilmente animado; sólo superficialmente deprimido
-                </div>
-                <div class="option" onclick="selectOption(20, 4)">
-                    <span class="option-number">4</span>Moderado - Moderadamente deprimido; triste la mayor parte del tiempo
-                </div>
-                <div class="option" onclick="selectOption(20, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente deprimido; claramente miserable
-                </div>
-                <div class="option" onclick="selectOption(20, 6)">
-                    <span class="option-number">6</span>Severo - Severamente deprimido; desesperanzado y desalentado
-                </div>
-                <div class="option" onclick="selectOption(20, 7)">
-                    <span class="option-number">7</span>Extremo - Depresión extrema; miserable constantemente
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-21">
-            <div class="question-number">G7</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Retardo Motor</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(21, 1)">
-                    <span class="option-number">1</span>Ausente - Actividad motora normal en todo aspecto
-                </div>
-                <div class="option" onclick="selectOption(21, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligera pero noticiable disminución en velocidad motora
-                </div>
-                <div class="option" onclick="selectOption(21, 3)">
-                    <span class="option-number">3</span>Leve - Claramente ralentizado pero no más que ligero impedimento
-                </div>
-                <div class="option" onclick="selectOption(21, 4)">
-                    <span class="option-number">4</span>Moderado - Moderadamente ralentizado; movimientos definidamente impedidos
-                </div>
-                <div class="option" onclick="selectOption(21, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente ralentizado; todas las acciones muy lentas
-                </div>
-                <div class="option" onclick="selectOption(21, 6)">
-                    <span class="option-number">6</span>Severo - Movimientos extremadamente lentos; actividad mínima
-                </div>
-                <div class="option" onclick="selectOption(21, 7)">
-                    <span class="option-number">7</span>Extremo - Virtualmente inmóvil; apenas perceptible actividad motora
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-22">
-            <div class="question-number">G8</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Falta de Cooperación</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(22, 1)">
-                    <span class="option-number">1</span>Ausente - Comportamiento natural y cooperativo
-                </div>
-                <div class="option" onclick="selectOption(22, 2)">
-                    <span class="option-number">2</span>Mínimo - Excesiva formalidad; cooperación ligeramente reluctante
-                </div>
-                <div class="option" onclick="selectOption(22, 3)">
-                    <span class="option-number">3</span>Leve - Alguna evidencia de resentimiento, irritación o impaciencia
-                </div>
-                <div class="option" onclick="selectOption(22, 4)">
-                    <span class="option-number">4</span>Moderado - Moderada falta de cooperación; respuestas cortas e irritables
-                </div>
-                <div class="option" onclick="selectOption(22, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente no cooperativo; responde mal
-                </div>
-                <div class="option" onclick="selectOption(22, 6)">
-                    <span class="option-number">6</span>Severo - Altamente no cooperativo; respuestas hostiles o rechazantes
-                </div>
-                <div class="option" onclick="selectOption(22, 7)">
-                    <span class="option-number">7</span>Extremo - Rehúsa completamente cooperar; hostil y agresivo
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-23">
-            <div class="question-number">G9</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Contenidos Inusuales del Pensamiento</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(23, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de pensamiento inusual, extraño o bizarro
-                </div>
-                <div class="option" onclick="selectOption(23, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligera peculiaridad en contenido del pensamiento
-                </div>
-                <div class="option" onclick="selectOption(23, 3)">
-                    <span class="option-number">3</span>Leve - Ideas claramente extrañas o contenido del pensamiento inusual
-                </div>
-                <div class="option" onclick="selectOption(23, 4)">
-                    <span class="option-number">4</span>Moderado - Ideas distintivamente inusuales o contenido bizarro del pensamiento
-                </div>
-                <div class="option" onclick="selectOption(23, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcadamente bizarro contenido del pensamiento
-                </div>
-                <div class="option" onclick="selectOption(23, 6)">
-                    <span class="option-number">6</span>Severo - Extremadamente bizarro pensamiento con contenido absurdo
-                </div>
-                <div class="option" onclick="selectOption(23, 7)">
-                    <span class="option-number">7</span>Extremo - Pensamiento repleto de ideas absurdas e incoherentes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-24">
-            <div class="question-number">G10</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Desorientación</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(24, 1)">
-                    <span class="option-number">1</span>Ausente - Totalmente orientado en las tres esferas
-                </div>
-                <div class="option" onclick="selectOption(24, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional y ligera confusión sobre el tiempo y lugar
-                </div>
-                <div class="option" onclick="selectOption(24, 3)">
-                    <span class="option-number">3</span>Leve - Moderada confusión; claramente desorientado en una esfera
-                </div>
-                <div class="option" onclick="selectOption(24, 4)">
-                    <span class="option-number">4</span>Moderado - Significativa confusión; desorientado en dos esferas
-                </div>
-                <div class="option" onclick="selectOption(24, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada confusión; severamente desorientado
-                </div>
-                <div class="option" onclick="selectOption(24, 6)">
-                    <span class="option-number">6</span>Severo - Extrema confusión y desorientación en las tres esferas
-                </div>
-                <div class="option" onclick="selectOption(24, 7)">
-                    <span class="option-number">7</span>Extremo - No tiene orientación; totalmente confundido
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-25">
-            <div class="question-number">G11</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Atención Deficiente</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(25, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de atención deficiente
-                </div>
-                <div class="option" onclick="selectOption(25, 2)">
-                    <span class="option-number">2</span>Mínimo - Limitada capacidad para enfocar atención; fácilmente distraíble
-                </div>
-                <div class="option" onclick="selectOption(25, 3)">
-                    <span class="option-number">3</span>Leve - Dificultad para enfocar atención; concentración pobre
-                </div>
-                <div class="option" onclick="selectOption(25, 4)">
-                    <span class="option-number">4</span>Moderado - Sólo puede mantener atención brevemente; muy distraíble
-                </div>
-                <div class="option" onclick="selectOption(25, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada dificultad para dirigir o mantener atención
-                </div>
-                <div class="option" onclick="selectOption(25, 6)">
-                    <span class="option-number">6</span>Severo - Sin foco sostenido de atención; extrema distracción
-                </div>
-                <div class="option" onclick="selectOption(25, 7)">
-                    <span class="option-number">7</span>Extremo - Sin capacidad dirigida de atención; totalmente distraído
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-26">
-            <div class="question-number">G12</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Ausencia de Juicio e Insight</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(26, 1)">
-                    <span class="option-number">1</span>Ausente - Reconoce enfermedad; comprende necesidad de tratamiento
-                </div>
-                <div class="option" onclick="selectOption(26, 2)">
-                    <span class="option-number">2</span>Mínimo - Ligera disminución en awareness de enfermedad
-                </div>
-                <div class="option" onclick="selectOption(26, 3)">
-                    <span class="option-number">3</span>Leve - Reconoce enfermedad pero culpa a otros factores externos
-                </div>
-                <div class="option" onclick="selectOption(26, 4)">
-                    <span class="option-number">4</span>Moderado - Insight fluctuante; algún reconocimiento de enfermedad
-                </div>
-                <div class="option" onclick="selectOption(26, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Deficiente insight; reconoce problemas vagamente
-                </div>
-                <div class="option" onclick="selectOption(26, 6)">
-                    <span class="option-number">6</span>Severo - Sin awareness de enfermedad; niega claramente síntomas
-                </div>
-                <div class="option" onclick="selectOption(26, 7)">
-                    <span class="option-number">7</span>Extremo - Enfáticamente niega enfermedad pasada y presente
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-27">
-            <div class="question-number">G13</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Perturbación de la Volición</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(27, 1)">
-                    <span class="option-number">1</span>Ausente - Comportamiento natural con voluntad apropiada
-                </div>
-                <div class="option" onclick="selectOption(27, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional indecisión en el curso de actividades normales
-                </div>
-                <div class="option" onclick="selectOption(27, 3)">
-                    <span class="option-number">3</span>Leve - Distintas dificultades en procesos de toma de decisiones
-                </div>
-                <div class="option" onclick="selectOption(27, 4)">
-                    <span class="option-number">4</span>Moderado - Disturbed volition; dificultad en iniciar y controlar actividad
-                </div>
-                <div class="option" onclick="selectOption(27, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada ambivalencia; actividad fragmentada
-                </div>
-                <div class="option" onclick="selectOption(27, 6)">
-                    <span class="option-number">6</span>Severo - Fuerte ambivalencia; actividad bloqueada o comportamiento inapropriado
-                </div>
-                <div class="option" onclick="selectOption(27, 7)">
-                    <span class="option-number">7</span>Extremo - Sin control volitivo; incapaz de iniciar o regular actividad
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-28">
-            <div class="question-number">G14</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Control Deficiente de los Impulsos</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(28, 1)">
-                    <span class="option-number">1</span>Ausente - Impulsos apropiadamente controlados
-                </div>
-                <div class="option" onclick="selectOption(28, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasionales impulsos difíciles de controlar
-                </div>
-                <div class="option" onclick="selectOption(28, 3)">
-                    <span class="option-number">3</span>Leve - Dificultades en control de impulsos resultan en comportamiento menor
-                </div>
-                <div class="option" onclick="selectOption(28, 4)">
-                    <span class="option-number">4</span>Moderado - Dificultades significativas en control de impulsos
-                </div>
-                <div class="option" onclick="selectOption(28, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Deficiente control de impulsos; episodios impulsivos ocasionales
-                </div>
-                <div class="option" onclick="selectOption(28, 6)">
-                    <span class="option-number">6</span>Severo - Impulsos frecuentemente mal controlados; episodios repetidos
-                </div>
-                <div class="option" onclick="selectOption(28, 7)">
-                    <span class="option-number">7</span>Extremo - Sin control de impulsos; episodios peligrosos constantes
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-29">
-            <div class="question-number">G15</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Preocupación</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(29, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de preocupación con pensamientos particulares
-                </div>
-                <div class="option" onclick="selectOption(29, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasionalmente absorto en pensamientos; fácilmente dirigible
-                </div>
-                <div class="option" onclick="selectOption(29, 3)">
-                    <span class="option-number">3</span>Leve - Frecuentemente preocupado por pensamientos recurrentes
-                </div>
-                <div class="option" onclick="selectOption(29, 4)">
-                    <span class="option-number">4</span>Moderado - Frecuente preocupación; dificultad para concentrarse
-                </div>
-                <div class="option" onclick="selectOption(29, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Marcada preocupación; interferencia significativa
-                </div>
-                <div class="option" onclick="selectOption(29, 6)">
-                    <span class="option-number">6</span>Severo - Intensamente preocupado; difícil dirigir hacia otros temas
-                </div>
-                <div class="option" onclick="selectOption(29, 7)">
-                    <span class="option-number">7</span>Extremo - Totalmente absorto; imposible dirigir a otros temas
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="card-30">
-            <div class="question-number">G16</div>
-            <div class="card-header">Psicopatología General</div>
-            <div class="question-text">Evitación Social Activa</div>
-            <div class="options">
-                <div class="option" onclick="selectOption(30, 1)">
-                    <span class="option-number">1</span>Ausente - Sin evidencia de evitación social
-                </div>
-                <div class="option" onclick="selectOption(30, 2)">
-                    <span class="option-number">2</span>Mínimo - Ocasional irritación por intrusión social
-                </div>
-                <div class="option" onclick="selectOption(30, 3)">
-                    <span class="option-number">3</span>Leve - Preferencia por estar solo; evita situaciones sociales
-                </div>
-                <div class="option" onclick="selectOption(30, 4)">
-                    <span class="option-number">4</span>Moderado - Marcada preferencia por actividades solitarias
-                </div>
-                <div class="option" onclick="selectOption(30, 5)">
-                    <span class="option-number">5</span>Moderado-severo - Busca aislamiento; evita activamente actividad social
-                </div>
-                <div class="option" onclick="selectOption(30, 6)">
-                    <span class="option-number">6</span>Severo - Altamente intolerante de situaciones sociales
-                </div>
-                <div class="option" onclick="selectOption(30, 7)">
-                    <span class="option-number">7</span>Extremo - Fuerza aislamiento completo; rehúsa interacción social
-                </div>
-            </div>
-        </div>
-
-        <!-- Card de Resultados -->
-        <div class="card" id="card-results">
-            <div class="card-header">
-                Resultados de la Evaluación PANSS
-            </div>
-            <div class="results-section">
-                <div class="score-card">
-                    <div class="score-header">Síntomas Positivos (P1-P7)</div>
-                    <div class="score-value" id="positive-score">0/49</div>
-                    <div id="positive-interpretation"></div>
-                </div>
-                
-                <div class="score-card">
-                    <div class="score-header">Síntomas Negativos (N1-N7)</div>
-                    <div class="score-value" id="negative-score">0/49</div>
-                    <div id="negative-interpretation"></div>
-                </div>
-                
-                <div class="score-card">
-                    <div class="score-header">Psicopatología General (G1-G16)</div>
-                    <div class="score-value" id="general-score">0/112</div>
-                    <div id="general-interpretation"></div>
-                </div>
-                
-                <div class="score-card">
-                    <div class="score-header">Puntuación Total PANSS</div>
-                    <div class="score-value" id="total-score">0/210</div>
-                    <div id="total-interpretation"></div>
-                </div>
-
-                <div class="interpretation">
-                    <h3 style="color: #29A98C; margin-bottom: 15px;">Interpretación Clínica</h3>
-                    <div id="clinical-interpretation"></div>
-                </div>
-
-                <div id="alerts-section"></div>
-                
-                <div class="export-buttons">
-                    <button class="export-button" onclick="exportToPDF()">📄 Exportar a PDF</button>
-                    <button class="export-button" onclick="exportToImage()">📷 Capturar Imagen</button>
-                    <button class="export-button" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
-                </div>
-            </div>
-        </div>
+  <!-- Card 0: Bienvenida -->
+  <div class="card active" id="card-0">
+    <div class="card-header">
+      <span class="scale-name">PANSS</span>
+      <span class="q-label">Escala de Síntomas Positivos y Negativos</span>
     </div>
+    <div class="card-body">
+      <div class="welcome-title">Instrucciones para el Profesional</div>
+      <div class="instructions-box">
+        <strong>Descripción:</strong> La PANSS es un instrumento de 30 ítems para evaluar la severidad de síntomas en esquizofrenia y trastornos psicóticos.<br><br>
+        <strong>Administración:</strong> Heteroaplicada por profesional capacitado mediante entrevista semiestructurada.<br><br>
+        <strong>Tiempo:</strong> 30-40 minutos. <strong>Periodo:</strong> Síntomas de la última semana.<br><br>
+        <strong>Estructura:</strong>
+        <ul>
+          <li>Síntomas Positivos (P1-P7): 7 ítems</li>
+          <li>Síntomas Negativos (N1-N7): 7 ítems</li>
+          <li>Psicopatología General (G1-G16): 16 ítems</li>
+        </ul>
+        <br>
+        <strong>Escala de puntuación:</strong> 1 = Ausente &nbsp;|&nbsp; 2 = Mínimo &nbsp;|&nbsp; 3 = Leve &nbsp;|&nbsp; 4 = Moderado &nbsp;|&nbsp; 5 = Mod-Severo &nbsp;|&nbsp; 6 = Severo &nbsp;|&nbsp; 7 = Extremo<br><br>
+        <strong>Consideraciones:</strong> Base su evaluación en la entrevista clínica y la observación del comportamiento. Considere tanto la frecuencia como la intensidad de los síntomas. Una reducción del 20% en el puntaje total indica respuesta al tratamiento.
+      </div>
+      <button class="btn-start" onclick="showCard(1)">Comenzar Evaluación</button>
+    </div>
+  </div>
 
-    <div class="progress-bar" id="progress-bar"></div>
-    <button class="back-button" id="back-button" onclick="previousCard()">←</button>
+  <!-- ===================== SÍNTOMAS POSITIVOS (P1-P7) ===================== -->
 
-    <script>
-        let currentCard = 0;
-        let responses = {};
-        const totalQuestions = 30;
+  <!-- Card 1: P1 - Delirios -->
+  <div class="card" id="card-1">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P1</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 1 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:3%"></div></div>
+      <div class="subscale-divider"><span class="subscale-tag">Síntomas Positivos</span></div>
+      <div class="question-text">Delirios</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(1,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(1,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(1,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(1,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(1,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(1,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(1,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-1"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">1 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function updateDisplay() {
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
-            });
+  <!-- Card 2: P2 - Desorganización Conceptual -->
+  <div class="card" id="card-2">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P2</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 2 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:7%"></div></div>
+      <div class="question-text">Desorganización Conceptual</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(2,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(2,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(2,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(2,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(2,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(2,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(2,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-2"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">2 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            if (currentCard === 'results') {
-                document.getElementById('card-results').classList.add('active');
-                document.getElementById('progress-bar').style.width = '100%';
-                document.getElementById('back-button').classList.remove('show');
-                return;
-            }
+  <!-- Card 3: P3 - Comportamiento Alucinatorio -->
+  <div class="card" id="card-3">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P3</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 3 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div>
+      <div class="question-text">Comportamiento Alucinatorio</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(3,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(3,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(3,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(3,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(3,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(3,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(3,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-3"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">3 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            document.getElementById(`card-${currentCard}`).classList.add('active');
+  <!-- Card 4: P4 - Excitación -->
+  <div class="card" id="card-4">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P4</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 4 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:13%"></div></div>
+      <div class="question-text">Excitación</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(4,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(4,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(4,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(4,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(4,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(4,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(4,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-4"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">4 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            const progress = (currentCard / totalQuestions) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+  <!-- Card 5: P5 - Grandiosidad -->
+  <div class="card" id="card-5">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P5</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 5 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:17%"></div></div>
+      <div class="question-text">Grandiosidad</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(5,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(5,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(5,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(5,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(5,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(5,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(5,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-5"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">5 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            const backButton = document.getElementById('back-button');
-            if (currentCard > 0) {
-                backButton.classList.add('show');
-            } else {
-                backButton.classList.remove('show');
-            }
-        }
+  <!-- Card 6: P6 - Suspicacia/Persecución -->
+  <div class="card" id="card-6">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P6</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 6 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+      <div class="question-text">Suspicacia / Persecución</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(6,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(6,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(6,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(6,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(6,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(6,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(6,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-6"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">6 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function selectOption(questionNumber, value) {
-            responses[questionNumber] = value;
+  <!-- Card 7: P7 - Hostilidad -->
+  <div class="card" id="card-7">
+    <div class="card-header">
+      <span class="scale-name">PANSS — P7</span>
+      <span class="q-label">Síntomas Positivos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 7 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:23%"></div></div>
+      <div class="question-text">Hostilidad</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(7,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(7,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(7,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(7,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(7,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(7,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(7,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-7"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">7 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            const currentCardElement = document.getElementById(`card-${currentCard}`);
-            currentCardElement.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            const opts = currentCardElement.querySelectorAll('.option');
-            if (opts[value - 1]) opts[value - 1].classList.add('selected');
+  <!-- ===================== SÍNTOMAS NEGATIVOS (N1-N7) ===================== -->
 
-            setTimeout(() => {
-                nextCard();
-            }, 150);
-        }
+  <!-- Card 8: N1 - Embotamiento Afectivo -->
+  <div class="card" id="card-8">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N1</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 8 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:27%"></div></div>
+      <div class="subscale-divider"><span class="subscale-tag">Síntomas Negativos</span></div>
+      <div class="question-text">Embotamiento Afectivo</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(8,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(8,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(8,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(8,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(8,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(8,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(8,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-8"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">8 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function nextCard() {
-            if (currentCard < totalQuestions) {
-                currentCard++;
-                updateDisplay();
-            } else if (currentCard === totalQuestions) {
-                showResults();
-            }
-        }
+  <!-- Card 9: N2 - Retraimiento Emocional -->
+  <div class="card" id="card-9">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N2</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 9 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+      <div class="question-text">Retraimiento Emocional</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(9,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(9,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(9,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(9,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(9,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(9,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(9,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-9"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">9 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function previousCard() {
-            if (currentCard === 'results') {
-                currentCard = totalQuestions;
-            } else if (currentCard > 0) {
-                currentCard--;
-            }
-            updateDisplay();
-        }
+  <!-- Card 10: N3 - Contacto Pobre -->
+  <div class="card" id="card-10">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N3</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 10 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33%"></div></div>
+      <div class="question-text">Contacto Pobre</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(10,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(10,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(10,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(10,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(10,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(10,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(10,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-10"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">10 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function calculateScore() {
-            let positiveScore = 0;
-            let negativeScore = 0;
-            let generalScore = 0;
+  <!-- Card 11: N4 - Retraimiento Social Pasivo/Apático -->
+  <div class="card" id="card-11">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N4</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 11 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:37%"></div></div>
+      <div class="question-text">Retraimiento Social Pasivo / Apático</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(11,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(11,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(11,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(11,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(11,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(11,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(11,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-11"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">11 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Síntomas Positivos (P1-P7)
-            for (let i = 1; i <= 7; i++) {
-                positiveScore += responses[i] || 1;
-            }
+  <!-- Card 12: N5 - Dificultad en el Pensamiento Abstracto -->
+  <div class="card" id="card-12">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N5</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 12 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div>
+      <div class="question-text">Dificultad en el Pensamiento Abstracto</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(12,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(12,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(12,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(12,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(12,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(12,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(12,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-12"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">12 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Síntomas Negativos (N1-N7)
-            for (let i = 8; i <= 14; i++) {
-                negativeScore += responses[i] || 1;
-            }
+  <!-- Card 13: N6 - Ausencia de Espontaneidad y Fluidez en la Conversación -->
+  <div class="card" id="card-13">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N6</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 13 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:43%"></div></div>
+      <div class="question-text">Ausencia de Espontaneidad y Fluidez en la Conversación</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(13,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(13,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(13,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(13,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(13,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(13,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(13,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-13"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">13 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Psicopatología General (G1-G16)
-            for (let i = 15; i <= 30; i++) {
-                generalScore += responses[i] || 1;
-            }
+  <!-- Card 14: N7 - Pensamiento Estereotipado -->
+  <div class="card" id="card-14">
+    <div class="card-header">
+      <span class="scale-name">PANSS — N7</span>
+      <span class="q-label">Síntomas Negativos</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 14 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:47%"></div></div>
+      <div class="question-text">Pensamiento Estereotipado</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(14,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(14,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(14,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(14,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(14,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(14,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(14,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-14"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">14 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            const totalScore = positiveScore + negativeScore + generalScore;
+  <!-- ===================== PSICOPATOLOGÍA GENERAL (G1-G16) ===================== -->
 
-            return {
-                positive: positiveScore,
-                negative: negativeScore,
-                general: generalScore,
-                total: totalScore
-            };
-        }
+  <!-- Card 15: G1 - Preocupación Somática -->
+  <div class="card" id="card-15">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G1</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 15 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+      <div class="subscale-divider"><span class="subscale-tag">Psicopatología General</span></div>
+      <div class="question-text">Preocupación Somática</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(15,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(15,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(15,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(15,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(15,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(15,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(15,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-15"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">15 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function getInterpretation(scores) {
-            const interpretations = {
-                positive: getSeverityLevel(scores.positive, 7, 49),
-                negative: getSeverityLevel(scores.negative, 7, 49),
-                general: getSeverityLevel(scores.general, 16, 112),
-                total: getSeverityLevel(scores.total, 30, 210)
-            };
+  <!-- Card 16: G2 - Ansiedad -->
+  <div class="card" id="card-16">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G2</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 16 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:53%"></div></div>
+      <div class="question-text">Ansiedad</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(16,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(16,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(16,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(16,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(16,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(16,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(16,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-16"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">16 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            return interpretations;
-        }
+  <!-- Card 17: G3 - Sentimientos de Culpa -->
+  <div class="card" id="card-17">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G3</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 17 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:57%"></div></div>
+      <div class="question-text">Sentimientos de Culpa</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(17,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(17,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(17,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(17,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(17,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(17,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(17,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-17"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">17 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function getSeverityLevel(score, minScore, maxScore) {
-            const percentage = ((score - minScore) / (maxScore - minScore)) * 100;
-            
-            if (percentage <= 25) {
-                return { level: 'Mínimo', class: 'severity-normal', description: 'Síntomas ausentes o mínimos' };
-            } else if (percentage <= 50) {
-                return { level: 'Leve', class: 'severity-mild', description: 'Síntomas leves presentes' };
-            } else if (percentage <= 75) {
-                return { level: 'Moderado', class: 'severity-moderate', description: 'Síntomas moderados significativos' };
-            } else {
-                return { level: 'Severo', class: 'severity-severe', description: 'Síntomas severos prominentes' };
-            }
-        }
+  <!-- Card 18: G4 - Tensión -->
+  <div class="card" id="card-18">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G4</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 18 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+      <div class="question-text">Tensión</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(18,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(18,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(18,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(18,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(18,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(18,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(18,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-18"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">18 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function showResults() {
-            currentCard = 'results';
-            const scores = calculateScore();
-            const interpretations = getInterpretation(scores);
+  <!-- Card 19: G5 - Manierismos y Posturas -->
+  <div class="card" id="card-19">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G5</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 19 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:63%"></div></div>
+      <div class="question-text">Manierismos y Posturas</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(19,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(19,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(19,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(19,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(19,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(19,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(19,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-19"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">19 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Actualizar puntuaciones
-            document.getElementById('positive-score').textContent = `${scores.positive}/49`;
-            document.getElementById('negative-score').textContent = `${scores.negative}/49`;
-            document.getElementById('general-score').textContent = `${scores.general}/112`;
-            document.getElementById('total-score').textContent = `${scores.total}/210`;
+  <!-- Card 20: G6 - Depresión -->
+  <div class="card" id="card-20">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G6</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 20 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:67%"></div></div>
+      <div class="question-text">Depresión</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(20,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(20,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(20,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(20,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(20,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(20,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(20,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-20"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">20 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Actualizar interpretaciones
-            document.getElementById('positive-interpretation').innerHTML = 
-                `<span class="severity-indicator ${interpretations.positive.class}">${interpretations.positive.level}</span> - ${interpretations.positive.description}`;
-            
-            document.getElementById('negative-interpretation').innerHTML = 
-                `<span class="severity-indicator ${interpretations.negative.class}">${interpretations.negative.level}</span> - ${interpretations.negative.description}`;
-            
-            document.getElementById('general-interpretation').innerHTML = 
-                `<span class="severity-indicator ${interpretations.general.class}">${interpretations.general.level}</span> - ${interpretations.general.description}`;
-            
-            document.getElementById('total-interpretation').innerHTML = 
-                `<span class="severity-indicator ${interpretations.total.class}">${interpretations.total.level}</span> - ${interpretations.total.description}`;
+  <!-- Card 21: G7 - Retardo Motor -->
+  <div class="card" id="card-21">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G7</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 21 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+      <div class="question-text">Retardo Motor</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(21,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(21,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(21,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(21,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(21,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(21,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(21,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-21"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">21 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Interpretación clínica detallada
-            const clinicalInterpretation = generateClinicalInterpretation(scores, interpretations);
-            document.getElementById('clinical-interpretation').innerHTML = clinicalInterpretation;
+  <!-- Card 22: G8 - Falta de Cooperación -->
+  <div class="card" id="card-22">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G8</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 22 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:73%"></div></div>
+      <div class="question-text">Falta de Cooperación</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(22,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(22,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(22,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(22,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(22,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(22,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(22,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-22"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">22 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Generar alertas
-            generateAlerts(scores);
+  <!-- Card 23: G9 - Contenidos Inusuales del Pensamiento -->
+  <div class="card" id="card-23">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G9</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 23 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:77%"></div></div>
+      <div class="question-text">Contenidos Inusuales del Pensamiento</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(23,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(23,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(23,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(23,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(23,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(23,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(23,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-23"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">23 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            updateDisplay();
-        }
+  <!-- Card 24: G10 - Desorientación -->
+  <div class="card" id="card-24">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G10</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 24 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+      <div class="question-text">Desorientación</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(24,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(24,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(24,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(24,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(24,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(24,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(24,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-24"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">24 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function generateClinicalInterpretation(scores, interpretations) {
-            let interpretation = '<strong>Perfil Sintomatológico:</strong><br>';
-            
-            // Análisis dimensional
-            if (scores.positive > scores.negative) {
-                interpretation += '• Predominio de síntomas positivos. Sugiere presencia de alucinaciones, delirios o desorganización del pensamiento.<br>';
-            } else if (scores.negative > scores.positive) {
-                interpretation += '• Predominio de síntomas negativos. Indica déficits en el funcionamiento emocional, social y cognitivo.<br>';
-            } else {
-                interpretation += '• Perfil mixto con síntomas positivos y negativos equilibrados.<br>';
-            }
+  <!-- Card 25: G11 - Atención Deficiente -->
+  <div class="card" id="card-25">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G11</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 25 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:83%"></div></div>
+      <div class="question-text">Atención Deficiente</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(25,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(25,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(25,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(25,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(25,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(25,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(25,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-25"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">25 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Severidad global
-            const totalPercentage = ((scores.total - 30) / 180) * 100;
-            interpretation += `• Severidad global: ${totalPercentage.toFixed(1)}% del rango máximo.<br>`;
+  <!-- Card 26: G12 - Ausencia de Juicio e Insight -->
+  <div class="card" id="card-26">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G12</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 26 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:87%"></div></div>
+      <div class="question-text">Ausencia de Juicio e Insight</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(26,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(26,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(26,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(26,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(26,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(26,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(26,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-26"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">26 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Criterios de respuesta al tratamiento
-            interpretation += '<br><strong>Consideraciones para el Tratamiento:</strong><br>';
-            if (scores.total >= 120) {
-                interpretation += '• Paciente candidato para intervención intensiva y posible hospitalización.<br>';
-            } else if (scores.total >= 90) {
-                interpretation += '• Requerirá tratamiento farmacológico y seguimiento estrecho.<br>';
-            } else {
-                interpretation += '• Puede beneficiarse de intervenciones ambulatorias y psicosociales.<br>';
-            }
+  <!-- Card 27: G13 - Perturbación de la Volición -->
+  <div class="card" id="card-27">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G13</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 27 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div>
+      <div class="question-text">Perturbación de la Volición</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(27,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(27,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(27,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(27,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(27,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(27,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(27,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-27"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">27 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Criterio de respuesta (reducción 20%)
-            const responseThreshold = Math.round(scores.total * 0.8);
-            interpretation += `• Una reducción a ≤${responseThreshold} puntos indicaría respuesta significativa al tratamiento.<br>`;
+  <!-- Card 28: G14 - Control Deficiente de los Impulsos -->
+  <div class="card" id="card-28">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G14</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 28 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:93%"></div></div>
+      <div class="question-text">Control Deficiente de los Impulsos</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(28,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(28,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(28,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(28,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(28,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(28,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(28,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-28"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">28 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            return interpretation;
-        }
+  <!-- Card 29: G15 - Preocupación -->
+  <div class="card" id="card-29">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G15</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 29 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:97%"></div></div>
+      <div class="question-text">Preocupación</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(29,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(29,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(29,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(29,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(29,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(29,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(29,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-29"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">29 / 30</span>
+      </div>
+    </div>
+  </div>
 
-        function generateAlerts(scores) {
-            const alertsContainer = document.getElementById('alerts-section');
-            let alerts = '';
+  <!-- Card 30: G16 - Evitación Social Activa -->
+  <div class="card" id="card-30">
+    <div class="card-header">
+      <span class="scale-name">PANSS — G16</span>
+      <span class="q-label">Psicopatología General</span>
+    </div>
+    <div class="card-body">
+      <div class="q-progress-label">Ítem 30 de 30</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+      <div class="question-text">Evitación Social Activa</div>
+      <div class="sev-bar">
+        <button class="sev-btn" onclick="selectSev(30,1,this)"><span>1</span>Ausente</button>
+        <button class="sev-btn" onclick="selectSev(30,2,this)"><span>2</span>Mínimo</button>
+        <button class="sev-btn" onclick="selectSev(30,3,this)"><span>3</span>Leve</button>
+        <button class="sev-btn" onclick="selectSev(30,4,this)"><span>4</span>Moderado</button>
+        <button class="sev-btn" onclick="selectSev(30,5,this)"><span>5</span>Mod-Sev</button>
+        <button class="sev-btn" onclick="selectSev(30,6,this)"><span>6</span>Severo</button>
+        <button class="sev-btn" onclick="selectSev(30,7,this)"><span>7</span>Extremo</button>
+      </div>
+      <div class="anchor-display" id="anchor-30"><em style="color:#a0aec0">Seleccione un nivel para ver la descripción clínica</em></div>
+      <div class="bottom-nav">
+        <button class="btn-back" onclick="previousCard()">← Atrás</button>
+        <span class="item-number-badge">30 / 30</span>
+      </div>
+    </div>
+  </div>
 
-            // Verificar ítems individuales de alto riesgo
-            const highRiskItems = [];
-            const criticalThreshold = 5; // 66% del máximo (7)
+  <!-- Card Final -->
+  <div class="card" id="card-final">
+    <div class="card-header">
+      <span class="scale-name">PANSS</span>
+      <span class="q-label">Evaluación completada</span>
+    </div>
+    <div class="card-body" style="text-align:center;padding:40px 32px;">
+      <h2 style="color:#112F33;margin-bottom:12px;">Evaluación completada</h2>
+      <p style="color:#718096;margin-bottom:24px;">Revise los resultados con el equipo clínico.</p>
+      <button class="btn-start" onclick="showResults()">Ver resultados</button>
+    </div>
+  </div>
 
-            for (let i = 1; i <= 30; i++) {
-                if (responses[i] >= criticalThreshold) {
-                    highRiskItems.push(getItemName(i));
-                }
-            }
+  <!-- Card Resultados -->
+  <div class="card" id="card-results">
+    <div class="card-header">
+      <span class="scale-name">PANSS</span>
+      <span class="q-label">Resultados</span>
+    </div>
+    <div class="card-body">
+      <div class="score-area" id="score-area">
+        <div class="score-num" id="total-score">—</div>
+        <div class="score-range" id="total-range">/ 210 (rango 30-210)</div>
+        <div id="score-badge"></div>
+      </div>
+      <div class="section-label">Subescalas</div>
+      <div class="subscales-grid">
+        <div class="subscale-box">
+          <div class="subscale-title">Síntomas Positivos</div>
+          <div class="subscale-num" id="pos-score">—</div>
+          <div class="subscale-max">/ 49 (rango 7-49)</div>
+        </div>
+        <div class="subscale-box">
+          <div class="subscale-title">Síntomas Negativos</div>
+          <div class="subscale-num" id="neg-score">—</div>
+          <div class="subscale-max">/ 49 (rango 7-49)</div>
+        </div>
+        <div class="subscale-box">
+          <div class="subscale-title">Psicopatología General</div>
+          <div class="subscale-num" id="gen-score">—</div>
+          <div class="subscale-max">/ 112 (rango 16-112)</div>
+        </div>
+      </div>
+      <div class="section-label">Interpretación clínica</div>
+      <div class="interp-box">
+        Puntaje total 30-210. Rango normal: 30-58. Leve: 59-75. Moderado: 76-99. Severo: 100-116. Muy severo: 117 o superior. Una reducción del 20% indica respuesta al tratamiento. El índice de psicosis compuesta = (P) menos (N).
+      </div>
+      <div class="action-row">
+        <button class="btn-action" onclick="window.print()">Imprimir</button>
+        <button class="btn-action" onclick="location.reload()">Nueva evaluación</button>
+      </div>
+    </div>
+  </div>
 
-            if (highRiskItems.length > 0) {
-                alerts += '<div class="alert high">';
-                alerts += '<strong>⚠️ Ítems de Alto Riesgo:</strong><br>';
-                alerts += 'Los siguientes ítems obtuvieron puntuaciones elevadas (≥5):<br>';
-                alerts += '• ' + highRiskItems.join('<br>• ');
-                alerts += '</div>';
-            }
+  <script>
+    const totalItems = 30;
+    let currentCardId = 'card-0';
+    let responses = {};
 
-            // Alerta de severidad total
-            if (scores.total >= 150) {
-                alerts += '<div class="alert high">';
-                alerts += '<strong>🚨 Severidad Crítica:</strong> Puntuación total muy elevada. Requiere evaluación inmediata del riesgo y considerar intervención intensiva.';
-                alerts += '</div>';
-            }
+    const anchors = {
+      1: {
+        1: "Ausente — No hay evidencia de creencias delirantes",
+        2: "Mínimo — Dudosa patología; puede estar en el rango superior de lo normal",
+        3: "Leve — Presencia de una o dos creencias delirantes vagas o poco sistematizadas",
+        4: "Moderado — Presencia de un sistema delirante bien organizado pero limitado",
+        5: "Moderado-severo — Presencia de múltiples delirios bien organizados",
+        6: "Severo — Presencia de sistema delirante estable y elaborado con contenido bizarro",
+        7: "Extremo — Pensamiento dominado por delirios incapacitantes y/o peligrosos"
+      },
+      2: {
+        1: "Ausente — No hay evidencia de desorganización formal del pensamiento",
+        2: "Mínimo — Pensamiento un tanto vago o irrelevante",
+        3: "Leve — Ocasionalmente pierde el hilo o las ideas no están bien relacionadas",
+        4: "Moderado — Pensamiento frecuentemente vago, tangencial o circumstancial",
+        5: "Moderado-severo — Pensamiento generalmente difícil de seguir",
+        6: "Severo — No hay conexión lógica entre ideas; habla incoherente",
+        7: "Extremo — Incoherencia severa o mutismo"
+      },
+      3: {
+        1: "Ausente — No hay evidencia de alucinaciones",
+        2: "Mínimo — Dudosa patología; puede estar en el rango superior de lo normal",
+        3: "Leve — Una o dos alucinaciones claramente formadas de cualquier tipo",
+        4: "Moderado — Alucinaciones ocasionales o algunas persistentes",
+        5: "Moderado-severo — Alucinaciones persistentes a lo largo del día",
+        6: "Severo — Alucinaciones presentes casi continuamente",
+        7: "Extremo — Totalmente preocupado por alucinaciones incapacitantes"
+      },
+      4: {
+        1: "Ausente — Comportamiento natural; actividad apropiada",
+        2: "Mínimo — Ocasionalmente elevado, animado o impaciente",
+        3: "Leve — Claramente elevado, habla rápida, ocasionalmente ruidoso",
+        4: "Moderado — Excitación significativa; habla rápida e hiperactividad ocasional",
+        5: "Moderado-severo — Marcadamente excitado; habla acelerada, hiperactividad",
+        6: "Severo — Significativamente excitado e hiperactivo; puede ser agresivo",
+        7: "Extremo — Excitación extrema; habla acelerada incoherente o hiperactividad"
+      },
+      5: {
+        1: "Ausente — No hay evidencia de autoestima exagerada",
+        2: "Mínimo — Autoestima algo elevada o jactanciosa",
+        3: "Leve — Exagerada autoestima o reclamos sin garantía",
+        4: "Moderado — Marcada grandiosidad con ideas grandiosas superficiales",
+        5: "Moderado-severo — Grandiosidad severa con delirios francos de grandeza",
+        6: "Severo — Pensamiento dominado por delirios grandiosos organizados",
+        7: "Extremo — Grandiosidad extrema con delirios incapacitantes"
+      },
+      6: {
+        1: "Ausente — No hay evidencia de desconfianza, suspicacia o ideas persecutorias",
+        2: "Mínimo — Vaga desconfianza o dudas sobre las motivaciones de otros",
+        3: "Leve — Distintivamente suspicaz; doble sentido en comentarios neutrales",
+        4: "Moderado — Marcadamente suspicaz; ideas de referencia persistentes",
+        5: "Moderado-severo — Marcadas ideas de persecución sin delirios claros",
+        6: "Severo — Delirios persecutorios claramente formados pero limitados",
+        7: "Extremo — Delirios persecutorios severos dominan la presentación"
+      },
+      7: {
+        1: "Ausente — No hay evidencia de cólera, irritabilidad, resentimiento u hostilidad",
+        2: "Mínimo — Indirecta o controlada irritabilidad",
+        3: "Leve — Ocasional irritabilidad y resentimiento",
+        4: "Moderado — Significativa irritabilidad y actitud francamente hostil",
+        5: "Moderado-severo — Marcadamente hostil; frecuente irritabilidad y cólera",
+        6: "Severo — Intensa hostilidad; comportamiento amenazante o agresivo",
+        7: "Extremo — Cólera extrema con hostilidad generalizada e incontrolable"
+      },
+      8: {
+        1: "Ausente — Rango emocional apropiado y modulado",
+        2: "Mínimo — Expresión emocional ligeramente disminuida",
+        3: "Leve — Rango emocional claramente reducido; expresión facial infrecuente",
+        4: "Moderado — Rango afectivo notablemente reducido",
+        5: "Moderado-severo — Marcada reducción en expresión emocional",
+        6: "Severo — Expresión emocional severamente reducida",
+        7: "Extremo — Virtualmente sin expresión emocional"
+      },
+      9: {
+        1: "Ausente — Apropiada participación emocional",
+        2: "Mínimo — Involucración emocional ligeramente reducida",
+        3: "Leve — Ocasionalmente parece indiferente o distante",
+        4: "Moderado — Marcada tendencia a mantenerse emocionalmente separado",
+        5: "Moderado-severo — Claramente distante y retraído emocionalmente",
+        6: "Severo — Marcadamente retraído emocionalmente e inaccesible",
+        7: "Extremo — Aparenta estar totalmente retraído emocionalmente"
+      },
+      10: {
+        1: "Ausente — Contacto interpersonal natural y apropiado",
+        2: "Mínimo — Contacto interpersonal ligeramente reducido",
+        3: "Leve — Moderada disminución en involucramiento o tono",
+        4: "Moderado — Poco natural, forzado o tono superficial",
+        5: "Moderado-severo — Claramente inadecuado, constante falta de involucramiento",
+        6: "Severo — Marcado déficit con mínimo contacto interpersonal",
+        7: "Extremo — Extremo déficit, paciente evita, rechaza o elude contacto"
+      },
+      11: {
+        1: "Ausente — Involucramiento social apropiado",
+        2: "Mínimo — Ocasional disminución en involucramiento social",
+        3: "Leve — Presente pero mantiene algún interés en actividades sociales",
+        4: "Moderado — Moderada disminución en interés y iniciativa social",
+        5: "Moderado-severo — Marcada falta de involucramiento social",
+        6: "Severo — Mínimo interés y pocas actividades sociales",
+        7: "Extremo — Ausencia virtual de involucramiento social"
+      },
+      12: {
+        1: "Ausente — No hay dificultad en el pensamiento abstracto",
+        2: "Mínimo — Ocasional dificultad con abstracciones complejas",
+        3: "Leve — Tendencia al pensamiento concreto; dificultad con conceptos",
+        4: "Moderado — Considerablemente concreto, pensamiento abstracto limitado",
+        5: "Moderado-severo — Marcado pensamiento concreto; dificultad con abstracciones",
+        6: "Severo — Pensamiento concretístico; sin conceptos abstractos",
+        7: "Extremo — Pensamiento sólo concreto; comprensión limitada de palabras simples"
+      },
+      13: {
+        1: "Ausente — Conversación natural y fluida",
+        2: "Mínimo — Ligera reducción en espontaneidad de la conversación",
+        3: "Leve — Ocasional prompting necesario para mantener conversación",
+        4: "Moderado — Marcada reducción en fluidez; frecuentes prompts necesarios",
+        5: "Moderado-severo — Marcada falta de espontaneidad; respuestas breves",
+        6: "Severo — Pocas respuestas espontáneas; respuestas limitadas",
+        7: "Extremo — Virtualmente sin espontaneidad; respuestas de una palabra"
+      },
+      14: {
+        1: "Ausente — No hay evidencia de pensamiento estereotipado",
+        2: "Mínimo — Ocasional uso de frases repetitivas o ideas clichés",
+        3: "Leve — Alguna tendencia a repetición en temas o perspectivas",
+        4: "Moderado — Marcada tendencia a repetir temas con pensamiento rígido",
+        5: "Moderado-severo — Frecuente repetición de ideas, frases o palabras",
+        6: "Severo — Pensamiento restringido a pocas ideas estereotipadas",
+        7: "Extremo — Pensamiento limitado a una o dos ideas estereotipadas"
+      },
+      15: {
+        1: "Ausente — No reporta problemas físicos o de salud",
+        2: "Mínimo — Vaga y ocasional preocupación por problemas de salud",
+        3: "Leve — Ocasional preocupación por problemas de salud o corporales",
+        4: "Moderado — Frecuentes quejas sobre problemas de salud o físicos",
+        5: "Moderado-severo — Preocupación muy frecuente por problemas de salud",
+        6: "Severo — Preocupación dominante por problemas de salud",
+        7: "Extremo — Totalmente preocupado por quejas de salud incapacitantes"
+      },
+      16: {
+        1: "Ausente — Sin evidencia de nerviosismo, preocupación o inquietud",
+        2: "Mínimo — Dudosa evidencia de ansiedad",
+        3: "Leve — Claramente nervioso e inquieto pero puede controlarse",
+        4: "Moderado — Significativa ansiedad; dificultad para controlarla",
+        5: "Moderado-severo — Marcada ansiedad; interfiere significativamente",
+        6: "Severo — Ansiedad severa; dominante en presentación clínica",
+        7: "Extremo — Ansiedad incapacitante; dominante en todas las áreas"
+      },
+      17: {
+        1: "Ausente — Sin evidencia de culpa, vergüenza o auto-reproches",
+        2: "Mínimo — Vaga o dudosa evidencia de culpa",
+        3: "Leve — Ocasional culpa o auto-reproches por actos menores",
+        4: "Moderado — Frecuentes sentimientos de culpa; preocupación por errores pasados",
+        5: "Moderado-severo — Marcados sentimientos de culpa asociados con auto-depreciación",
+        6: "Severo — Intensos sentimientos de culpa con ideas delirantes",
+        7: "Extremo — Agobiado por delirios de culpa incapacitantes"
+      },
+      18: {
+        1: "Ausente — Relajado y calmo",
+        2: "Mínimo — Ligeramente tenso; ocasionalmente inquieto",
+        3: "Leve — Moderada tensión; ocasional inquietud o impaciencia",
+        4: "Moderado — Significativa tensión; dificultad para relajarse",
+        5: "Moderado-severo — Marcada tensión; inquietud motora notable",
+        6: "Severo — Tenso al extremo; inquietud prominente",
+        7: "Extremo — Tensión extrema; inquietud constante e incapacitante"
+      },
+      19: {
+        1: "Ausente — No hay evidencia de movimientos o posturas inusuales",
+        2: "Mínimo — Ligera rigidez postural o movimientos inusuales poco frecuentes",
+        3: "Leve — Ocasionales movimientos inusuales o rigidez postural",
+        4: "Moderado — Frecuentes movimientos peculiares o posturas inusuales",
+        5: "Moderado-severo — Marcados manierismos; posturas bizarras ocasionales",
+        6: "Severo — Manierismos frecuentes; posturas bizarras persistentes",
+        7: "Extremo — Comportamiento bizarro constante; posturas catatónicas"
+      },
+      20: {
+        1: "Ausente — Sin evidencia de tristeza, desaliento o pesimismo",
+        2: "Mínimo — Vagos y raros períodos de tristeza",
+        3: "Leve — Triste pero fácilmente animado; sólo superficialmente deprimido",
+        4: "Moderado — Moderadamente deprimido; triste la mayor parte del tiempo",
+        5: "Moderado-severo — Marcadamente deprimido; claramente miserable",
+        6: "Severo — Severamente deprimido; desesperanzado y desalentado",
+        7: "Extremo — Depresión extrema; miserable constantemente"
+      },
+      21: {
+        1: "Ausente — Actividad motora normal en todo aspecto",
+        2: "Mínimo — Ligera pero noticiable disminución en velocidad motora",
+        3: "Leve — Claramente ralentizado pero no más que ligero impedimento",
+        4: "Moderado — Moderadamente ralentizado; movimientos definidamente impedidos",
+        5: "Moderado-severo — Marcadamente ralentizado; todas las acciones muy lentas",
+        6: "Severo — Movimientos extremadamente lentos; actividad mínima",
+        7: "Extremo — Virtualmente inmóvil; apenas perceptible actividad motora"
+      },
+      22: {
+        1: "Ausente — Comportamiento natural y cooperativo",
+        2: "Mínimo — Excesiva formalidad; cooperación ligeramente reluctante",
+        3: "Leve — Alguna evidencia de resentimiento, irritación o impaciencia",
+        4: "Moderado — Moderada falta de cooperación; respuestas cortas e irritables",
+        5: "Moderado-severo — Marcadamente no cooperativo; responde mal",
+        6: "Severo — Altamente no cooperativo; respuestas hostiles o rechazantes",
+        7: "Extremo — Rehúsa completamente cooperar; hostil y agresivo"
+      },
+      23: {
+        1: "Ausente — Sin evidencia de pensamiento inusual, extraño o bizarro",
+        2: "Mínimo — Ligera peculiaridad en contenido del pensamiento",
+        3: "Leve — Ideas claramente extrañas o contenido del pensamiento inusual",
+        4: "Moderado — Ideas distintivamente inusuales o contenido bizarro del pensamiento",
+        5: "Moderado-severo — Marcadamente bizarro contenido del pensamiento",
+        6: "Severo — Extremadamente bizarro pensamiento con contenido absurdo",
+        7: "Extremo — Pensamiento repleto de ideas absurdas e incoherentes"
+      },
+      24: {
+        1: "Ausente — Totalmente orientado en las tres esferas",
+        2: "Mínimo — Ocasional y ligera confusión sobre el tiempo y lugar",
+        3: "Leve — Moderada confusión; claramente desorientado en una esfera",
+        4: "Moderado — Significativa confusión; desorientado en dos esferas",
+        5: "Moderado-severo — Marcada confusión; severamente desorientado",
+        6: "Severo — Extrema confusión y desorientación en las tres esferas",
+        7: "Extremo — No tiene orientación; totalmente confundido"
+      },
+      25: {
+        1: "Ausente — Sin evidencia de atención deficiente",
+        2: "Mínimo — Limitada capacidad para enfocar atención; fácilmente distraíble",
+        3: "Leve — Dificultad para enfocar atención; concentración pobre",
+        4: "Moderado — Sólo puede mantener atención brevemente; muy distraíble",
+        5: "Moderado-severo — Marcada dificultad para dirigir o mantener atención",
+        6: "Severo — Sin foco sostenido de atención; extrema distracción",
+        7: "Extremo — Sin capacidad dirigida de atención; totalmente distraído"
+      },
+      26: {
+        1: "Ausente — Reconoce enfermedad; comprende necesidad de tratamiento",
+        2: "Mínimo — Ligera disminución en awareness de enfermedad",
+        3: "Leve — Reconoce enfermedad pero culpa a otros factores externos",
+        4: "Moderado — Insight fluctuante; algún reconocimiento de enfermedad",
+        5: "Moderado-severo — Deficiente insight; reconoce problemas vagamente",
+        6: "Severo — Sin awareness de enfermedad; niega claramente síntomas",
+        7: "Extremo — Enfáticamente niega enfermedad pasada y presente"
+      },
+      27: {
+        1: "Ausente — Comportamiento natural con voluntad apropiada",
+        2: "Mínimo — Ocasional indecisión en el curso de actividades normales",
+        3: "Leve — Distintas dificultades en procesos de toma de decisiones",
+        4: "Moderado — Volición perturbada; dificultad en iniciar y controlar actividad",
+        5: "Moderado-severo — Marcada ambivalencia; actividad fragmentada",
+        6: "Severo — Fuerte ambivalencia; actividad bloqueada o comportamiento inapropiado",
+        7: "Extremo — Sin control volitivo; incapaz de iniciar o regular actividad"
+      },
+      28: {
+        1: "Ausente — Impulsos apropiadamente controlados",
+        2: "Mínimo — Ocasionales impulsos difíciles de controlar",
+        3: "Leve — Dificultades en control de impulsos resultan en comportamiento menor",
+        4: "Moderado — Dificultades significativas en control de impulsos",
+        5: "Moderado-severo — Deficiente control de impulsos; episodios impulsivos ocasionales",
+        6: "Severo — Impulsos frecuentemente mal controlados; episodios repetidos",
+        7: "Extremo — Sin control de impulsos; episodios peligrosos constantes"
+      },
+      29: {
+        1: "Ausente — Sin evidencia de preocupación con pensamientos particulares",
+        2: "Mínimo — Ocasionalmente absorto en pensamientos; fácilmente dirigible",
+        3: "Leve — Frecuentemente preocupado por pensamientos recurrentes",
+        4: "Moderado — Frecuente preocupación; dificultad para concentrarse",
+        5: "Moderado-severo — Marcada preocupación; interferencia significativa",
+        6: "Severo — Intensamente preocupado; difícil dirigir hacia otros temas",
+        7: "Extremo — Totalmente absorto; imposible dirigir a otros temas"
+      },
+      30: {
+        1: "Ausente — Sin evidencia de evitación social",
+        2: "Mínimo — Ocasional irritación por intrusión social",
+        3: "Leve — Preferencia por estar solo; evita situaciones sociales",
+        4: "Moderado — Marcada preferencia por actividades solitarias",
+        5: "Moderado-severo — Busca aislamiento; evita activamente actividad social",
+        6: "Severo — Altamente intolerante de situaciones sociales",
+        7: "Extremo — Fuerza aislamiento completo; rehúsa interacción social"
+      }
+    };
 
-            // Alerta de síntomas positivos severos
-            if (scores.positive >= 35) {
-                alerts += '<div class="alert">';
-                alerts += '<strong>⚠️ Síntomas Positivos Severos:</strong> Monitorear riesgo de heteroagresividad y adherencia al tratamiento.';
-                alerts += '</div>';
-            }
+    function showCard(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      const key = (typeof id === 'number') ? 'card-' + id : id;
+      document.getElementById(key).classList.add('active');
+      currentCardId = key;
+      window.scrollTo(0, 0);
+      if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+    }
 
-            alertsContainer.innerHTML = alerts;
-        }
+    function restoreSelections(n) {
+      if (responses[n] === undefined) return;
+      const card = document.getElementById('card-' + n);
+      const val = responses[n];
+      card.querySelectorAll('.sev-btn').forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx + 1 === val);
+      });
+      if (anchors[n] && anchors[n][val]) {
+        const parts = anchors[n][val].split(' — ');
+        document.getElementById('anchor-' + n).innerHTML =
+          '<strong>' + val + ' — ' + parts[0] + '</strong>' +
+          (parts.length > 1 ? '<br>' + parts.slice(1).join(' — ') : '');
+      }
+    }
 
-        function getItemName(itemNumber) {
-            const itemNames = {
-                1: 'P1 - Delirios', 2: 'P2 - Desorganización Conceptual', 3: 'P3 - Comportamiento Alucinatorio',
-                4: 'P4 - Excitación', 5: 'P5 - Grandiosidad', 6: 'P6 - Suspicacia/Persecución', 7: 'P7 - Hostilidad',
-                8: 'N1 - Embotamiento Afectivo', 9: 'N2 - Retraimiento Emocional', 10: 'N3 - Contacto Pobre',
-                11: 'N4 - Retraimiento Social', 12: 'N5 - Dificultad Pensamiento Abstracto', 13: 'N6 - Ausencia Espontaneidad',
-                14: 'N7 - Pensamiento Estereotipado', 15: 'G1 - Preocupación Somática', 16: 'G2 - Ansiedad',
-                17: 'G3 - Sentimientos de Culpa', 18: 'G4 - Tensión', 19: 'G5 - Manierismos y Posturas',
-                20: 'G6 - Depresión', 21: 'G7 - Retardo Motor', 22: 'G8 - Falta de Cooperación',
-                23: 'G9 - Contenidos Inusuales del Pensamiento', 24: 'G10 - Desorientación', 25: 'G11 - Atención Deficiente',
-                26: 'G12 - Ausencia de Juicio e Insight', 27: 'G13 - Perturbación de la Volición',
-                28: 'G14 - Control Deficiente de Impulsos', 29: 'G15 - Preocupación', 30: 'G16 - Evitación Social Activa'
-            };
-            return itemNames[itemNumber] || `Ítem ${itemNumber}`;
-        }
+    function selectSev(qNum, value, btn) {
+      const card = document.getElementById('card-' + qNum);
+      card.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      responses[qNum] = value;
 
-        function exportToPDF() {
-            window.print();
-        }
+      if (anchors[qNum] && anchors[qNum][value]) {
+        const parts = anchors[qNum][value].split(' — ');
+        document.getElementById('anchor-' + qNum).innerHTML =
+          '<strong>' + value + ' — ' + parts[0] + '</strong>' +
+          (parts.length > 1 ? '<br>' + parts.slice(1).join(' — ') : '');
+      }
 
-        function exportToImage() {
-            const resultsCard = document.getElementById('card-results');
-            
-            // Crear un canvas temporal
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Configurar el canvas
-            canvas.width = 800;
-            canvas.height = 1000;
-            
-            // Fondo blanco
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Generar imagen simple con texto
-            ctx.fillStyle = '#29A98C';
-            ctx.font = 'bold 24px Arial';
-            ctx.fillText('Resultados PANSS', 20, 40);
-            
-            const scores = calculateScore();
-            ctx.fillStyle = '#112F33';
-            ctx.font = '18px Arial';
-            ctx.fillText(`Síntomas Positivos: ${scores.positive}/49`, 20, 80);
-            ctx.fillText(`Síntomas Negativos: ${scores.negative}/49`, 20, 110);
-            ctx.fillText(`Psicopatología General: ${scores.general}/112`, 20, 140);
-            ctx.fillText(`Puntuación Total: ${scores.total}/210`, 20, 170);
-            
-            // Descargar imagen
-            const link = document.createElement('a');
-            link.download = 'resultados_panss.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        }
+      setTimeout(() => {
+        if (qNum < totalItems) showCard(qNum + 1);
+        else showCard('card-final');
+      }, 200);
+    }
 
-        function newEvaluation() {
-            currentCard = 0;
-            responses = {};
-            
-            // Limpiar selecciones
-            document.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            updateDisplay();
-        }
+    function previousCard() {
+      const match = currentCardId.match(/card-(\d+)/);
+      if (!match) return;
+      const n = parseInt(match[1]);
+      if (n <= 1) showCard(0);
+      else showCard(n - 1);
+    }
 
-        // Inicializar
-        updateDisplay();
-    </script>
+    function showResults() {
+      let pos = 0, neg = 0, gen = 0;
+      for (let i = 1; i <= 7; i++) pos += responses[i] || 1;
+      for (let i = 8; i <= 14; i++) neg += responses[i] || 1;
+      for (let i = 15; i <= 30; i++) gen += responses[i] || 1;
+      const total = pos + neg + gen;
+
+      const pct = ((total - 30) / (210 - 30)) * 100;
+      let color, label;
+      if (pct <= 20) { color = '#48bb78'; label = 'Mínimo'; }
+      else if (pct <= 45) { color = '#f6ad55'; label = 'Leve-Moderado'; }
+      else if (pct <= 70) { color = '#ed8936'; label = 'Moderado-Severo'; }
+      else { color = '#f56565'; label = 'Severo'; }
+
+      document.getElementById('total-score').textContent = total;
+      document.getElementById('total-score').style.color = color;
+      document.getElementById('total-range').textContent = '/ 210 (rango 30-210)';
+      document.getElementById('score-badge').innerHTML =
+        '<span class="score-badge" style="background:' + color + '22;color:' + color + ';border:1px solid ' + color + '">' + label + '</span>';
+
+      document.getElementById('pos-score').textContent = pos;
+      document.getElementById('pos-score').style.color = ((pos - 7) / 42 > 0.5) ? '#f56565' : '#48bb78';
+      document.getElementById('neg-score').textContent = neg;
+      document.getElementById('neg-score').style.color = ((neg - 7) / 42 > 0.5) ? '#f56565' : '#48bb78';
+      document.getElementById('gen-score').textContent = gen;
+      document.getElementById('gen-score').style.color = ((gen - 16) / 96 > 0.5) ? '#f56565' : '#48bb78';
+
+      showCard('card-results');
+    }
+  </script>
 </body>
 </html>

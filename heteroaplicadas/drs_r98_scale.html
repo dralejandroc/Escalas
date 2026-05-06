@@ -117,28 +117,21 @@
         }
 
         .option {
-            background: rgba(255, 255, 255, 0.7);
-            border: 2px solid rgba(41, 169, 140, 0.3);
-            border-radius: 15px;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            color: #112F33;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 14px;
             font-weight: 500;
+            color: #112F33;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-
-        .option:hover {
-            background: rgba(41, 169, 140, 0.1);
-            border-color: #29A98C;
-            transform: translateY(-2px);
-        }
-
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border-color: #29A98C;
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .progress-bar {
             position: fixed;
@@ -751,9 +744,9 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                    <button class="btn" onclick="captureResults()">📸 Capturar</button>
-                    <button class="btn btn-secondary" onclick="newAssessment()">🔄 Nueva Evaluación</button>
+                    <button class="btn" onclick="exportToPDF()">Exportar PDF</button>
+                    <button class="btn" onclick="captureResults()">Capturar</button>
+                    <button class="btn btn-secondary" onclick="newAssessment()">Nueva Evaluación</button>
                 </div>
             </div>
         </div>
@@ -974,7 +967,7 @@
             // Mostrar alertas
             const alertsDiv = document.getElementById('high-alerts');
             if (alerts.length > 0) {
-                let alertsHTML = '<div class="alert-high"><h5>⚠️ Ítems con Puntuación Alta</h5>';
+                let alertsHTML = '<div class="alert-high"><h5>Ítems con Puntuación Alta</h5>';
                 alerts.forEach(alert => {
                     alertsHTML += `<p><strong>Ítem ${alert.number} - ${alert.item}:</strong> Puntuación ${alert.score}/3</p>`;
                 });

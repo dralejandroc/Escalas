@@ -100,26 +100,21 @@
         }
 
         .option {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
+            width: 100%;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            padding: 15px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #112F33;
+            background: #fff;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-
-        .option:hover {
-            border-color: #29A98C;
-            background: rgba(41, 169, 140, 0.1);
-        }
-
-        .option.selected {
-            border-color: #29A98C;
-            background: linear-gradient(135deg, rgba(41, 169, 140, 0.1), rgba(17, 47, 51, 0.1));
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .option-value {
             background: linear-gradient(135deg, #29A98C, #112F33);
@@ -359,7 +354,7 @@
             </div>
             
             <div class="instructions">
-                <h3>📋 Instrucciones para el Profesional</h3>
+                <h3>Instrucciones para el Profesional</h3>
                 <p><strong>Recomendación de aplicación:</strong> Esta escala debe utilizarse para evaluar la presencia e intensidad de síntomas prodrómicos en:</p>
                 <ul>
                     <li>Adolescentes y adultos jóvenes (12-30 años) con sospecha de síndrome prodrómico de psicosis</li>
@@ -368,13 +363,13 @@
                     <li>Evaluación inicial en servicios de detección temprana de psicosis</li>
                 </ul>
                 
-                <h3>🔍 Instrucciones de Aplicación</h3>
+                <h3>Instrucciones de Aplicación</h3>
                 <p><strong>Administración:</strong> Heteroaplicada por profesional entrenado en entrevista semiestructurada.</p>
                 <p><strong>Tiempo:</strong> 30-60 minutos aproximadamente.</p>
                 <p><strong>Periodo de evaluación:</strong> Síntomas presentes en el último mes, con especial atención a cambios en el último año.</p>
                 <p><strong>Puntuación:</strong> Escala Likert de 0-6 puntos por ítem (0=ausente, 6=severo y psicótico).</p>
                 
-                <h3>⚠️ Consideraciones Clínicas</h3>
+                <h3>Consideraciones Clínicas</h3>
                 <p>• Aplicar preferiblemente en períodos <6 meses desde la última evaluación</p>
                 <p>• Los síntomas positivos (P1-P5) son diagnósticos para síndromes de riesgo</p>
                 <p>• Puntuaciones ≥3 en síntomas positivos indican intensidad prodrómicas</p>
@@ -1120,24 +1115,24 @@
             <div id="total-card-container"></div>
 
             <div class="interpretation">
-                <h3>🎯 Interpretación Clínica</h3>
+                <h3>Interpretación Clínica</h3>
                 <div id="clinical-interpretation"></div>
             </div>
 
             <div class="interpretation">
-                <h3>⚠️ Alertas y Recomendaciones</h3>
+                <h3>Alertas y Recomendaciones</h3>
                 <div id="alerts-section"></div>
             </div>
 
             <div class="interpretation">
-                <h3>📊 Criterios Diagnósticos</h3>
+                <h3>Criterios Diagnósticos</h3>
                 <div id="diagnostic-criteria"></div>
             </div>
 
             <div class="export-buttons">
-                <button class="export-btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="export-btn" onclick="exportToImage()">📸 Capturar Imagen</button>
-                <button class="export-btn" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="export-btn" onclick="exportToPDF()">Exportar PDF</button>
+                <button class="export-btn" onclick="exportToImage()">Capturar Imagen</button>
+                <button class="export-btn" onclick="newEvaluation()">Nueva Evaluación</button>
             </div>
         </div>
     </div>

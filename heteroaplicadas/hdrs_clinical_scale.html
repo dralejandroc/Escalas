@@ -92,27 +92,21 @@
         }
 
         .option {
-            background: rgba(41, 169, 140, 0.1);
-            border: 2px solid rgba(41, 169, 140, 0.3);
+            width: 100%;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
             color: #112F33;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s;
+            font-family: inherit;
         }
-
-        .option:hover {
-            background: rgba(41, 169, 140, 0.2);
-            border-color: #29A98C;
-            transform: translateY(-2px);
-        }
-
-        .option.selected {
-            background: linear-gradient(135deg, #29A98C, #112F33);
-            color: white;
-            border-color: #29A98C;
-        }
+        .option:hover { border-color: #29A98C; background: rgba(41,169,140,0.06); }
+        .option.selected { border-color: #29A98C; background: rgba(41,169,140,0.13); font-weight: 600; color: #112F33; }
 
         .navigation {
             position: fixed;
@@ -578,9 +572,9 @@
             </div>
             
             <div class="action-buttons">
-                <button class="btn" onclick="exportToPDF()">📄 Exportar PDF</button>
-                <button class="btn" onclick="exportToImage()">📷 Capturar Imagen</button>
-                <button class="btn" onclick="newEvaluation()">🔄 Nueva Evaluación</button>
+                <button class="btn" onclick="exportToPDF()">Exportar PDF</button>
+                <button class="btn" onclick="exportToImage()">Capturar Imagen</button>
+                <button class="btn" onclick="newEvaluation()">Nueva Evaluación</button>
             </div>
         </div>
     </div>
@@ -727,7 +721,7 @@
             // Alert for suicide risk (Item 3)
             if (responses[3] >= 3) {
                 alerts.push({
-                    title: "⚠️ ALERTA: Riesgo Suicida Elevado",
+                    title: "ALERTA:Riesgo Suicida Elevado",
                     message: "El paciente presenta ideas o intentos suicidas. Requiere evaluación urgente de riesgo y medidas de seguridad inmediatas."
                 });
             }
@@ -735,7 +729,7 @@
             // Alert for severe psychotic features (Item 2)
             if (responses[2] >= 3) {
                 alerts.push({
-                    title: "⚠️ ALERTA: Síntomas Psicóticos",
+                    title: "ALERTA:Síntomas Psicóticos",
                     message: "Presencia de ideas delirantes de culpabilidad o alucinaciones. Considerar evaluación psiquiátrica especializada."
                 });
             }
@@ -743,7 +737,7 @@
             // Alert for severe functional impairment (Item 7)
             if (responses[7] >= 3) {
                 alerts.push({
-                    title: "⚠️ ALERTA: Deterioro Funcional Severo",
+                    title: "ALERTA:Deterioro Funcional Severo",
                     message: "Marcado deterioro en el funcionamiento laboral/social. Evaluar necesidad de incapacidad temporal o ajustes laborales."
                 });
             }
@@ -751,7 +745,7 @@
             // Alert for severe psychomotor symptoms (Item 8)
             if (responses[8] >= 3) {
                 alerts.push({
-                    title: "⚠️ ALERTA: Inhibición Psicomotora Severa",
+                    title: "ALERTA:Inhibición Psicomotora Severa",
                     message: "Grave enlentecimiento psicomotor. Considerar evaluación neurológica diferencial y monitoreo estrecho."
                 });
             }
