@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCAS — Escala de Ansiedad Infantil de Spence</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#29A98C 0%,#112F33 100%); min-height:100vh; padding:24px 16px; }
+.card-wrap { max-width:800px; margin:0 auto 24px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.18); overflow:hidden; display:none; }
+.card-wrap.active { display:block; }
+.card-header { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+.scale-name { font-size:15px; font-weight:600; opacity:.9; }
+.q-label { font-size:13px; opacity:.8; }
+.card-body { padding:28px 32px 24px; }
+.question-text { font-size:22px; font-weight:500; color:#112F33; line-height:1.5; margin-bottom:28px; }
+.options { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+.option { width:100%; border:2px solid #e2e8f0; border-radius:12px; padding:14px 20px; font-size:14px; font-weight:500; color:#112F33; background:#fff; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; }
+.option:hover { border-color:#29A98C; background:rgba(41,169,140,0.06); }
+.option.selected { border-color:#29A98C; background:rgba(41,169,140,0.13); font-weight:600; }
+.q-progress-label { font-size:11px; color:#a0aec0; margin-bottom:4px; }
+.progress-bar-wrap { height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.progress-bar-fill { height:100%; background:linear-gradient(90deg,#29A98C,#112F33); border-radius:3px; transition:width .3s; }
+.bottom-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn-back { background:none; border:1px solid #cbd5e0; border-radius:8px; color:#718096; padding:7px 16px; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-back:hover { border-color:#29A98C; color:#29A98C; }
+.item-number-badge { font-size:11px; color:#cbd5e0; font-weight:500; }
+.welcome-title { font-size:22px; font-weight:700; color:#112F33; margin-bottom:16px; }
+.instructions-box { background:#f0faf7; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:16px 18px; margin-bottom:24px; color:#112F33; font-size:14px; line-height:1.75; }
+.btn-start { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:12px 32px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; display:block; margin:0 auto; }
+.score-area { text-align:center; padding:24px 20px 20px; border-radius:16px; border:2px solid #e2e8f0; margin-bottom:20px; }
+.score-num { font-size:72px; font-weight:900; line-height:1; }
+.score-range { font-size:14px; color:#a0aec0; margin-top:2px; }
+.score-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:700; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a0aec0; margin-bottom:8px; }
+.interp-box { background:#f7fafc; border-left:4px solid #29A98C; border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:16px; font-size:13px; color:#2d3748; line-height:1.7; }
+.subscales-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px; }
+.subscale-box { border:1px solid #e2e8f0; border-radius:10px; padding:12px; text-align:center; }
+.subscale-title { font-size:11px; color:#718096; font-weight:600; margin-bottom:5px; line-height:1.3; }
+.subscale-num { font-size:26px; font-weight:700; }
+.subscale-max { font-size:10px; color:#a0aec0; margin-top:1px; }
+.action-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.btn-action { background:linear-gradient(135deg,#29A98C,#112F33); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.final-msg { text-align:center; padding:24px 20px; }
+.final-msg h2 { font-size:20px; font-weight:700; color:#112F33; margin-bottom:12px; }
+.final-msg p { font-size:14px; color:#718096; line-height:1.7; margin-bottom:24px; }
+.filler-note { font-size:12px; color:#a0aec0; font-style:italic; margin-bottom:10px; }
+@media(max-width:600px){body{padding:12px 10px;}.card-body{padding:20px 18px 18px;}.question-text{font-size:18px;}.subscales-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<!-- CARD 0: Bienvenida -->
+<div class="card-wrap active" id="card-0">
+  <div class="card-header">
+    <span class="scale-name">SCAS</span>
+    <span class="q-label">Ansiedad Infantil</span>
+  </div>
+  <div class="card-body">
+    <div class="welcome-title">Escala de Ansiedad Infantil de Spence</div>
+    <div class="instructions-box">
+      A continuación hay una lista de cosas que les pasan a los niños y niñas. Lee cada frase con cuidado y señala <strong>con qué frecuencia te pasa</strong> cada una de ellas.<br><br>
+      No hay respuestas buenas ni malas, solo queremos saber cómo te sientes. Contesta con sinceridad.<br><br>
+      <strong>Opciones de respuesta:</strong><br>
+      &nbsp;&nbsp;• <strong>Nunca</strong> — Eso no me pasa<br>
+      &nbsp;&nbsp;• <strong>A veces</strong> — Me pasa de vez en cuando<br>
+      &nbsp;&nbsp;• <strong>Muchas veces</strong> — Me pasa bastante seguido<br>
+      &nbsp;&nbsp;• <strong>Siempre</strong> — Me pasa todo el tiempo<br><br>
+      Este cuestionario tiene <strong>44 preguntas</strong>.
+    </div>
+    <button class="btn-start" onclick="showCard(1)">Comenzar</button>
+  </div>
+</div>
+
+<!-- CARD 1 — GAD -->
+<div class="card-wrap" id="card-1">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 1 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:2%"></div></div>
+    <div class="question-text">Me preocupo por las cosas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(1,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(1,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(1,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(1,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="showCard(0)">← Atrás</button><span class="item-number-badge">1 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 2 — FPI -->
+<div class="card-wrap" id="card-2">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 2 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div>
+    <div class="question-text">Me da miedo estar en la oscuridad</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(2,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(2,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(2,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(2,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">2 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 3 — OCD -->
+<div class="card-wrap" id="card-3">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 3 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:7%"></div></div>
+    <div class="question-text">Cuando tengo algún problema, me vienen pensamientos que no puedo quitarme de la cabeza</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(3,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(3,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(3,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(3,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">3 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 4 — FPI -->
+<div class="card-wrap" id="card-4">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 4 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:9%"></div></div>
+    <div class="question-text">Tengo miedo a los perros u otros animales</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(4,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(4,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(4,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(4,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">4 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 5 — SA -->
+<div class="card-wrap" id="card-5">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 5 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:11%"></div></div>
+    <div class="question-text">Me da miedo estar solo/a en casa</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(5,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(5,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(5,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(5,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">5 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 6 — SP -->
+<div class="card-wrap" id="card-6">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 6 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:14%"></div></div>
+    <div class="question-text">Tengo miedo de que me vaya mal en el colegio o en los exámenes</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(6,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(6,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(6,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(6,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">6 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 7 — PA -->
+<div class="card-wrap" id="card-7">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 7 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:16%"></div></div>
+    <div class="question-text">Tengo miedo a estar en lugares muy llenos de gente (como centros comerciales, el cine o los autobuses)</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(7,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(7,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(7,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(7,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">7 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 8 — SA -->
+<div class="card-wrap" id="card-8">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 8 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:18%"></div></div>
+    <div class="question-text">Me preocupa que algo malo le pueda pasar a mis padres o tutores</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(8,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(8,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(8,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(8,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">8 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 9 — PA -->
+<div class="card-wrap" id="card-9">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 9 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div>
+    <div class="question-text">Me asusta la idea de tener un ataque de pánico o de ponerme muy mal de repente</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(9,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(9,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(9,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(9,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">9 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 10 — SP -->
+<div class="card-wrap" id="card-10">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 10 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:23%"></div></div>
+    <div class="question-text">Me da miedo estar con personas que no conozco</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(10,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(10,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(10,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(10,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">10 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 11 — FILLER -->
+<div class="card-wrap" id="card-11">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 11 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Me siento bien</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(11,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(11,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(11,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(11,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">11 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 12 — SA -->
+<div class="card-wrap" id="card-12">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 12 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:27%"></div></div>
+    <div class="question-text">Me da miedo quedarme a dormir fuera de casa (en casa de amigos, en campamentos)</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(12,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(12,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(12,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(12,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">12 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 13 — PA -->
+<div class="card-wrap" id="card-13">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 13 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div>
+    <div class="question-text">De repente me siento como si no pudiera respirar, sin razón para ello</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(13,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(13,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(13,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(13,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">13 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 14 — OCD -->
+<div class="card-wrap" id="card-14">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 14 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:32%"></div></div>
+    <div class="question-text">Tengo que comprobar una y otra vez que las cosas están bien hechas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(14,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(14,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(14,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(14,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">14 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 15 — SA -->
+<div class="card-wrap" id="card-15">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 15 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:34%"></div></div>
+    <div class="question-text">Tengo miedo de alejarme de mis padres o tutores</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(15,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(15,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(15,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(15,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">15 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 16 — GAD -->
+<div class="card-wrap" id="card-16">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 16 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:36%"></div></div>
+    <div class="question-text">Tengo miedo de que algo malo me ocurra a mí</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(16,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(16,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(16,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(16,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">16 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 17 — FILLER -->
+<div class="card-wrap" id="card-17">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 17 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:39%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Soy una buena persona</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(17,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(17,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(17,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(17,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">17 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 18 — PA -->
+<div class="card-wrap" id="card-18">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 18 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:41%"></div></div>
+    <div class="question-text">Tengo miedo de volverme loco/a</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(18,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(18,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(18,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(18,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">18 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 19 — OCD -->
+<div class="card-wrap" id="card-19">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 19 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:43%"></div></div>
+    <div class="question-text">Tengo que pensar en ciertas cosas para evitar que ocurran cosas malas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(19,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(19,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(19,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(19,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">19 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 20 — GAD -->
+<div class="card-wrap" id="card-20">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 20 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div>
+    <div class="question-text">Me preocupa que las cosas no me salgan bien</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(20,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(20,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(20,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(20,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">20 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 21 — GAD -->
+<div class="card-wrap" id="card-21">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 21 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:48%"></div></div>
+    <div class="question-text">Me preocupa enfermarme o ponerme enfermo/a</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(21,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(21,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(21,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(21,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">21 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 22 — SP -->
+<div class="card-wrap" id="card-22">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 22 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%"></div></div>
+    <div class="question-text">Me preocupa caerle bien a los demás</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(22,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(22,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(22,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(22,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">22 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 23 — FPI -->
+<div class="card-wrap" id="card-23">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 23 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:52%"></div></div>
+    <div class="question-text">Tengo miedo a las alturas (estar en lugares muy altos)</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(23,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(23,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(23,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(23,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">23 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 24 — OCD -->
+<div class="card-wrap" id="card-24">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 24 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:55%"></div></div>
+    <div class="question-text">Tengo que hacer las cosas de una manera especial para evitar que pase algo malo</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(24,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(24,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(24,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(24,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">24 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 25 — FPI -->
+<div class="card-wrap" id="card-25">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 25 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:57%"></div></div>
+    <div class="question-text">Tengo miedo a las inyecciones o a las agujas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(25,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(25,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(25,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(25,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">25 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 26 — FILLER -->
+<div class="card-wrap" id="card-26">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 26 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:59%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Me gusta hacer cosas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(26,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(26,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(26,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(26,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">26 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 27 — SP -->
+<div class="card-wrap" id="card-27">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 27 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:61%"></div></div>
+    <div class="question-text">Me preocupa lo que los demás puedan pensar de mí</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(27,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(27,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(27,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(27,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">27 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 28 — PA -->
+<div class="card-wrap" id="card-28">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 28 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:64%"></div></div>
+    <div class="question-text">De repente, mi corazón empieza a latir muy deprisa sin razón para ello</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(28,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(28,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(28,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(28,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">28 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 29 — PA -->
+<div class="card-wrap" id="card-29">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 29 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:66%"></div></div>
+    <div class="question-text">Tengo miedo de estar en lugares de los que sea difícil salir</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(29,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(29,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(29,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(29,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">29 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 30 — SP -->
+<div class="card-wrap" id="card-30">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 30 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:68%"></div></div>
+    <div class="question-text">Me preocupa hacer el ridículo o quedar en vergüenza delante de los demás</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(30,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(30,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(30,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(30,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">30 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 31 — FILLER -->
+<div class="card-wrap" id="card-31">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 31 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Me gusta estar con otras personas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(31,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(31,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(31,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(31,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">31 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 32 — PA -->
+<div class="card-wrap" id="card-32">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 32 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:73%"></div></div>
+    <div class="question-text">Tengo miedo a los espacios abiertos (como plazas grandes, parques o estacionamientos)</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(32,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(32,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(32,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(32,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">32 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 33 — OCD -->
+<div class="card-wrap" id="card-33">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 33 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:75%"></div></div>
+    <div class="question-text">Cosas malas se me vienen a la mente aunque intente no pensarlas</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(33,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(33,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(33,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(33,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">33 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 34 — PA -->
+<div class="card-wrap" id="card-34">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 34 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:77%"></div></div>
+    <div class="question-text">De repente me siento muy asustado/a sin razón para ello</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(34,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(34,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(34,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(34,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">34 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 35 — FPI -->
+<div class="card-wrap" id="card-35">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 35 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:80%"></div></div>
+    <div class="question-text">Tengo miedo a las arañas u otros insectos</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(35,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(35,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(35,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(35,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">35 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 36 — OCD -->
+<div class="card-wrap" id="card-36">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 36 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:82%"></div></div>
+    <div class="question-text">Cuando tengo algún problema, repito ciertos movimientos una y otra vez</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(36,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(36,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(36,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(36,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">36 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 37 — SA -->
+<div class="card-wrap" id="card-37">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 37 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:84%"></div></div>
+    <div class="question-text">Tengo miedo de dormir solo/a</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(37,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(37,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(37,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(37,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">37 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 38 — FILLER -->
+<div class="card-wrap" id="card-38">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 38 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:86%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Me gusta ser como soy</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(38,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(38,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(38,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(38,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">38 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 39 — SP -->
+<div class="card-wrap" id="card-39">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 39 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:89%"></div></div>
+    <div class="question-text">Me cuesta trabajo hablar con personas que no conozco</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(39,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(39,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(39,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(39,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">39 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 40 — GAD -->
+<div class="card-wrap" id="card-40">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 40 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:91%"></div></div>
+    <div class="question-text">Me preocupa que las cosas no salgan como yo espero</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(40,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(40,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(40,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(40,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">40 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 41 — PA -->
+<div class="card-wrap" id="card-41">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 41 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:93%"></div></div>
+    <div class="question-text">Cuando tengo miedo, me mareo o me dan náuseas o ganas de vomitar</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(41,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(41,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(41,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(41,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">41 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 42 — GAD -->
+<div class="card-wrap" id="card-42">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 42 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:95%"></div></div>
+    <div class="question-text">Me preocupa cometer errores</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(42,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(42,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(42,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(42,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">42 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 43 — FILLER -->
+<div class="card-wrap" id="card-43">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 43 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:98%"></div></div>
+    <div class="filler-note">Pregunta general</div>
+    <div class="question-text">Me siento feliz</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(43,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(43,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(43,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(43,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">43 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD 44 — SA -->
+<div class="card-wrap" id="card-44">
+  <div class="card-header"><span class="scale-name">SCAS</span><span class="q-label">Ansiedad Infantil</span></div>
+  <div class="card-body">
+    <div class="q-progress-label">Pregunta 44 de 44</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+    <div class="question-text">Tengo miedo de ir al colegio</div>
+    <div class="options">
+      <button class="option" data-score="0" onclick="selectOption(44,0,this)">Nunca</button>
+      <button class="option" data-score="1" onclick="selectOption(44,1,this)">A veces</button>
+      <button class="option" data-score="2" onclick="selectOption(44,2,this)">Muchas veces</button>
+      <button class="option" data-score="3" onclick="selectOption(44,3,this)">Siempre</button>
+    </div>
+    <div class="bottom-nav"><button class="btn-back" onclick="previousCard()">← Atrás</button><span class="item-number-badge">44 / 44</span></div>
+  </div>
+</div>
+
+<!-- CARD FINAL -->
+<div class="card-wrap" id="card-final">
+  <div class="card-header">
+    <span class="scale-name">SCAS</span>
+    <span class="q-label">Evaluación completada</span>
+  </div>
+  <div class="card-body">
+    <div class="final-msg">
+      <h2>¡Muchas gracias!</h2>
+      <p>Has terminado el cuestionario. Por favor, entrega el dispositivo a tu médico o psicólogo para que revise los resultados.</p>
+      <button class="btn-start" onclick="showResults()">Ver resultados</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARD RESULTS -->
+<div class="card-wrap" id="card-results">
+  <div class="card-header">
+    <span class="scale-name">SCAS</span>
+    <span class="q-label">Resultados</span>
+  </div>
+  <div class="card-body">
+    <div class="score-area">
+      <div class="score-num" id="score-num">—</div>
+      <div class="score-range">/ 114 puntos (38 ítems × 3)</div>
+      <div id="score-badge-wrap"></div>
+    </div>
+
+    <div class="section-label">Puntuaciones por subescala</div>
+    <div class="subscales-grid">
+      <div class="subscale-box">
+        <div class="subscale-title">Pánico / Agorafobia</div>
+        <div class="subscale-num" id="sub-pa">—</div>
+        <div class="subscale-max">/ 27</div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Ansiedad de Separación</div>
+        <div class="subscale-num" id="sub-sa">—</div>
+        <div class="subscale-max">/ 18</div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Fobia Social</div>
+        <div class="subscale-num" id="sub-sp">—</div>
+        <div class="subscale-max">/ 18</div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Miedos Físicos</div>
+        <div class="subscale-num" id="sub-fpi">—</div>
+        <div class="subscale-max">/ 15</div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">TOC</div>
+        <div class="subscale-num" id="sub-ocd">—</div>
+        <div class="subscale-max">/ 18</div>
+      </div>
+      <div class="subscale-box">
+        <div class="subscale-title">Ansiedad Generalizada</div>
+        <div class="subscale-num" id="sub-gad">—</div>
+        <div class="subscale-max">/ 18</div>
+      </div>
+    </div>
+
+    <div class="section-label">Interpretación clínica</div>
+    <div class="interp-box" id="interp-box"></div>
+
+    <div class="action-row">
+      <button class="btn-action" onclick="window.print()">Imprimir resultados</button>
+      <button class="btn-action" onclick="showCard(0); responses={};">Nueva evaluación</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const totalItems = 44;
+let currentCardId = 'card-0';
+let responses = {};
+
+// Subscale item assignments
+const subscales = {
+  PA:  [7, 9, 13, 18, 28, 29, 32, 34, 41],
+  SA:  [5, 8, 12, 15, 37, 44],
+  SP:  [6, 10, 22, 27, 30, 39],
+  FPI: [2, 4, 23, 25, 35],
+  OCD: [3, 14, 19, 24, 33, 36],
+  GAD: [1, 16, 20, 21, 40, 42]
+};
+const fillers = [11, 17, 26, 31, 38, 43];
+
+function showCard(id) {
+    document.querySelectorAll('.card-wrap').forEach(c => c.classList.remove('active'));
+    const key = (typeof id === 'number') ? 'card-' + id : id;
+    document.getElementById(key).classList.add('active');
+    currentCardId = key;
+    window.scrollTo(0, 0);
+    if (typeof id === 'number' && id >= 1 && id <= totalItems) restoreSelections(id);
+}
+
+function restoreSelections(n) {
+    if (responses[n] === undefined) return;
+    const card = document.getElementById('card-' + n);
+    const storedScore = responses[n];
+    card.querySelectorAll('.option').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.score) === storedScore);
+    });
+}
+
+function selectOption(qNum, value, btn) {
+    btn.parentNode.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    responses[qNum] = value;
+    setTimeout(() => {
+        if (qNum < totalItems) showCard(qNum + 1);
+        else showCard('card-final');
+    }, 150);
+}
+
+function previousCard() {
+    const match = currentCardId.match(/card-(\d+)/);
+    if (!match) return;
+    const n = parseInt(match[1]);
+    if (n <= 1) showCard(0);
+    else showCard(n - 1);
+}
+
+function subScore(items) {
+    return items.reduce((sum, i) => sum + (responses[i] || 0), 0);
+}
+
+function subColor(val, max) {
+    const pct = val / max;
+    if (pct < 0.33) return '#48bb78';
+    if (pct < 0.55) return '#f6ad55';
+    if (pct < 0.75) return '#ed8936';
+    return '#f56565';
+}
+
+function showResults() {
+    const pa  = subScore(subscales.PA);
+    const sa  = subScore(subscales.SA);
+    const sp  = subScore(subscales.SP);
+    const fpi = subScore(subscales.FPI);
+    const ocd = subScore(subscales.OCD);
+    const gad = subScore(subscales.GAD);
+    const total = pa + sa + sp + fpi + ocd + gad;
+
+    let color, label, interp;
+    if (total <= 22) {
+        color = '#48bb78'; label = 'Dentro de lo esperado';
+        interp = 'La puntuación total (<strong>' + total + '/114</strong>) se encuentra dentro del rango esperado para la edad. No se identifican síntomas de ansiedad clínicamente significativos en este momento.';
+    } else if (total <= 40) {
+        color = '#f6ad55'; label = 'Ansiedad leve';
+        interp = 'La puntuación total (<strong>' + total + '/114</strong>) sugiere síntomas de ansiedad de nivel leve. Se recomienda monitoreo, psicoeducación y revisar las subescalas elevadas para orientar la intervención.';
+    } else if (total <= 60) {
+        color = '#ed8936'; label = 'Ansiedad moderada';
+        interp = 'La puntuación total (<strong>' + total + '/114</strong>) indica ansiedad de nivel moderado con repercusión en el funcionamiento. Se recomienda evaluación clínica completa e intervención psicológica enfocada en las áreas más afectadas.';
+    } else {
+        color = '#f56565'; label = 'Ansiedad elevada';
+        interp = 'La puntuación total (<strong>' + total + '/114</strong>) indica un nivel elevado de síntomas ansiosos que requiere atención clínica. Se recomienda evaluación diagnóstica completa y plan de tratamiento (TCC u otras intervenciones basadas en evidencia).';
+    }
+
+    document.getElementById('score-num').textContent = total;
+    document.getElementById('score-num').style.color = color;
+    document.getElementById('score-badge-wrap').innerHTML =
+        '<span class="score-badge" style="background:' + color + '22;color:' + color + ';border:1px solid ' + color + '">' + label + '</span>';
+
+    const subs = [
+        {id:'sub-pa', val:pa, max:27},
+        {id:'sub-sa', val:sa, max:18},
+        {id:'sub-sp', val:sp, max:18},
+        {id:'sub-fpi', val:fpi, max:15},
+        {id:'sub-ocd', val:ocd, max:18},
+        {id:'sub-gad', val:gad, max:18}
+    ];
+    subs.forEach(s => {
+        const el = document.getElementById(s.id);
+        el.textContent = s.val;
+        el.style.color = subColor(s.val, s.max);
+    });
+
+    document.getElementById('interp-box').innerHTML = interp +
+        '<br><br><em style="font-size:12px;color:#a0aec0;">Referencia: Spence (1998). Validación México: Muñoz &amp; Jiménez (2010), Rev. Latinoam. Psicología, 42(1):13–24. α=0.88. Para interpretación normativa precisa se recomienda comparar con datos normativos por sexo y edad.</em>';
+
+    showCard('card-results');
+}
+</script>
+</body>
+</html>
